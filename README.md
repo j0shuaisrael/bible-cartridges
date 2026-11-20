@@ -139,14 +139,41 @@ python3 -m http.server 8000        # from the project root
 ```
 
 Controls: virtual joystick (bottom-left) or WASD to move; drag anywhere else
-to look around; drag the scroll itself to read on when the text exceeds the
-sheet; tap/click the scroll to play or pause the reading. `?lang=es` forces
-Spanish glosses; `?scroll=0.5` starts halfway down the text.
+to look around; drag the scroll itself — or two-finger scroll / mouse wheel
+over it — to read on when the text exceeds the sheet; tap/click the scroll
+to play or pause the reading. `?lang=es` forces Spanish glosses;
+`?scroll=0.5` starts halfway down the text.
 
 The viewer decodes `cartridge.png` in the browser (see `decode.js`) and
 renders the scroll from the decoded pack. If the cartridge is damaged it
 says so on the scroll instead of failing silently. If `audio.webm` is
 missing it shows a note and the scroll still reads fine.
+
+## Refinement round — 2026-11-19 (Pol's first look at the live site)
+
+* **Scroll is one continuous object** — the tan sheet and the tan rolls now
+  share the same height (3.5), and the sheet's edge sits inside the roll
+  (roll radius 0.5, centre ±3.8, sheet plane z = −0.30), so no seam or
+  see-through gap shows from any angle.
+* **Trackpad scroll reads the chapter** — a wheel / two-finger scroll over
+  the scroll advances the text, in addition to drag-to-scroll. Scoped to
+  the scroll by raycast; a wheel anywhere else does nothing.
+* **Skybox visible** — the anime sky now shows. Root cause: the sky sphere
+  winds inward (signed volume < 0) and its GLB material uses
+  `KHR_materials_pbrSpecularGlossiness`, unsupported in three r160, so the
+  old BackSide standard material rendered nothing and the dark-navy scene
+  background showed through. The sky is now an unlit `MeshBasicMaterial`
+  using the decoded texture, double-sided, un-tone-mapped.
+* **Sleek glossy pillar arches** — the palace structure meshes (everything
+  but the mosaic floor) are polished metal: metalness 1.0, roughness 0.05,
+  near-white silver, lit by a RoomEnvironment PMREM map assigned
+  per-material, so the pillars show clear bright reflections. The floor
+  keeps its own material. Side effect: the central step/dais tip below the
+  scroll is now bright metallic white and more noticeable (it never
+  touches the text).
+* Verified in headless WebKit (Playwright): zero console errors; wheel and
+  drag tests pass with measured text offsets; screenshots inspected
+  (default, outward, sky-up, pillar close-up, scroll side/back/joint).
 
 ## Still missing
 

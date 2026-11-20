@@ -54,13 +54,14 @@
 <div id="scene"></div>
 <div id="title"></div>
 <div id="status">loading…</div>
-<div id="hint">Tap the scroll to play the reading · drag the scroll to read on · drag elsewhere to look around</div>
+<div id="hint">Tap the scroll to play the reading · drag or scroll on the scroll to read on · drag elsewhere to look around</div>
 <div id="joy"><div id="knob"></div></div>
 <audio id="chap-audio" preload="auto"></audio>
 
 <script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { decodeCartridge, pickLanguage, intercalate } from './decode.js';
 import { CHAPTER } from './chapter.js';
 
@@ -177,6 +178,15 @@ const sun = new THREE.DirectionalLight(0xfff2dd, 1.6);
 sun.position.set(20, 30, 10);
 scene.add(sun);
 
+// Polished-metal environment: a small studio room baked to a PMREM map.
+// It is assigned per-material to the palace pillars only (never
+// scene-wide), so the mosaic floor and the scroll keep exactly their
+// current look. Polished metal with nothing to reflect reads black —
+// this map is what makes the pillars show bright reflections.
+const pmrem = new THREE.PMREMGenerator(renderer);
+const studioEnv = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+pmrem.dispose();
+
 const loader = new GLTFLoader();
 const loadState = { palace: false, skybox: false, cartridge: false };
 
@@ -202,18 +212,29 @@ loader.load('../../assets/cloud-palace.glb', (g) => {
   // stands at y=2.0 against the bbox floor, it ends up UNDER the floor
   // plane, which then hides the scroll's top half and most of the hall.
   // So: shift the palace down until the floor plane's centre is at y=0.
-  let floor = null, floorFlat = Infinity;
+  let floor = null, floorFlat = Infinity, floorMesh = null;
   g.scene.traverse((o) => {
     if (!o.isMesh) return;
     const b = new THREE.Box3().setFromObject(o);
     const s = b.getSize(new THREE.Vector3());
     const flat = s.y / Math.max(s.x, s.z);
-    if (flat < floorFlat) { floorFlat = flat; floor = b; }
+    if (flat < floorFlat) { floorFlat = flat; floor = b; floorMesh = o; }
   });
   if (floor) {
     const c = floor.getCenter(new THREE.Vector3());
     g.scene.position.y -= c.y;
   }
+  // Sleek, glossy pillar arches: every structure mesh except the flat
+  // floor plane becomes polished metal — metalness 1, roughness 0.05 —
+  // lit by the studio environment map, so the pillars show clear bright
+  // mirror-like reflections. The floor keeps its own mosaic material.
+  const pillarMetal = new THREE.MeshStandardMaterial({
+    color: 0xf2f3f5, metalness: 1.0, roughness: 0.05,
+    envMap: studioEnv, envMapIntensity: 1.25, side: THREE.DoubleSide,
+  });
+  g.scene.traverse((o) => {
+    if (o.isMesh && o !== floorMesh) o.material = pillarMetal;
+  });
   scene.add(g.scene);
   loadState.palace = true;
   refreshStatus();
@@ -221,10 +242,23 @@ loader.load('../../assets/cloud-palace.glb', (g) => {
 
 loader.load('../../assets/skybox.glb', (g) => {
   g.scene.traverse((o) => {
-    if (o.isMesh) {
-      o.material.side = THREE.BackSide; // we stand inside the sky sphere
-      o.material.depthWrite = false;
-    }
+    if (!o.isMesh) return;
+    // The skybox GLB's material uses KHR_materials_pbrSpecularGlossiness
+    // (unsupported in three r160 — the loader warns and falls back to a
+    // metalness-1 standard material), and its sphere winds inward
+    // (signed volume < 0), so with the old BackSide material the sphere
+    // rendered nothing at all — the dark navy was the scene background
+    // showing through. Fix: an unlit material using the texture the
+    // loader DID decode (emissiveMap), double-sided so the winding
+    // cannot hide it, and un-tone-mapped so the anime sky shows at full
+    // brightness.
+    const src = o.material;
+    const tex = (src && (src.emissiveMap || src.map)) || null;
+    o.material = new THREE.MeshBasicMaterial({
+      map: tex, side: THREE.DoubleSide, toneMapped: false, depthWrite: false,
+    });
+    o.renderOrder = -1;
+    if (src) src.dispose();
   });
   // The file's sphere is radius 1 in local space but its nodes carry a
   // ~500x matrix, so as loaded it already spans ~1000 units. Measure it and
@@ -279,11 +313,11 @@ const sheet = new THREE.Mesh(new THREE.BoxGeometry(SHEET_W, SHEET_H, 0.06), shee
 sheet.name = 'scroll-sheet';
 scrollGroup.add(sheet);
 
-const rollGeo = new THREE.CylinderGeometry(0.42, 0.42, 3.9, 24);
+const rollGeo = new THREE.CylinderGeometry(0.5, 0.5, SHEET_H, 24);
 const rollMat = new THREE.MeshStandardMaterial({ color: TAN, roughness: 0.85 });
-const rodGeo = new THREE.CylinderGeometry(0.07, 0.07, 4.7, 12);
+const rodGeo = new THREE.CylinderGeometry(0.07, 0.07, 4.3, 12);
 const rodMat = new THREE.MeshStandardMaterial({ color: WOOD, roughness: 0.8 });
-const capGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.12, 24);
+const capGeo = new THREE.CylinderGeometry(0.56, 0.56, 0.12, 24);
 const capMat = new THREE.MeshStandardMaterial({ color: WOOD, roughness: 0.8 });
 for (const side of [-1, 1]) {
   const x = side * (SHEET_W / 2 + 0.30); // sheet edge tucks into the roll
@@ -295,12 +329,18 @@ for (const side of [-1, 1]) {
   scrollGroup.add(rod);
   for (const end of [-1, 1]) {
     const cap = new THREE.Mesh(capGeo, capMat);
-    cap.position.set(x, end * 1.98, 0);
+    cap.position.set(x, end * 1.81, 0);
     scrollGroup.add(cap);
   }
 }
-// Sheet connects to the rolls on the backside: the sheet plane sits slightly
-// behind the roll centres; the text faces +z, toward the arriving visitor.
+// The sheet and the rolls are ONE continuous object: the tan sheet and
+// the tan rolls share the same height (SHEET_H), and the sheet's edge
+// sits INSIDE the roll — at the sheet edge (x = ±3.5) the roll (centre
+// ±3.8, radius 0.5) spans z ±0.4, while the sheet plane sits at
+// z = -0.30, so the sheet's edge face is fully inside the roll volume
+// and no seam or see-through gap can show from any angle. The sheet
+// plane sits slightly behind the roll centres; the text faces +z,
+// toward the arriving visitor.
 sheet.position.z = -0.30;
 // The scroll floats above the palace's central feature (a low step/dais
 // rising to y≈1.57 at the platform centre): its sheet bottom sits at 1.85,
@@ -445,6 +485,21 @@ renderer.domElement.addEventListener('pointercancel', () => {
   dragMode = null; downPos = null; lastPos = null;
 });
 
+// Two-finger trackpad scroll reads the chapter too: a wheel over the
+// scroll advances the text (same direction as dragging up), in addition
+// to drag-to-scroll. Scoped to the scroll by raycast — a wheel anywhere
+// else does nothing, and the page never scrolls (overflow is hidden).
+renderer.domElement.addEventListener('wheel', (e) => {
+  if (!scrollTex || scrollMaxFrac <= 0) return;
+  if (!pickScroll(e)) return;
+  e.preventDefault();
+  let d = e.deltaY;
+  if (e.deltaMode === 1) d *= 16;              // lines
+  else if (e.deltaMode === 2) d *= innerHeight; // pages
+  scrollFrac = Math.min(1, Math.max(0, scrollFrac + d * 0.0008));
+  applyScrollOffset(scrollTex);
+}, { passive: false });
+
 addEventListener('resize', () => {
   camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
@@ -491,7 +546,15 @@ if (new URLSearchParams(location.search).has('debug')) {
   window.__psalmDebug = {
     get scrollTex() { return scrollTex; },
     get scrollFrac() { return scrollFrac; },
+    set scrollFrac(v) {
+      scrollFrac = Math.min(1, Math.max(0, v));
+      if (scrollTex) applyScrollOffset(scrollTex);
+    },
     get scrollMaxFrac() { return scrollMaxFrac; },
+    get yaw() { return yaw; },
+    set yaw(v) { yaw = v; },
+    get pitch() { return pitch; },
+    set pitch(v) { pitch = v; },
     camera, scene, scrollGroup, THREE,
   };
 }
