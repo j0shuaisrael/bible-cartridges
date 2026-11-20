@@ -8,6 +8,8 @@ chapter. This prototype is **Psalm 1 only**.
 
 ```
 index.html                  plain white "Index of /" directory listing (the hub)
+decode.html                 universal decoder: drop any cartridge PNG, read the
+                            chapter — nothing to install, works from file:// too
 assets/
   cloud-palace.glb          the platform (sky strip surgically removed, see below)
   skybox.glb                the surrounding sky (single sphere)
@@ -15,6 +17,8 @@ psalms/001/
   index.html                the Psalm 1 viewer (three.js) — THE TEMPLATE, see below
   chapter.js                chapter metadata: number, titles, filenames
   decode.js                 in-browser PSLM cartridge decoder
+  encode.html               the Psalm 1 encoder (template for all 150 psalms):
+                            drop your image, get the cartridge — no downgrade
   cartridge.png             the cartridge: cover + Psalm 1 text + audio, steganographed
   cover.png                 cover art (PLACEHOLDER — replace with real art)
   audio.webm                the chapter reading, Opus in WebM (58 s)
@@ -99,10 +103,88 @@ Long chapters need a bigger cover: the LSB audio layer holds ~393 KB in a
 image for it (or 2 LSBs, or a lower Opus bitrate). The encoder fails loudly
 at build time if a payload doesn't fit; it never silently truncates.
 
-Planned later (not built yet): a separate encoder page per psalm — the
-cartridge's "pregnant twin" maker — hooked to that psalm's chapter + audio,
-which accepts an image and produces the cartridge. That page is a sibling
-of the viewer, not part of it.
+## Encoder + decoder pages — the "pregnant twin" maker (2026-11-20)
+
+* **`psalms/001/encode.html`** — the per-psalm encoder (template for all
+  150). Drop a PNG or JPEG; it builds this psalm's cartridge as a download.
+  The psalm number comes from the page's own folder; the chapter data is
+  fetched from `tools/psalmNNN_data.json` and the audio from `audio.webm`
+  in the same folder — the same files the viewer uses. Both are also
+  embedded in the page as fallbacks, used only when fetch is blocked
+  (opening the page directly from `file://`). On GitHub Pages the live
+  files are always preferred. To clone for another psalm: copy the folder,
+  replace the data + audio, and regenerate the two embedded blobs from
+  those files.
+* **`decode.html`** (repo root) — the universal decoder. Anyone can drag
+  any cartridge PNG onto it (or pick a file) and read the chapter: verified
+  intercalated Hebrew + transliteration + gloss in the device language
+  (English fallback, manual language picker), plus the audio player. On
+  any SHA-256 mismatch it reports DAMAGE and shows nothing unverified. It
+  accepts cartridges made by either the Python encoder or the web encoder.
+  Its decoder is a standalone copy of `psalms/001/decode.js`, inlined so
+  the page works from `file://` (a module import would be blocked there).
+
+### The no-downgrade rule — how it is kept
+
+* Output dimensions are exactly the input's. The art is never resized;
+  the code strip is extra rows added on top.
+* PNG input: the pixel data is re-encoded losslessly (filter-0 scanlines,
+  zlib) and **every metadata chunk is copied verbatim** into the output
+  (`tEXt`, `iTXt`, `zTXt`, `eXIf`, `iCCP`, and any others) — the file is
+  never rebuilt from pixels alone. RGBA input stays RGBA; RGB stays RGB.
+* JPEG input: decoded once to PNG — pixels identical to the decoded JPEG,
+  never re-encoded as JPEG. EXIF → `eXIf`, XMP → `iTXt`
+  "XML:com.adobe.xmp", IPTC → `zTXt` "Raw profile type iptc"
+  (ImageMagick convention, hex-encoded), ICC profile → `iCCP`.
+* The numbers are shown before encoding (pack bytes, audio bytes, strip
+  rows, LSB capacity, % used). If the audio does not fit, the page refuses
+  loudly with those numbers and disables encoding — it never silently
+  truncates. An in-page self-check re-reads the built strip and verifies
+  both SHA-256s before offering the download.
+* Known limits: 16-bit PNG input is stored as 8-bit (the browser canvas
+  holds 8-bit pixels) — the page warns when it happens. The strip filler
+  bytes use a small deterministic PRNG (mulberry32) instead of Python's
+  Mersenne Twister; filler is ignored by every decoder, so cartridges
+  still verify — but a byte-for-byte diff against a Python-encoded
+  cartridge of the same cover will differ in the filler (and in the
+  compressed pack bytes, since the browser's deflate level is not
+  controllable). The decoded content is identical.
+* Engine quirk, measured 2026-11-20: WebKit's `CompressionStream`
+  ('deflate') is non-conformant — it returns a **zlib-wrapped** stream
+  instead of raw deflate. The encoder uses `'deflate-raw'` (with a
+  strip-the-wrapper fallback), and the decoder's inflate retries stripped
+  on failure, so both pages work in WebKit and in spec-conformant engines.
+
+### Verification (2026-11-20, headless WebKit + Python)
+
+* Real 2048×2048 test images (Pillow): PNG with 3× `tEXt` + `eXIf`;
+  JPEG with EXIF + XMP + IPTC + ICC. Both encoded through the page.
+* `tools/decode.py` round-trips all browser-encoded cartridges: both
+  SHA-256s verified; decoded text pack is exactly `psalm001_data.json`;
+  decoded audio SHA-256 `5474dd97…` matches `audio.webm`. The `file://`
+  cartridge is byte-identical to the HTTP one (SHA-256 `64f93372…`).
+* Metadata: PNG output chunks byte-identical to input (all 4, in order);
+  JPEG output carries `eXIf` (EXIF bytes identical), `iTXt` (XMP bytes
+  identical), `zTXt` (IPTC bytes identical), `iCCP` (profile bytes
+  identical). Dimensions 2048×2048 in, 2048×2048 out.
+* Pixels: below the strip, max channel change is 1/255 (the LSB audio);
+  strip rows hold the code. JPEG cartridge vs Pillow's JPEG decode: max
+  delta 1 (decoder rounding).
+* Decoder page renders the browser cartridge (6 verses, EN + ES glosses,
+  audio readyState 4, duration 58.417 s) and the Python cartridge alike;
+  a plain PNG reports DAMAGE ("bad magic"); a one-pixel flip in the pack
+  reports DAMAGE ("pack length mismatch"); a flip in the header reports
+  DAMAGE ("audio SHA-256 mismatch"). Nothing unverified is ever shown.
+* Oversize: a 64×64 image refuses loudly — 192,766 bytes of audio vs
+  1,152 bytes of LSB capacity (16,733.2%), encode button disabled.
+* Zero console errors on both pages, over HTTP and from `file://`.
+
+### Follow-ups (not in this round)
+
+* **Webpage-as-input** — rendering a page to pixels needs a page
+  renderer; the encoder takes image files only for now.
+* Cover the other 149 psalms (each: data JSON + audio + cover +
+  cartridge + one `psalms/NNN/` viewer/encoder pair).
 
 ## Building a cartridge
 

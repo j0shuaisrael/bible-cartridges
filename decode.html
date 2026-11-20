@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<!--
+  Bible Cartridges — universal decoder.
+
+  Anyone can drag any cartridge PNG onto this page (or pick a file) and
+  read the chapter — nothing to install, no account, no network, no cost.
+  It parses the PSLM v2 header, verifies the SHA-256 of the text pack and
+  of the audio, and only then renders the chapter and offers the audio.
+  On any mismatch it reports DAMAGE and shows nothing unverified.
+
+  The decoder below is a standalone copy of psalms/001/decode.js (same
+  PSLM v2 logic, same version). It is inlined here on purpose: this page
+  must work from file:// as well as from GitHub Pages, and an ES-module
+  import of ../psalms/001/decode.js would be blocked by CORS on file://.
+  If decode.js changes, mirror the change here.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bible Cartridge Decoder</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0 auto;
+    max-width: 760px; padding: 24px 16px 64px; line-height: 1.5; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  p.sub { color: #666; margin: 0 0 20px; }
+  #drop { border: 2px dashed #888; border-radius: 12px; padding: 28px 16px;
+    text-align: center; cursor: pointer; }
+  #drop.over { border-color: #2e9e5b; background: rgba(46,158,91,.08); }
+  #drop input { display: none; }
+  .ok { border: 1px solid #2e9e5b; border-radius: 8px; padding: 10px 12px;
+    margin: 16px 0; background: rgba(46,158,91,.08); }
+  .bad { border: 1px solid #d64545; border-radius: 8px; padding: 12px;
+    margin: 16px 0; background: rgba(214,69,69,.10); }
+  .bad h2 { color: #d64545; margin: 0 0 6px; font-size: 1.1rem; }
+  .meta { font-size: .9rem; color: #555; }
+  .meta code { font-size: .85rem; }
+  #cover { max-width: 100%; border-radius: 8px; margin: 12px 0; display: block; }
+  #langrow { margin: 12px 0; }
+  .verse { border-top: 1px solid #ddd; padding: 12px 2px; font-size: 1.15rem;
+    line-height: 2.1; }
+  .verse .vnum { font-size: .8rem; color: #888; display: block; line-height: 1.4; }
+  .tok { white-space: nowrap; }
+  .heb { font-size: 1.2em; }
+  .lat { font-size: .82em; color: #444; }
+  audio { width: 100%; margin: 12px 0; }
+  .small { font-size: .85rem; color: #777; }
+</style>
+</head>
+<body>
+<h1>Bible Cartridge Decoder</h1>
+<p class="sub">Drop a cartridge PNG here — the chapter it carries is read back,
+verified byte-for-byte, and shown to you. Nothing is uploaded anywhere;
+everything happens in your browser.</p>
+
+<div id="drop" tabindex="0" role="button" aria-label="Choose a cartridge PNG file">
+  <strong>Drop a cartridge PNG here</strong><br>
+  <span class="small">or click to choose a file</span>
+  <input id="file" type="file" accept="image/png,.png">
+</div>
+
+<div id="report" aria-live="polite"></div>
+<div id="result" hidden>
+  <div class="ok" id="verified"></div>
+  <img id="cover" alt="Cartridge cover art">
+  <div id="langrow" hidden>
+    <label>Gloss language:
+      <select id="lang"></select>
+    </label>
+    <span class="small" id="langnote"></span>
+  </div>
+  <audio id="player" controls hidden></audio>
+  <div id="verses"></div>
+  <p class="small">Text and audio above were verified against the SHA-256
+  checksums stored in the cartridge. If anything had not matched, nothing
+  would be shown here.</p>
+</div>
+
+<script type="module">
+// ---- PSLM v2 decoder (standalone copy of psalms/001/decode.js) ----------
+const MAGIC = [0x50, 0x53, 0x4c, 0x4d]; // "PSLM"
+const VERSION = 2;
+
+function hexSha256(bytes) {
+  return crypto.subtle.digest('SHA-256', bytes).then((buf) =>
+    [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join(''));
+}
+
+async function inflateZlib(bytes) {
+  // The pack is a zlib stream (0x78 .. + raw deflate + adler32), exactly
+  // as Python's zlib.compress produces. WebKit's DecompressionStream
+  // ('deflate') accepts that; spec-conformant engines want raw deflate
+  // via 'deflate-raw' — so retry stripped on failure.
+  const tryStream = async (fmt, input) => {
+    const ds = new DecompressionStream(fmt);
+    return new Uint8Array(await new Response(new Blob([input]).stream().pipeThrough(ds)).arrayBuffer());
+  };
+  try {
+    return await tryStream('deflate', bytes);
+  } catch (e) { /* fall through to the stripped retry */ }
+  if (bytes.length >= 6 && bytes[0] === 0x78 && ((bytes[0] * 256 + bytes[1]) % 31 === 0)) {
+    return await tryStream('deflate-raw', bytes.subarray(2, bytes.length - 4));
+  }
+  throw new Error('Failed to Decode Data');
+}
+
+function stripBytes(data, w, n) {
+  const out = new Uint8Array(n);
+  const rows = Math.ceil(n / (w * 3));
+  let p = 0;
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < w; x++) {
+      if (p >= n) return out;
+      const i = (y * w + x) * 4;
+      out[p++] = data[i];
+      if (p >= n) return out;
+      out[p++] = data[i + 1];
+      if (p >= n) return out;
+      out[p++] = data[i + 2];
+    }
+  }
+  return out;
+}
+
+function lsbAudio(data, w, h, stripH, n) {
+  const out = new Uint8Array(n);
+  let bit = 0;
+  const total = n * 8;
+  for (let y = stripH; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      if (bit >= total) return out;
+      const i = (y * w + x) * 4;
+      for (let c = 0; c < 3; c++) {
+        if (bit >= total) return out;
+        if (data[i + c] & 1) out[Math.floor(bit / 8)] |= 1 << (7 - (bit % 8));
+        bit++;
+      }
+    }
+  }
+  if (bit < total) throw new Error('cartridge truncated: LSB layer ended before the audio did');
+  return out;
+}
+
+async function decodeCartridgeImage(img) {
+  const canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(img, 0, 0);
+  const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const w = canvas.width, h = canvas.height;
+
+  const head = stripBytes(data, w, 9);
+  if (!MAGIC.every((b, i) => b === head[i])) {
+    throw new Error('not a PSLM cartridge (bad magic)');
+  }
+  if (head[4] !== VERSION) {
+    throw new Error(`unsupported PSLM version ${head[4]} (this decoder reads v${VERSION})`);
+  }
+  const hlen = new DataView(head.buffer, head.byteOffset + 5, 4).getUint32(0, false);
+  const headerRaw = stripBytes(data, w, 9 + hlen).subarray(9);
+  const header = JSON.parse(new TextDecoder().decode(headerRaw));
+
+  const stripH = header.strip_h;
+  const blobLen = 9 + hlen + header.pack_comp_len;
+  const blob = stripBytes(data, w, blobLen);
+  const comp = blob.subarray(9 + hlen);
+  const packBytes = await inflateZlib(comp);
+  if (packBytes.length !== header.pack_len) {
+    throw new Error('pack length mismatch — cartridge damaged');
+  }
+  if ((await hexSha256(packBytes)) !== header.pack_sha256) {
+    throw new Error('pack SHA-256 mismatch — text damaged');
+  }
+  const pack = JSON.parse(new TextDecoder().decode(packBytes));
+
+  let audio = null;
+  if (header.audio_len) {
+    audio = lsbAudio(data, w, h, stripH, header.audio_len);
+    if ((await hexSha256(audio)) !== header.audio_sha256) {
+      throw new Error('audio SHA-256 mismatch — audio damaged');
+    }
+  }
+  return { header, pack, audio, w, h };
+}
+
+function pickLanguage(header, deviceLanguage) {
+  const langs = header.languages || [];
+  const tag = (deviceLanguage || '').toLowerCase();
+  if (langs.includes(tag)) return tag;
+  const primary = tag.split('-')[0];
+  if (langs.includes(primary)) return primary;
+  return header.fallback || 'en';
+}
+
+// ---- page logic ---------------------------------------------------------
+const drop = document.getElementById('drop');
+const fileInput = document.getElementById('file');
+const report = document.getElementById('report');
+const result = document.getElementById('result');
+const verifiedEl = document.getElementById('verified');
+const coverEl = document.getElementById('cover');
+const langRow = document.getElementById('langrow');
+const langSel = document.getElementById('lang');
+const langNote = document.getElementById('langnote');
+const player = document.getElementById('player');
+const versesEl = document.getElementById('verses');
+
+let current = null; // { header, pack, audio }
+
+function showDamage(message) {
+  result.hidden = true;
+  current = null;
+  report.innerHTML = '';
+  const div = document.createElement('div');
+  div.className = 'bad';
+  const h = document.createElement('h2');
+  h.textContent = 'DAMAGED — nothing shown';
+  const p = document.createElement('p');
+  p.textContent = message + ' This file did not verify, so no text or audio from it is displayed.';
+  div.append(h, p);
+  report.append(div);
+}
+
+function renderVerses(lang) {
+  const { pack } = current;
+  const glossLang = pack.languages.includes(lang) ? lang : pack.fallback;
+  versesEl.innerHTML = '';
+  pack.verses.forEach((verse, vi) => {
+    const div = document.createElement('div');
+    div.className = 'verse';
+    div.dir = 'rtl';
+    const num = document.createElement('span');
+    num.className = 'vnum';
+    num.dir = 'ltr';
+    num.textContent = 'Verse ' + (vi + 1);
+    div.append(num);
+    verse.forEach((idx, ti) => {
+      const e = pack.lexicon[idx];
+      const tok = document.createElement('span');
+      tok.className = 'tok';
+      const heb = document.createElement('bdi');
+      heb.className = 'heb';
+      heb.textContent = e.h;
+      const lat = document.createElement('span');
+      lat.className = 'lat';
+      lat.textContent = ` (${e.t}, ${e.g[glossLang]})`;
+      tok.append(heb, lat);
+      div.append(tok);
+      if (ti < verse.length - 1) div.append(document.createTextNode(' '));
+    });
+    versesEl.append(div);
+  });
+}
+
+async function handleFile(file) {
+  report.innerHTML = '';
+  result.hidden = true;
+  current = null;
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  try {
+    img.src = url;
+    await img.decode();
+  } catch (e) {
+    URL.revokeObjectURL(url);
+    showDamage('This file could not be read as an image (' + e.message + ').');
+    return;
+  }
+  let decoded;
+  try {
+    decoded = await decodeCartridgeImage(img);
+  } catch (e) {
+    URL.revokeObjectURL(url);
+    showDamage(e.message);
+    return;
+  }
+  const { header, pack, audio, w, h } = decoded;
+  current = decoded;
+
+  const short = (s) => s ? s.slice(0, 12) + '…' : '—';
+  verifiedEl.innerHTML = '';
+  const title = document.createElement('div');
+  title.innerHTML = `<strong>Verified ✓ — ${pack.title || ('Psalm ' + header.chapter)}</strong>`;
+  const meta = document.createElement('div');
+  meta.className = 'meta';
+  meta.innerHTML =
+    `PSLM v${header.version} · chapter ${header.chapter} · ${w}×${h} · strip ${header.strip_h} rows<br>` +
+    `Text pack ${header.pack_len.toLocaleString()} bytes, SHA-256 <code>${short(header.pack_sha256)}</code> ✓ · ` +
+    `${header.audio_len ? `audio ${header.audio_len.toLocaleString()} bytes ${header.audio_format || ''}, SHA-256 <code>${short(header.audio_sha256)}</code> ✓` : 'no audio packed'}<br>` +
+    `Languages packed: ${header.languages.join(', ')} (fallback ${header.fallback}) · ` +
+    `${pack.verses.length} verses, ${pack.lexicon.length} unique words`;
+  verifiedEl.append(title, meta);
+
+  coverEl.src = url; // keep the object URL alive for the preview
+  coverEl.alt = 'Cartridge cover art (' + file.name + ')';
+
+  if (header.languages && header.languages.length) {
+    langRow.hidden = false;
+    langSel.innerHTML = '';
+    header.languages.forEach((l) => {
+      const o = document.createElement('option');
+      o.value = l; o.textContent = l;
+      langSel.append(o);
+    });
+    const picked = pickLanguage(header, navigator.language);
+    langSel.value = picked;
+    langNote.textContent = `Picked “${picked}” from your device language (${navigator.language || 'unknown'}).`;
+  } else {
+    langRow.hidden = true;
+  }
+
+  if (audio) {
+    const audioUrl = URL.createObjectURL(new Blob([audio], { type: 'audio/webm' }));
+    player.src = audioUrl;
+    player.hidden = false;
+  } else {
+    player.hidden = true;
+    player.removeAttribute('src');
+  }
+
+  renderVerses(langSel.value || header.fallback || 'en');
+  result.hidden = false;
+  report.innerHTML = '';
+}
+
+langSel.addEventListener('change', () => {
+  if (current) {
+    renderVerses(langSel.value);
+    langNote.textContent = `Showing glosses in “${langSel.value}”.`;
+  }
+});
+
+drop.addEventListener('click', () => fileInput.click());
+drop.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+});
+['dragenter', 'dragover'].forEach((ev) =>
+  drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach((ev) =>
+  drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', (e) => {
+  const f = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) handleFile(f);
+});
+fileInput.addEventListener('change', () => {
+  if (fileInput.files[0]) handleFile(fileInput.files[0]);
+});
+</script>
+</body>
+</html>
