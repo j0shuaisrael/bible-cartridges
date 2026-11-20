@@ -1,0 +1,478 @@
+{
+ "chapter": 120,
+ "title": "Psalm 120",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  [
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  [
+   13,
+   14,
+   15,
+   16,
+   17,
+   12
+  ],
+  [
+   18,
+   19,
+   20,
+   21,
+   22,
+   23
+  ],
+  [
+   24,
+   25,
+   26,
+   27,
+   28,
+   29
+  ],
+  [
+   30,
+   31,
+   9,
+   21,
+   32,
+   33
+  ],
+  [
+   34,
+   35,
+   36,
+   37,
+   38
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "הַמַּעֲלוֹת",
+   "t": "hammaalot",
+   "g": {
+    "en": "the elevation",
+    "es": "escalera",
+    "ru": "подъём"
+   }
+  },
+  {
+   "h": "אֶל־יְהוָה",
+   "t": "el-YHWH",
+   "g": {
+    "en": "to, toward the LORD",
+    "fr": "à l'Éternel",
+    "ru": "к Господь",
+    "ar": "إله الرب",
+    "ja": "～へ、～に向かって、～に向けて 主",
+    "ko": "신 여호와"
+   }
+  },
+  {
+   "h": "בַּצָּרָתָה",
+   "t": "ba-tzaratah",
+   "g": {
+    "en": "in trouble",
+    "es": "angustia",
+    "fr": "oppression",
+    "ru": "беда",
+    "zh": "不幸",
+    "id": "kemalangan"
+   }
+  },
+  {
+   "h": "לִּי",
+   "t": "li",
+   "g": {
+    "en": "to me",
+    "fr": "à"
+   }
+  },
+  {
+   "h": "קָרָאתִי",
+   "t": "karati",
+   "g": {
+    "en": "to call out to",
+    "fr": "appeler",
+    "ru": "звать",
+    "zh": "叫"
+   }
+  },
+  {
+   "h": "וַיַּעֲנֵנִי",
+   "t": "va-yaaneni",
+   "g": {
+    "en": "and to answer me",
+    "fr": "affliger",
+    "ru": "угнетать",
+    "zh": "回答"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "הַצִּילָה",
+   "t": "ha-tzilah",
+   "g": {
+    "en": "to snatch away",
+    "fr": "enlever"
+   }
+  },
+  {
+   "h": "נַפְשִׁי",
+   "t": "nafshi",
+   "g": {
+    "en": "my soul",
+    "fr": "âme",
+    "ru": "душа",
+    "ar": "نفس",
+    "zh": "灵魂",
+    "id": "jiwa",
+    "ja": "魂"
+   }
+  },
+  {
+   "h": "מִשְּׂפַת־שֶׁקֶר",
+   "t": "missefat-sheker",
+   "g": {
+    "en": "from lip of lie",
+    "es": "labio mentira",
+    "ru": "язык ложь",
+    "zh": "语言 谎言",
+    "ja": "言語 嘘"
+   }
+  },
+  {
+   "h": "מִלָּשׁוֹן",
+   "t": "millashon",
+   "g": {
+    "en": "from tongue, used literally of",
+    "es": "lengua",
+    "fr": "langage",
+    "ru": "язык",
+    "ar": "لسان",
+    "zh": "舌头"
+   }
+  },
+  {
+   "h": "רְמִיָּה",
+   "t": "remiyyah",
+   "g": {
+    "en": "remissness, treachery"
+   }
+  },
+  {
+   "h": "מַה־יִּתֵּן",
+   "t": "mah-yitten",
+   "g": {
+    "en": "what to give",
+    "es": "que dar",
+    "fr": "quoi donner",
+    "ru": "что дать",
+    "ja": "何 与える"
+   }
+  },
+  {
+   "h": "לְךָ",
+   "t": "lekha",
+   "g": {
+    "en": "to you",
+    "fr": "à"
+   }
+  },
+  {
+   "h": "וּמַה־יֹּסִיף",
+   "t": "u-mah-yosif",
+   "g": {
+    "en": "and what to add or augment",
+    "fr": "quoi continuer",
+    "ru": "что добавлять"
+   }
+  },
+  {
+   "h": "לָךְ",
+   "t": "lakhe",
+   "g": {
+    "en": "to you",
+    "fr": "à"
+   }
+  },
+  {
+   "h": "לָשׁוֹן",
+   "t": "lashon",
+   "g": {
+    "en": "tongue, used literally",
+    "es": "lengua",
+    "fr": "langage",
+    "ru": "язык",
+    "ar": "لسان",
+    "zh": "舌头"
+   }
+  },
+  {
+   "h": "חִצֵּי",
+   "t": "chittzei",
+   "g": {
+    "en": "piercer of",
+    "es": "flecha",
+    "fr": "flèche",
+    "ru": "стрела",
+    "zh": "箭",
+    "ja": "矢"
+   }
+  },
+  {
+   "h": "גִבּוֹר",
+   "t": "gibbor",
+   "g": {
+    "en": "powerful",
+    "fr": "brave"
+   }
+  },
+  {
+   "h": "שְׁנוּנִים",
+   "t": "shenunim",
+   "g": {
+    "en": "to point"
+   }
+  },
+  {
+   "h": "עִם",
+   "t": "im",
+   "g": {
+    "en": "with",
+    "es": "con",
+    "fr": "avec",
+    "ru": "вместе",
+    "ar": "مع",
+    "zh": "和",
+    "id": "dengan"
+   }
+  },
+  {
+   "h": "גַּחֲלֵי",
+   "t": "gachalei",
+   "g": {
+    "en": "ember of",
+    "ru": "горящий"
+   }
+  },
+  {
+   "h": "רְתָמִים",
+   "t": "retamim",
+   "g": {
+    "en": "Spanish broom",
+    "es": "retama"
+   }
+  },
+  {
+   "h": "אוֹיָה־לִי",
+   "t": "oyah-li",
+   "g": {
+    "en": "lamentation to me"
+   }
+  },
+  {
+   "h": "כִּי־גַרְתִּי",
+   "t": "ki-garti",
+   "g": {
+    "en": "for, because to turn aside from the road",
+    "fr": "car habiter"
+   }
+  },
+  {
+   "h": "מֶשֶׁךְ",
+   "t": "meshekh",
+   "g": {
+    "en": "Meshek",
+    "fr": "Méschec",
+    "ru": "Мешех"
+   }
+  },
+  {
+   "h": "שָׁכַנְתִּי",
+   "t": "shakhanti",
+   "g": {
+    "en": "to reside or permanently stay",
+    "fr": "placer",
+    "ru": "обитать",
+    "zh": "居住"
+   }
+  },
+  {
+   "h": "עִם־אָהֳלֵי",
+   "t": "im-aholei",
+   "g": {
+    "en": "with tent of",
+    "fr": "avec tente",
+    "ru": "вместе палатка"
+   }
+  },
+  {
+   "h": "קֵדָר",
+   "t": "kedar",
+   "g": {
+    "en": "Kedar",
+    "ru": "гончар"
+   }
+  },
+  {
+   "h": "רַבַּת",
+   "t": "rabbat",
+   "g": {
+    "en": "abundant of",
+    "fr": "grand",
+    "ru": "многочисленный",
+    "zh": "许多"
+   }
+  },
+  {
+   "h": "שָׁכְנָה־לָּהּ",
+   "t": "shakhenah-lah",
+   "g": {
+    "en": "to reside or permanently stay to her",
+    "fr": "placer à"
+   }
+  },
+  {
+   "h": "שׂוֹנֵא",
+   "t": "sone",
+   "g": {
+    "en": "to hate",
+    "fr": "haïr",
+    "ru": "ненавидеть",
+    "zh": "憎恨"
+   }
+  },
+  {
+   "h": "שָׁלוֹם",
+   "t": "shalom",
+   "g": {
+    "en": "peace",
+    "es": "paz",
+    "fr": "paix",
+    "de": "Judentum",
+    "ru": "благополучие",
+    "ar": "مرحبا",
+    "zh": "和平",
+    "ja": "平和"
+   }
+  },
+  {
+   "h": "אֲנִי־שָׁלוֹם",
+   "t": "ani-shalom",
+   "g": {
+    "en": "I peace",
+    "es": "yo paz",
+    "fr": "je paix",
+    "de": "1. Person Singular Judentum",
+    "ru": "я благополучие",
+    "ar": "أنا مرحبا",
+    "zh": "我 和平",
+    "ja": "一人称単数代名詞 平和"
+   }
+  },
+  {
+   "h": "וְכִי",
+   "t": "ve-khi",
+   "g": {
+    "en": "and for, because",
+    "es": "porque",
+    "fr": "car",
+    "ja": "何故"
+   }
+  },
+  {
+   "h": "אֲדַבֵּר",
+   "t": "adabber",
+   "g": {
+    "en": "to speak",
+    "fr": "dire"
+   }
+  },
+  {
+   "h": "הֵמָּה",
+   "t": "hemmah",
+   "g": {
+    "en": "they",
+    "es": "ellos",
+    "fr": "eux",
+    "de": "sie",
+    "ru": "они",
+    "zh": "他们",
+    "id": "mereka"
+   }
+  },
+  {
+   "h": "לַמִּלְחָמָה",
+   "t": "la-milchamah",
+   "g": {
+    "en": "to battle",
+    "es": "guerra",
+    "pt": "guerra",
+    "fr": "guerre",
+    "ru": "война",
+    "ar": "خرب",
+    "zh": "战斗",
+    "ja": "戦争",
+    "ko": "전쟁"
+   }
+  }
+ ],
+ "text": "שִׁיר הַמַּעֲלוֹת אֶל־יְהוָה בַּצָּרָתָה לִּי קָרָאתִי וַיַּעֲנֵנִי\nיְהוָה הַצִּילָה נַפְשִׁי מִשְּׂפַת־שֶׁקֶר מִלָּשׁוֹן רְמִיָּה\nמַה־יִּתֵּן לְךָ וּמַה־יֹּסִיף לָךְ לָשׁוֹן רְמִיָּה\nחִצֵּי גִבּוֹר שְׁנוּנִים עִם גַּחֲלֵי רְתָמִים\nאוֹיָה־לִי כִּי־גַרְתִּי מֶשֶׁךְ שָׁכַנְתִּי עִם־אָהֳלֵי קֵדָר\nרַבַּת שָׁכְנָה־לָּהּ נַפְשִׁי עִם שׂוֹנֵא שָׁלוֹם\nאֲנִי־שָׁלוֹם וְכִי אֲדַבֵּר הֵמָּה לַמִּלְחָמָה"
+}

@@ -1,0 +1,772 @@
+{
+ "chapter": 12,
+ "title": "Psalm 12",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3
+  ],
+  [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  [
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20
+  ],
+  [
+   21,
+   5,
+   22,
+   17,
+   23,
+   24,
+   25
+  ],
+  [
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34
+  ],
+  [
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   5,
+   42,
+   43,
+   44,
+   45
+  ],
+  [
+   46,
+   5,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54
+  ],
+  [
+   55,
+   56,
+   57,
+   58,
+   59,
+   60
+  ],
+  [
+   61,
+   62,
+   63,
+   64,
+   65,
+   66,
+   11
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "לַמְנַצֵּחַ",
+   "t": "la-mnattzeach",
+   "g": {
+    "en": "to to oversee"
+   }
+  },
+  {
+   "h": "עַל־הַשְּׁמִינִית",
+   "t": "al-ha-sheminit",
+   "g": {
+    "en": "above, over the probably an eight-stringed lyre",
+    "ru": "на восьмая"
+   }
+  },
+  {
+   "h": "מִזְמוֹר",
+   "t": "mizmor",
+   "g": {
+    "en": "psalm",
+    "ru": "псалом"
+   }
+  },
+  {
+   "h": "לְדָוִד",
+   "t": "le-david",
+   "g": {
+    "en": "to David",
+    "es": "David",
+    "pt": "Davi",
+    "fr": "David",
+    "ru": "Давид",
+    "ja": "ダビデ"
+   }
+  },
+  {
+   "h": "הוֹשִׁיעָה",
+   "t": "hoshiah",
+   "g": {
+    "en": "to save, deliver"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "כִּי־גָמַר",
+   "t": "ki-gamar",
+   "g": {
+    "en": "for, because to end",
+    "fr": "car finir"
+   }
+  },
+  {
+   "h": "חָסִיד",
+   "t": "chasid",
+   "g": {
+    "en": "godly",
+    "fr": "pieux"
+   }
+  },
+  {
+   "h": "כִּי־פַסּוּ",
+   "t": "ki-fassu",
+   "g": {
+    "en": "for, because probably to disperse"
+   }
+  },
+  {
+   "h": "אֱמוּנִים",
+   "t": "emunim",
+   "g": {
+    "en": "to build up or support",
+    "fr": "croire"
+   }
+  },
+  {
+   "h": "מִבְּנֵי",
+   "t": "mibbenei",
+   "g": {
+    "en": "from son of",
+    "es": "hijo",
+    "fr": "fils",
+    "ru": "сын",
+    "zh": "儿子",
+    "ja": "息子"
+   }
+  },
+  {
+   "h": "אָדָם",
+   "t": "adam",
+   "g": {
+    "en": "man",
+    "es": "ser humano",
+    "fr": "homme",
+    "ru": "человек",
+    "ar": "رجل",
+    "zh": "人",
+    "ja": "アダム",
+    "ko": "사람"
+   }
+  },
+  {
+   "h": "שָׁוְא",
+   "t": "shav",
+   "g": {
+    "en": "evil, literally or morally",
+    "fr": "niqqud",
+    "ru": "шва",
+    "ja": "嘘"
+   }
+  },
+  {
+   "h": "יְדַבְּרוּ",
+   "t": "yedabberu",
+   "g": {
+    "en": "to speak",
+    "fr": "dire"
+   }
+  },
+  {
+   "h": "אִישׁ",
+   "t": "ish",
+   "g": {
+    "en": "man",
+    "es": "hombre",
+    "fr": "homme",
+    "ru": "мужчина",
+    "ar": "رجل",
+    "zh": "男人",
+    "ja": "男"
+   }
+  },
+  {
+   "h": "אֶת־רֵעֵהוּ",
+   "t": "et-reehu",
+   "g": {
+    "en": "with his associate",
+    "fr": "Préposition introduisant le complément d’objet mal",
+    "ja": "へ 邪悪"
+   }
+  },
+  {
+   "h": "שְׂפַת",
+   "t": "sefat",
+   "g": {
+    "en": "lip of",
+    "es": "labio",
+    "fr": "lèvre",
+    "ru": "язык",
+    "zh": "语言",
+    "ja": "言語"
+   }
+  },
+  {
+   "h": "חֲלָקוֹת",
+   "t": "chalakot",
+   "g": {
+    "en": "smoothness"
+   }
+  },
+  {
+   "h": "בְּלֵב",
+   "t": "be-lev",
+   "g": {
+    "en": "in heart",
+    "es": "corazón",
+    "pt": "coração",
+    "fr": "cœur",
+    "ru": "сердце",
+    "zh": "心脏",
+    "ja": "心臓"
+   }
+  },
+  {
+   "h": "וָלֵב",
+   "t": "va-lev",
+   "g": {
+    "en": "and heart",
+    "es": "corazón",
+    "pt": "coração",
+    "fr": "cœur",
+    "ru": "сердце",
+    "zh": "心脏",
+    "ja": "心臓"
+   }
+  },
+  {
+   "h": "יְדַבֵּרוּ",
+   "t": "yedabberu",
+   "g": {
+    "en": "to speak",
+    "fr": "dire"
+   }
+  },
+  {
+   "h": "יַכְרֵת",
+   "t": "yakhret",
+   "g": {
+    "en": "to cut",
+    "fr": "maintenir"
+   }
+  },
+  {
+   "h": "כָּל־שִׂפְתֵי",
+   "t": "kal-siftei",
+   "g": {
+    "en": "all of lip of",
+    "es": "todo labio",
+    "fr": "tous lèvre",
+    "ru": "весь язык",
+    "ja": "全体 言語"
+   }
+  },
+  {
+   "h": "לָשׁוֹן",
+   "t": "lashon",
+   "g": {
+    "en": "tongue, used literally",
+    "es": "lengua",
+    "fr": "langage",
+    "ru": "язык",
+    "ar": "لسان",
+    "zh": "舌头"
+   }
+  },
+  {
+   "h": "מְדַבֶּרֶת",
+   "t": "medabberet",
+   "g": {
+    "en": "to speak",
+    "fr": "dire"
+   }
+  },
+  {
+   "h": "גְּדֹלוֹת",
+   "t": "gedolot",
+   "g": {
+    "en": "great",
+    "es": "grande",
+    "fr": "grand",
+    "ru": "большой",
+    "zh": "大",
+    "ja": "大きな",
+    "ko": "크다"
+   }
+  },
+  {
+   "h": "אֲשֶׁר",
+   "t": "asher",
+   "g": {
+    "en": "who",
+    "es": "que",
+    "fr": "qui",
+    "ru": "который",
+    "ja": "関係代名詞"
+   }
+  },
+  {
+   "h": "אָמְרוּ",
+   "t": "ameru",
+   "g": {
+    "en": "to say",
+    "es": "decir",
+    "fr": "dire",
+    "ru": "говорить",
+    "ja": "言う、話す"
+   }
+  },
+  {
+   "h": "לִלְשֹׁנֵנוּ",
+   "t": "li-le-shonenu",
+   "g": {
+    "en": "to our tongue, used literally",
+    "es": "lengua",
+    "fr": "langage",
+    "ru": "язык",
+    "ar": "لسان",
+    "zh": "舌头"
+   }
+  },
+  {
+   "h": "נַגְבִּיר",
+   "t": "nagbir",
+   "g": {
+    "en": "to be strong",
+    "fr": "surmonter",
+    "ru": "быть",
+    "zh": "强壮"
+   }
+  },
+  {
+   "h": "שְׂפָתֵינוּ",
+   "t": "sefateinu",
+   "g": {
+    "en": "our lip",
+    "es": "labio",
+    "fr": "lèvre",
+    "ru": "язык",
+    "zh": "语言",
+    "ja": "言語"
+   }
+  },
+  {
+   "h": "אִתָּנוּ",
+   "t": "ittanu",
+   "g": {
+    "en": "with us",
+    "fr": "Préposition introduisant le complément d’objet",
+    "ar": "أنت",
+    "id": "kamu",
+    "ja": "へ"
+   }
+  },
+  {
+   "h": "מִי",
+   "t": "mi",
+   "g": {
+    "en": "who?",
+    "es": "quien",
+    "fr": "qui",
+    "ru": "кто",
+    "zh": "谁",
+    "ja": "だれ"
+   }
+  },
+  {
+   "h": "אָדוֹן",
+   "t": "adon",
+   "g": {
+    "en": "sovereign",
+    "fr": "maître",
+    "ru": "господин",
+    "ar": "سيد",
+    "zh": "主人",
+    "ja": "主"
+   }
+  },
+  {
+   "h": "לָנוּ",
+   "t": "lanu",
+   "g": {
+    "en": "to us",
+    "fr": "à"
+   }
+  },
+  {
+   "h": "מִשֹּׁד",
+   "t": "misshod",
+   "g": {
+    "en": "from violence, ravage of",
+    "fr": "profondeur",
+    "ru": "груди",
+    "zh": "乳房",
+    "ja": "胸"
+   }
+  },
+  {
+   "h": "עֲנִיִּים",
+   "t": "aniyyim",
+   "g": {
+    "en": "poor",
+    "es": "pobre",
+    "ru": "бедный",
+    "zh": "贫穷",
+    "ko": "가난하다"
+   }
+  },
+  {
+   "h": "מֵאֶנְקַת",
+   "t": "meenkat",
+   "g": {
+    "en": "from shrieking of",
+    "ru": "стон"
+   }
+  },
+  {
+   "h": "אֶבְיוֹנִים",
+   "t": "evyonim",
+   "g": {
+    "en": "needy"
+   }
+  },
+  {
+   "h": "עַתָּה",
+   "t": "attah",
+   "g": {
+    "en": "at this time",
+    "fr": "maintenant",
+    "ru": "итак"
+   }
+  },
+  {
+   "h": "אָקוּם",
+   "t": "akum",
+   "g": {
+    "en": "to rise",
+    "fr": "se lever",
+    "ru": "вставать"
+   }
+  },
+  {
+   "h": "יֹאמַר",
+   "t": "yomar",
+   "g": {
+    "en": "to say",
+    "es": "decir",
+    "fr": "dire",
+    "ru": "говорить",
+    "ja": "言う、話す"
+   }
+  },
+  {
+   "h": "אָשִׁית",
+   "t": "ashit",
+   "g": {
+    "en": "to place",
+    "fr": "mettre"
+   }
+  },
+  {
+   "h": "בְּיֵשַׁע",
+   "t": "be-yesha",
+   "g": {
+    "en": "in liberty, deliverance",
+    "ru": "спасение"
+   }
+  },
+  {
+   "h": "יָפִיחַ",
+   "t": "yafiach",
+   "g": {
+    "en": "to puff"
+   }
+  },
+  {
+   "h": "לוֹ",
+   "t": "lo",
+   "g": {
+    "en": "to him",
+    "fr": "à"
+   }
+  },
+  {
+   "h": "אִמְרוֹת",
+   "t": "imrot",
+   "g": {
+    "en": "word of",
+    "fr": "parole",
+    "ru": "изречение"
+   }
+  },
+  {
+   "h": "אֲמָרוֹת",
+   "t": "amarot",
+   "g": {
+    "en": "word",
+    "fr": "parole",
+    "ru": "изречение"
+   }
+  },
+  {
+   "h": "טְהֹרוֹת",
+   "t": "tehorot",
+   "g": {
+    "en": "pure",
+    "fr": "pur"
+   }
+  },
+  {
+   "h": "כֶּסֶף",
+   "t": "kesef",
+   "g": {
+    "en": "silver",
+    "es": "plata",
+    "fr": "argent",
+    "ru": "серебро",
+    "zh": "银",
+    "ja": "お金"
+   }
+  },
+  {
+   "h": "צָרוּף",
+   "t": "tzaruf",
+   "g": {
+    "en": "to fuse",
+    "ru": "очищать"
+   }
+  },
+  {
+   "h": "בַּעֲלִיל",
+   "t": "ba-alil",
+   "g": {
+    "en": "in probably a crucible"
+   }
+  },
+  {
+   "h": "לָאָרֶץ",
+   "t": "laaretz",
+   "g": {
+    "en": "to earth",
+    "es": "tierra",
+    "pt": "Terra",
+    "fr": "terre",
+    "ru": "страна",
+    "ar": "أرض",
+    "zh": "国家",
+    "ja": "大地"
+   }
+  },
+  {
+   "h": "מְזֻקָּק",
+   "t": "mezukkak",
+   "g": {
+    "en": "to strain, extract"
+   }
+  },
+  {
+   "h": "שִׁבְעָתָיִם",
+   "t": "shivatayim",
+   "g": {
+    "en": "seven-times"
+   }
+  },
+  {
+   "h": "אַתָּה־יְהוָה",
+   "t": "attah-YHWH",
+   "g": {
+    "en": "you the LORD",
+    "es": "tú el SEÑOR",
+    "fr": "tu l'Éternel",
+    "de": "du HERR",
+    "ru": "ты Господь",
+    "ar": "أنت الرب",
+    "zh": "你 耶和华"
+   }
+  },
+  {
+   "h": "תִּשְׁמְרֵם",
+   "t": "tishmerem",
+   "g": {
+    "en": "to keep, guard them",
+    "fr": "garder",
+    "ru": "ограждать",
+    "zh": "看守",
+    "ja": "保つ"
+   }
+  },
+  {
+   "h": "תִּצְּרֶנּוּ",
+   "t": "tittzerennu",
+   "g": {
+    "en": "to guard, keep him"
+   }
+  },
+  {
+   "h": "מִן־הַדּוֹר",
+   "t": "min-haddor",
+   "g": {
+    "en": "from the generation",
+    "fr": "de génération",
+    "ru": "из поколение",
+    "ja": "から 世代"
+   }
+  },
+  {
+   "h": "זוּ",
+   "t": "zu",
+   "g": {
+    "en": "this or that"
+   }
+  },
+  {
+   "h": "לְעוֹלָם",
+   "t": "le-olam",
+   "g": {
+    "en": "to forever",
+    "es": "mundo",
+    "fr": "monde",
+    "ru": "мир",
+    "zh": "世界",
+    "id": "dunia",
+    "ja": "世界"
+   }
+  },
+  {
+   "h": "סָבִיב",
+   "t": "saviv",
+   "g": {
+    "en": "around"
+   }
+  },
+  {
+   "h": "רְשָׁעִים",
+   "t": "resha'im",
+   "g": {
+    "en": "the wicked",
+    "es": "los malvados",
+    "fr": "méchant",
+    "ru": "злодей",
+    "ja": "悪人"
+   }
+  },
+  {
+   "h": "יִתְהַלָּכוּן",
+   "t": "yithallakhun",
+   "g": {
+    "en": "to walk",
+    "es": "ir",
+    "fr": "aller",
+    "ru": "идти",
+    "ar": "ذهب",
+    "zh": "去",
+    "ja": "いく"
+   }
+  },
+  {
+   "h": "כְּרֻם",
+   "t": "ke-rum",
+   "g": {
+    "en": "like to be high actively, to rise or raise of",
+    "fr": "s’élever"
+   }
+  },
+  {
+   "h": "זֻלּוּת",
+   "t": "zullut",
+   "g": {
+    "en": "shaking"
+   }
+  },
+  {
+   "h": "לִבְנֵי",
+   "t": "li-ve-nei",
+   "g": {
+    "en": "to son of",
+    "es": "hijo",
+    "fr": "fils",
+    "ru": "сын",
+    "zh": "儿子",
+    "ja": "息子"
+   }
+  }
+ ],
+ "text": "לַמְנַצֵּחַ עַל־הַשְּׁמִינִית מִזְמוֹר לְדָוִד\nהוֹשִׁיעָה יְהוָה כִּי־גָמַר חָסִיד כִּי־פַסּוּ אֱמוּנִים מִבְּנֵי אָדָם\nשָׁוְא יְדַבְּרוּ אִישׁ אֶת־רֵעֵהוּ שְׂפַת חֲלָקוֹת בְּלֵב וָלֵב יְדַבֵּרוּ\nיַכְרֵת יְהוָה כָּל־שִׂפְתֵי חֲלָקוֹת לָשׁוֹן מְדַבֶּרֶת גְּדֹלוֹת\nאֲשֶׁר אָמְרוּ לִלְשֹׁנֵנוּ נַגְבִּיר שְׂפָתֵינוּ אִתָּנוּ מִי אָדוֹן לָנוּ\nמִשֹּׁד עֲנִיִּים מֵאֶנְקַת אֶבְיוֹנִים עַתָּה אָקוּם יֹאמַר יְהוָה אָשִׁית בְּיֵשַׁע יָפִיחַ לוֹ\nאִמְרוֹת יְהוָה אֲמָרוֹת טְהֹרוֹת כֶּסֶף צָרוּף בַּעֲלִיל לָאָרֶץ מְזֻקָּק שִׁבְעָתָיִם\nאַתָּה־יְהוָה תִּשְׁמְרֵם תִּצְּרֶנּוּ מִן־הַדּוֹר זוּ לְעוֹלָם\nסָבִיב רְשָׁעִים יִתְהַלָּכוּן כְּרֻם זֻלּוּת לִבְנֵי אָדָם"
+}

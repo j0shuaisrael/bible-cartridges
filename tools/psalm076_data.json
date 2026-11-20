@@ -1,0 +1,864 @@
+{
+ "chapter": 76,
+ "title": "Psalm 76",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  [
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  [
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22
+  ],
+  [
+   23,
+   24,
+   25,
+   26
+  ],
+  [
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34
+  ],
+  [
+   35,
+   36,
+   37,
+   38,
+   39,
+   40
+  ],
+  [
+   24,
+   41,
+   24,
+   42,
+   43,
+   44,
+   45
+  ],
+  [
+   46,
+   47,
+   48,
+   49,
+   50,
+   51
+  ],
+  [
+   52,
+   7,
+   53,
+   54,
+   22
+  ],
+  [
+   55,
+   56,
+   57,
+   58,
+   59,
+   60
+  ],
+  [
+   61,
+   62,
+   63,
+   64,
+   65,
+   66,
+   67,
+   68
+  ],
+  [
+   69,
+   70,
+   71,
+   41,
+   72
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "לַמְנַצֵּחַ",
+   "t": "la-mnattzeach",
+   "g": {
+    "en": "to to oversee"
+   }
+  },
+  {
+   "h": "בִּנְגִינֹת",
+   "t": "bi-nginot",
+   "g": {
+    "en": "in instrumental music",
+    "ru": "игра",
+    "zh": "演奏"
+   }
+  },
+  {
+   "h": "מִזְמוֹר",
+   "t": "mizmor",
+   "g": {
+    "en": "psalm",
+    "ru": "псалом"
+   }
+  },
+  {
+   "h": "לְאָסָף",
+   "t": "le-asaf",
+   "g": {
+    "en": "to Asaph",
+    "ru": "Асаф"
+   }
+  },
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "נוֹדָע",
+   "t": "noda",
+   "g": {
+    "en": "to know",
+    "fr": "savoir",
+    "ru": "знать",
+    "ja": "知る"
+   }
+  },
+  {
+   "h": "בִּיהוּדָה",
+   "t": "bi-hudah",
+   "g": {
+    "en": "in Jehudah",
+    "fr": "Judée",
+    "ru": "Иуда",
+    "ja": "イスラエル（ヤコブ）の子ユダ"
+   }
+  },
+  {
+   "h": "אֱלֹהִים",
+   "t": "elohim",
+   "g": {
+    "en": "God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "בְּיִשְׂרָאֵל",
+   "t": "be-yisrael",
+   "g": {
+    "en": "in Israel",
+    "es": "Israel",
+    "pt": "Israel",
+    "fr": "Israël",
+    "de": "Staat",
+    "ru": "Израиль",
+    "zh": "以色列",
+    "hi": "इज़राइल",
+    "ja": "イスラエル",
+    "ko": "이스라엘"
+   }
+  },
+  {
+   "h": "גָּדוֹל",
+   "t": "gadol",
+   "g": {
+    "en": "great",
+    "es": "grande",
+    "fr": "grand",
+    "ru": "большой",
+    "zh": "大",
+    "ja": "大きな",
+    "ko": "크다"
+   }
+  },
+  {
+   "h": "שְׁמוֹ",
+   "t": "shemo",
+   "g": {
+    "en": "his name",
+    "es": "nombre",
+    "fr": "nom",
+    "ru": "имя",
+    "zh": "名字",
+    "ja": "名前"
+   }
+  },
+  {
+   "h": "וַיְהִי",
+   "t": "va-yhi",
+   "g": {
+    "en": "and to be",
+    "es": "ser",
+    "fr": "être",
+    "ru": "быть",
+    "zh": "存在",
+    "ja": "である"
+   }
+  },
+  {
+   "h": "בְשָׁלֵם",
+   "t": "ve-shalem",
+   "g": {
+    "en": "in Shalem",
+    "fr": "Salem"
+   }
+  },
+  {
+   "h": "סוּכּוֹ",
+   "t": "sukko",
+   "g": {
+    "en": "his hut",
+    "ru": "сумма"
+   }
+  },
+  {
+   "h": "וּמְעוֹנָתוֹ",
+   "t": "u-meonato",
+   "g": {
+    "en": "and his abode, of God",
+    "ru": "мученик"
+   }
+  },
+  {
+   "h": "בְצִיּוֹן",
+   "t": "ve-tzion",
+   "g": {
+    "en": "in Zion",
+    "es": "Sion",
+    "ru": "Сион",
+    "ja": "シオン"
+   }
+  },
+  {
+   "h": "שָׁמָּה",
+   "t": "shammah",
+   "g": {
+    "en": "there then",
+    "es": "allá",
+    "fr": "là",
+    "zh": "那里"
+   }
+  },
+  {
+   "h": "שִׁבַּר",
+   "t": "shibbar",
+   "g": {
+    "en": "to burst",
+    "fr": "briser",
+    "ru": "ломать"
+   }
+  },
+  {
+   "h": "רִשְׁפֵי־קָשֶׁת",
+   "t": "rishfei-kashet",
+   "g": {
+    "en": "live coal of bow, forshooting or the iris",
+    "ru": "искра радуга"
+   }
+  },
+  {
+   "h": "מָגֵן",
+   "t": "magen",
+   "g": {
+    "en": "shield",
+    "fr": "bouclier",
+    "ru": "щит",
+    "ja": "盾"
+   }
+  },
+  {
+   "h": "וְחֶרֶב",
+   "t": "ve-cherev",
+   "g": {
+    "en": "and drought",
+    "es": "espada",
+    "fr": "épée",
+    "ru": "меч",
+    "ar": "سيف",
+    "ja": "つるぎ",
+    "ko": "검"
+   }
+  },
+  {
+   "h": "וּמִלְחָמָה",
+   "t": "u-milchamah",
+   "g": {
+    "en": "and battle",
+    "es": "guerra",
+    "pt": "guerra",
+    "fr": "guerre",
+    "ru": "война",
+    "ar": "خرب",
+    "zh": "战斗",
+    "ja": "戦争",
+    "ko": "전쟁"
+   }
+  },
+  {
+   "h": "סֶלָה",
+   "t": "selah",
+   "g": {
+    "en": "pause"
+   }
+  },
+  {
+   "h": "נָאוֹר",
+   "t": "naor",
+   "g": {
+    "en": "to be luminous",
+    "fr": "éclairer",
+    "ru": "светить",
+    "ko": "빛"
+   }
+  },
+  {
+   "h": "אַתָּה",
+   "t": "attah",
+   "g": {
+    "en": "you",
+    "es": "tú",
+    "fr": "tu",
+    "de": "du",
+    "ru": "ты",
+    "ar": "أنت",
+    "zh": "你"
+   }
+  },
+  {
+   "h": "אַדִּיר",
+   "t": "addir",
+   "g": {
+    "en": "wide or large"
+   }
+  },
+  {
+   "h": "מֵהַרְרֵי־טָרֶף",
+   "t": "meharrei-taref",
+   "g": {
+    "en": "from mountain of something torn"
+   }
+  },
+  {
+   "h": "אֶשְׁתּוֹלְלוּ",
+   "t": "eshtolelu",
+   "g": {
+    "en": "to drop or strip"
+   }
+  },
+  {
+   "h": "אַבִּירֵי",
+   "t": "abbirei",
+   "g": {
+    "en": "mighty of"
+   }
+  },
+  {
+   "h": "לֵב",
+   "t": "lev",
+   "g": {
+    "en": "heart",
+    "es": "corazón",
+    "pt": "coração",
+    "fr": "cœur",
+    "ru": "сердце",
+    "zh": "心脏",
+    "ja": "心臓"
+   }
+  },
+  {
+   "h": "נָמוּ",
+   "t": "namu",
+   "g": {
+    "en": "to slumber",
+    "ru": "дремать"
+   }
+  },
+  {
+   "h": "שְׁנָתָם",
+   "t": "shenatam",
+   "g": {
+    "en": "their sleep",
+    "es": "año",
+    "pt": "ano",
+    "fr": "année",
+    "ru": "год",
+    "zh": "年",
+    "id": "tahun",
+    "ja": "年"
+   }
+  },
+  {
+   "h": "וְלֹא־מָצְאוּ",
+   "t": "ve-lo-matzeu",
+   "g": {
+    "en": "and not to come forth to",
+    "fr": "ne trouver",
+    "ru": "нет находить",
+    "ja": "いいえ 発見"
+   }
+  },
+  {
+   "h": "כָל־אַנְשֵׁי־חַיִל",
+   "t": "khal-anshei-chayil",
+   "g": {
+    "en": "all of man of probably a force",
+    "fr": "tous homme fortune",
+    "ru": "весь мужчина воин"
+   }
+  },
+  {
+   "h": "יְדֵיהֶם",
+   "t": "yedeihem",
+   "g": {
+    "en": "their hand",
+    "es": "mano",
+    "pt": "mão",
+    "fr": "main",
+    "ru": "рука",
+    "zh": "手",
+    "id": "tangan",
+    "ja": "手"
+   }
+  },
+  {
+   "h": "מִגַּעֲרָתְךָ",
+   "t": "miggaaratekha",
+   "g": {
+    "en": "from your chiding"
+   }
+  },
+  {
+   "h": "אֱלֹהֵי",
+   "t": "elohei",
+   "g": {
+    "en": "God of",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "יַעֲקֹב",
+   "t": "yaakov",
+   "g": {
+    "en": "Jacob",
+    "pt": "Jacó",
+    "ru": "Иаков",
+    "zh": "雅各",
+    "ja": "ヤコブ"
+   }
+  },
+  {
+   "h": "נִרְדָּם",
+   "t": "nirdam",
+   "g": {
+    "en": "to stun",
+    "ru": "усыплять"
+   }
+  },
+  {
+   "h": "וְרֶכֶב",
+   "t": "ve-rekhev",
+   "g": {
+    "en": "and vehicle",
+    "ru": "средство",
+    "zh": "车辆",
+    "ja": "車"
+   }
+  },
+  {
+   "h": "וָסוּס",
+   "t": "va-sus",
+   "g": {
+    "en": "and horse",
+    "es": "caballo",
+    "fr": "cheval",
+    "ru": "конь",
+    "zh": "马",
+    "id": "kuda",
+    "ko": "말"
+   }
+  },
+  {
+   "h": "נוֹרָא",
+   "t": "nora",
+   "g": {
+    "en": "to fear",
+    "fr": "avoir peur",
+    "ru": "бояться",
+    "zh": "害怕"
+   }
+  },
+  {
+   "h": "וּמִי־יַעֲמֹד",
+   "t": "u-mi-yaamod",
+   "g": {
+    "en": "and who? to stand",
+    "es": "quien pararse",
+    "fr": "qui se tenir",
+    "ru": "кто стоять",
+    "ja": "だれ 立つ"
+   }
+  },
+  {
+   "h": "לְפָנֶיךָ",
+   "t": "le-faneikha",
+   "g": {
+    "en": "to your face",
+    "es": "cara",
+    "fr": "visage",
+    "ru": "лицо",
+    "zh": "脸",
+    "ja": "顔",
+    "ko": "얼굴"
+   }
+  },
+  {
+   "h": "מֵאָז",
+   "t": "meaz",
+   "g": {
+    "en": "from at that time or place",
+    "fr": "alors",
+    "ru": "тогда",
+    "ja": "このように"
+   }
+  },
+  {
+   "h": "אַפֶּךָ",
+   "t": "appekha",
+   "g": {
+    "en": "your anger",
+    "es": "nariz",
+    "pt": "nariz",
+    "fr": "nez",
+    "ru": "нос",
+    "zh": "鼻子",
+    "ja": "鼻"
+   }
+  },
+  {
+   "h": "מִשָּׁמַיִם",
+   "t": "misshamayim",
+   "g": {
+    "en": "from sky",
+    "es": "cielo",
+    "pt": "céu",
+    "fr": "ciel",
+    "ru": "небо",
+    "zh": "天空",
+    "ja": "天"
+   }
+  },
+  {
+   "h": "הִשְׁמַעְתָּ",
+   "t": "hi-shmata",
+   "g": {
+    "en": "to hear intelligently",
+    "fr": "entendre",
+    "ru": "слышать",
+    "ja": "聞く"
+   }
+  },
+  {
+   "h": "דִּין",
+   "t": "din",
+   "g": {
+    "en": "judgement",
+    "ru": "закон",
+    "zh": "法律",
+    "ja": "法律"
+   }
+  },
+  {
+   "h": "אֶרֶץ",
+   "t": "eretz",
+   "g": {
+    "en": "earth",
+    "es": "tierra",
+    "pt": "Terra",
+    "fr": "terre",
+    "ru": "страна",
+    "ar": "أرض",
+    "zh": "国家",
+    "ja": "大地"
+   }
+  },
+  {
+   "h": "יָרְאָה",
+   "t": "yareah",
+   "g": {
+    "en": "to fear",
+    "fr": "avoir peur",
+    "ru": "бояться",
+    "zh": "害怕"
+   }
+  },
+  {
+   "h": "וְשָׁקָטָה",
+   "t": "ve-shakatah",
+   "g": {
+    "en": "and to repose",
+    "ko": "조용함"
+   }
+  },
+  {
+   "h": "בְּקוּם־לַמִּשְׁפָּט",
+   "t": "be-kum-la-mishpat",
+   "g": {
+    "en": "in to rise of to judgment",
+    "fr": "se lever justice",
+    "ru": "вставать суд"
+   }
+  },
+  {
+   "h": "לְהוֹשִׁיעַ",
+   "t": "le-hoshia",
+   "g": {
+    "en": "to to save, deliver of"
+   }
+  },
+  {
+   "h": "כָּל־עַנְוֵי־אֶרֶץ",
+   "t": "kal-anvei-eretz",
+   "g": {
+    "en": "all of depressed, in mind or circumstances of earth"
+   }
+  },
+  {
+   "h": "כִּי־חֲמַת",
+   "t": "ki-chamat",
+   "g": {
+    "en": "for, because heat of",
+    "fr": "car fureur"
+   }
+  },
+  {
+   "h": "אָדָם",
+   "t": "adam",
+   "g": {
+    "en": "man",
+    "es": "ser humano",
+    "fr": "homme",
+    "ru": "человек",
+    "ar": "رجل",
+    "zh": "人",
+    "ja": "アダム",
+    "ko": "사람"
+   }
+  },
+  {
+   "h": "תּוֹדֶךָּ",
+   "t": "todekkha",
+   "g": {
+    "en": "to praise you",
+    "fr": "reconnaissant"
+   }
+  },
+  {
+   "h": "שְׁאֵרִית",
+   "t": "sheerit",
+   "g": {
+    "en": "remainder or residual portion of",
+    "fr": "subsistant",
+    "ru": "остаток"
+   }
+  },
+  {
+   "h": "חֵמֹת",
+   "t": "chemot",
+   "g": {
+    "en": "heat",
+    "fr": "fureur",
+    "ru": "солнце",
+    "zh": "太阳"
+   }
+  },
+  {
+   "h": "תַּחְגֹּר",
+   "t": "tachgor",
+   "g": {
+    "en": "to gird on",
+    "ru": "опоясывать"
+   }
+  },
+  {
+   "h": "נִדְרוּ",
+   "t": "nidru",
+   "g": {
+    "en": "to promise",
+    "fr": "vœu"
+   }
+  },
+  {
+   "h": "וְשַׁלְּמוּ",
+   "t": "ve-shallemu",
+   "g": {
+    "en": "and to be safe",
+    "fr": "payer"
+   }
+  },
+  {
+   "h": "לַיהוָה",
+   "t": "la-ihvah",
+   "g": {
+    "en": "to the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "אֱלֹהֵיכֶם",
+   "t": "eloheikhem",
+   "g": {
+    "en": "your God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "כָּל־סְבִיבָיו",
+   "t": "kal-sevivaiw",
+   "g": {
+    "en": "all of his around"
+   }
+  },
+  {
+   "h": "יֹבִילוּ",
+   "t": "yovilu",
+   "g": {
+    "en": "to flow",
+    "ru": "течь"
+   }
+  },
+  {
+   "h": "שַׁי",
+   "t": "shai",
+   "g": {
+    "en": "gift",
+    "ru": "подарок",
+    "zh": "礼物",
+    "id": "hadiah",
+    "ja": "贈り物"
+   }
+  },
+  {
+   "h": "לַמּוֹרָא",
+   "t": "la-mora",
+   "g": {
+    "en": "to fear",
+    "fr": "peur"
+   }
+  },
+  {
+   "h": "יִבְצֹר",
+   "t": "yivtzor",
+   "g": {
+    "en": "to gather grapes",
+    "fr": "impossible",
+    "ru": "собирать"
+   }
+  },
+  {
+   "h": "רוּחַ",
+   "t": "ruach",
+   "g": {
+    "en": "wind",
+    "es": "viento",
+    "fr": "vent",
+    "ru": "ветер",
+    "zh": "风",
+    "ja": "風"
+   }
+  },
+  {
+   "h": "נְגִידִים",
+   "t": "negidim",
+   "g": {
+    "en": "commander, civil"
+   }
+  },
+  {
+   "h": "לְמַלְכֵי־אָרֶץ",
+   "t": "le-malkhei-aretz",
+   "g": {
+    "en": "to king of earth",
+    "es": "rey tierra",
+    "fr": "roi terre",
+    "ru": "царь страна",
+    "zh": "国王 国家",
+    "ja": "王 大地"
+   }
+  }
+ ],
+ "text": "לַמְנַצֵּחַ בִּנְגִינֹת מִזְמוֹר לְאָסָף שִׁיר\nנוֹדָע בִּיהוּדָה אֱלֹהִים בְּיִשְׂרָאֵל גָּדוֹל שְׁמוֹ\nוַיְהִי בְשָׁלֵם סוּכּוֹ וּמְעוֹנָתוֹ בְצִיּוֹן\nשָׁמָּה שִׁבַּר רִשְׁפֵי־קָשֶׁת מָגֵן וְחֶרֶב וּמִלְחָמָה סֶלָה\nנָאוֹר אַתָּה אַדִּיר מֵהַרְרֵי־טָרֶף\nאֶשְׁתּוֹלְלוּ אַבִּירֵי לֵב נָמוּ שְׁנָתָם וְלֹא־מָצְאוּ כָל־אַנְשֵׁי־חַיִל יְדֵיהֶם\nמִגַּעֲרָתְךָ אֱלֹהֵי יַעֲקֹב נִרְדָּם וְרֶכֶב וָסוּס\nאַתָּה נוֹרָא אַתָּה וּמִי־יַעֲמֹד לְפָנֶיךָ מֵאָז אַפֶּךָ\nמִשָּׁמַיִם הִשְׁמַעְתָּ דִּין אֶרֶץ יָרְאָה וְשָׁקָטָה\nבְּקוּם־לַמִּשְׁפָּט אֱלֹהִים לְהוֹשִׁיעַ כָּל־עַנְוֵי־אֶרֶץ סֶלָה\nכִּי־חֲמַת אָדָם תּוֹדֶךָּ שְׁאֵרִית חֵמֹת תַּחְגֹּר\nנִדְרוּ וְשַׁלְּמוּ לַיהוָה אֱלֹהֵיכֶם כָּל־סְבִיבָיו יֹבִילוּ שַׁי לַמּוֹרָא\nיִבְצֹר רוּחַ נְגִידִים נוֹרָא לְמַלְכֵי־אָרֶץ"
+}

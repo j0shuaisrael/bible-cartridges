@@ -1,0 +1,538 @@
+{
+ "chapter": 113,
+ "title": "Psalm 113",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   1,
+   4,
+   3
+  ],
+  [
+   5,
+   6,
+   3,
+   7,
+   8,
+   9
+  ],
+  [
+   10,
+   11,
+   12,
+   6,
+   3
+  ],
+  [
+   13,
+   14,
+   3,
+   15,
+   16,
+   17
+  ],
+  [
+   18,
+   19,
+   20,
+   21,
+   22
+  ],
+  [
+   23,
+   24,
+   25,
+   26
+  ],
+  [
+   27,
+   28,
+   29,
+   30,
+   31,
+   32
+  ],
+  [
+   33,
+   34,
+   35,
+   36,
+   37
+  ],
+  [
+   38,
+   39,
+   40,
+   41,
+   42,
+   0
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "הַלְלוּ־יָהּ",
+   "t": "ha-le-lu-yah",
+   "g": {
+    "en": "to praise the LORD",
+    "fr": "louer l'Éternel"
+   }
+  },
+  {
+   "h": "הַלְלוּ",
+   "t": "ha-le-lu",
+   "g": {
+    "en": "to praise",
+    "fr": "louer"
+   }
+  },
+  {
+   "h": "עַבְדֵי",
+   "t": "avdei",
+   "g": {
+    "en": "servant of",
+    "es": "siervo",
+    "fr": "serviteur",
+    "ru": "раб",
+    "ja": "奴隷"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "אֶת־שֵׁם",
+   "t": "et-shem",
+   "g": {
+    "en": "object marker name of"
+   }
+  },
+  {
+   "h": "יְהִי",
+   "t": "yehi",
+   "g": {
+    "en": "to be",
+    "es": "ser",
+    "fr": "être",
+    "ru": "быть",
+    "zh": "存在",
+    "ja": "である"
+   }
+  },
+  {
+   "h": "שֵׁם",
+   "t": "shem",
+   "g": {
+    "en": "name of",
+    "es": "nombre",
+    "fr": "nom",
+    "ru": "имя",
+    "zh": "名字",
+    "ja": "名前"
+   }
+  },
+  {
+   "h": "מְבֹרָךְ",
+   "t": "mevorakhe",
+   "g": {
+    "en": "to bless",
+    "fr": "bénir",
+    "ru": "благословлять"
+   }
+  },
+  {
+   "h": "מֵעַתָּה",
+   "t": "meattah",
+   "g": {
+    "en": "from at this time",
+    "fr": "maintenant",
+    "ru": "итак"
+   }
+  },
+  {
+   "h": "וְעַד־עוֹלָם",
+   "t": "ve-ad-olam",
+   "g": {
+    "en": "and until forever",
+    "fr": "jusqu'à monde",
+    "ru": "до мир",
+    "ja": "まで 世界"
+   }
+  },
+  {
+   "h": "מִמִּזְרַח־שֶׁמֶשׁ",
+   "t": "mimmizrach-shemesh",
+   "g": {
+    "en": "from sunrise of sun",
+    "es": "oriente sol",
+    "pt": "leste sol",
+    "fr": "est soleil",
+    "ru": "восток солнце",
+    "zh": "东方 太阳",
+    "ja": "東 太陽"
+   }
+  },
+  {
+   "h": "עַד־מְבוֹאוֹ",
+   "t": "ad-mevoo",
+   "g": {
+    "en": "until his entrance",
+    "ru": "до введение"
+   }
+  },
+  {
+   "h": "מְהֻלָּל",
+   "t": "mehullal",
+   "g": {
+    "en": "to praise",
+    "fr": "louer"
+   }
+  },
+  {
+   "h": "רָם",
+   "t": "ram",
+   "g": {
+    "en": "to be high actively, to rise or raise",
+    "fr": "s’élever"
+   }
+  },
+  {
+   "h": "עַל־כָּל־גּוֹיִם",
+   "t": "al-kal-goyim",
+   "g": {
+    "en": "above, over all of foreign nation",
+    "es": "sobre todo nación",
+    "fr": "sur tous nation",
+    "ru": "на весь народ"
+   }
+  },
+  {
+   "h": "עַל",
+   "t": "al",
+   "g": {
+    "en": "above, over",
+    "es": "sobre",
+    "fr": "sur",
+    "ru": "на",
+    "ja": "上"
+   }
+  },
+  {
+   "h": "הַשָּׁמַיִם",
+   "t": "hasshamayim",
+   "g": {
+    "en": "the sky",
+    "es": "cielo",
+    "pt": "céu",
+    "fr": "ciel",
+    "ru": "небо",
+    "zh": "天空",
+    "ja": "天"
+   }
+  },
+  {
+   "h": "כְּבוֹדוֹ",
+   "t": "ke-vodo",
+   "g": {
+    "en": "his glory",
+    "es": "honra",
+    "fr": "honneur",
+    "ru": "уважение",
+    "id": "kehormatan",
+    "ja": "名誉"
+   }
+  },
+  {
+   "h": "מִי",
+   "t": "mi",
+   "g": {
+    "en": "who?",
+    "es": "quien",
+    "fr": "qui",
+    "ru": "кто",
+    "zh": "谁",
+    "ja": "だれ"
+   }
+  },
+  {
+   "h": "כַּיהוָה",
+   "t": "kaihvah",
+   "g": {
+    "en": "like the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "אֱלֹהֵינוּ",
+   "t": "eloheinu",
+   "g": {
+    "en": "our God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "הַמַּגְבִּיהִי",
+   "t": "hammagbihi",
+   "g": {
+    "en": "the to soar of",
+    "ru": "стать"
+   }
+  },
+  {
+   "h": "לָשָׁבֶת",
+   "t": "lashavet",
+   "g": {
+    "en": "to to sit, dwell of",
+    "fr": "habiter",
+    "ru": "сидеть",
+    "ja": "座る"
+   }
+  },
+  {
+   "h": "הַמַּשְׁפִּילִי",
+   "t": "hammashpili",
+   "g": {
+    "en": "the to depress or sink of"
+   }
+  },
+  {
+   "h": "לִרְאוֹת",
+   "t": "li-rot",
+   "g": {
+    "en": "to to see of",
+    "fr": "voir",
+    "ru": "видеть",
+    "zh": "看见"
+   }
+  },
+  {
+   "h": "בַּשָּׁמַיִם",
+   "t": "ba-shamayim",
+   "g": {
+    "en": "in sky",
+    "es": "cielo",
+    "pt": "céu",
+    "fr": "ciel",
+    "ru": "небо",
+    "zh": "天空",
+    "ja": "天"
+   }
+  },
+  {
+   "h": "וּבָאָרֶץ",
+   "t": "u-vaaretz",
+   "g": {
+    "en": "and in earth",
+    "es": "tierra",
+    "pt": "Terra",
+    "fr": "terre",
+    "ru": "страна",
+    "ar": "أرض",
+    "zh": "国家",
+    "ja": "大地"
+   }
+  },
+  {
+   "h": "מְקִימִי",
+   "t": "mekimi",
+   "g": {
+    "en": "to rise of",
+    "fr": "se lever",
+    "ru": "вставать"
+   }
+  },
+  {
+   "h": "מֵעָפָר",
+   "t": "meafar",
+   "g": {
+    "en": "from dust",
+    "fr": "poussière",
+    "ru": "прах",
+    "ja": "地球"
+   }
+  },
+  {
+   "h": "דָּל",
+   "t": "dal",
+   "g": {
+    "en": "dangling",
+    "fr": "faible"
+   }
+  },
+  {
+   "h": "מֵאַשְׁפֹּת",
+   "t": "meashpot",
+   "g": {
+    "en": "from heap of rubbish or filth"
+   }
+  },
+  {
+   "h": "יָרִים",
+   "t": "yarim",
+   "g": {
+    "en": "to be high actively, to rise or raise",
+    "fr": "s’élever"
+   }
+  },
+  {
+   "h": "אֶבְיוֹן",
+   "t": "evyon",
+   "g": {
+    "en": "needy"
+   }
+  },
+  {
+   "h": "לְהוֹשִׁיבִי",
+   "t": "le-hoshivi",
+   "g": {
+    "en": "to to sit, dwell of",
+    "fr": "habiter",
+    "ru": "сидеть",
+    "ja": "座る"
+   }
+  },
+  {
+   "h": "עִם־נְדִיבִים",
+   "t": "im-nedivim",
+   "g": {
+    "en": "with voluntary",
+    "ru": "вместе щедрый"
+   }
+  },
+  {
+   "h": "עִם",
+   "t": "im",
+   "g": {
+    "en": "with",
+    "es": "con",
+    "fr": "avec",
+    "ru": "вместе",
+    "ar": "مع",
+    "zh": "和",
+    "id": "dengan"
+   }
+  },
+  {
+   "h": "נְדִיבֵי",
+   "t": "nedivei",
+   "g": {
+    "en": "voluntary of",
+    "ru": "щедрый"
+   }
+  },
+  {
+   "h": "עַמּוֹ",
+   "t": "ammo",
+   "g": {
+    "en": "his people",
+    "es": "pueblo",
+    "pt": "povo",
+    "fr": "peuple",
+    "ru": "народ",
+    "zh": "人民",
+    "ja": "国々"
+   }
+  },
+  {
+   "h": "מוֹשִׁיבִי",
+   "t": "moshivi",
+   "g": {
+    "en": "to sit, dwell of",
+    "fr": "habiter",
+    "ru": "сидеть",
+    "ja": "座る"
+   }
+  },
+  {
+   "h": "עֲקֶרֶת",
+   "t": "akeret",
+   "g": {
+    "en": "sterile of",
+    "fr": "stérile"
+   }
+  },
+  {
+   "h": "הַבַּיִת",
+   "t": "habbayit",
+   "g": {
+    "en": "the house",
+    "es": "casa",
+    "pt": "casa",
+    "fr": "maison",
+    "ru": "дом",
+    "zh": "房屋",
+    "id": "rumah",
+    "ja": "家",
+    "ko": "집"
+   }
+  },
+  {
+   "h": "אֵם־הַבָּנִים",
+   "t": "em-habbanim",
+   "g": {
+    "en": "mother of the son",
+    "es": "madre hijo",
+    "fr": "mère fils",
+    "ru": "мать сын",
+    "zh": "母亲 儿子",
+    "ja": "母親 息子"
+   }
+  },
+  {
+   "h": "שְׂמֵחָה",
+   "t": "semechah",
+   "g": {
+    "en": "blithe or gleeful",
+    "ru": "счастливый",
+    "ko": "행복하다"
+   }
+  }
+ ],
+ "text": "הַלְלוּ־יָהּ הַלְלוּ עַבְדֵי יְהוָה הַלְלוּ אֶת־שֵׁם יְהוָה\nיְהִי שֵׁם יְהוָה מְבֹרָךְ מֵעַתָּה וְעַד־עוֹלָם\nמִמִּזְרַח־שֶׁמֶשׁ עַד־מְבוֹאוֹ מְהֻלָּל שֵׁם יְהוָה\nרָם עַל־כָּל־גּוֹיִם יְהוָה עַל הַשָּׁמַיִם כְּבוֹדוֹ\nמִי כַּיהוָה אֱלֹהֵינוּ הַמַּגְבִּיהִי לָשָׁבֶת\nהַמַּשְׁפִּילִי לִרְאוֹת בַּשָּׁמַיִם וּבָאָרֶץ\nמְקִימִי מֵעָפָר דָּל מֵאַשְׁפֹּת יָרִים אֶבְיוֹן\nלְהוֹשִׁיבִי עִם־נְדִיבִים עִם נְדִיבֵי עַמּוֹ\nמוֹשִׁיבִי עֲקֶרֶת הַבַּיִת אֵם־הַבָּנִים שְׂמֵחָה הַלְלוּ־יָהּ"
+}

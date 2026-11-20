@@ -1,0 +1,492 @@
+{
+ "chapter": 13,
+ "title": "Psalm 13",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2
+  ],
+  [
+   3,
+   4,
+   5,
+   6,
+   3,
+   7,
+   8,
+   9
+  ],
+  [
+   3,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   3,
+   16,
+   17,
+   18
+  ],
+  [
+   19,
+   20,
+   4,
+   21,
+   22,
+   23,
+   24,
+   25
+  ],
+  [
+   26,
+   17,
+   27,
+   28,
+   29,
+   30,
+   31
+  ],
+  [
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   30,
+   40,
+   18
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "לַמְנַצֵּחַ",
+   "t": "la-mnattzeach",
+   "g": {
+    "en": "to to oversee"
+   }
+  },
+  {
+   "h": "מִזְמוֹר",
+   "t": "mizmor",
+   "g": {
+    "en": "psalm",
+    "ru": "псалом"
+   }
+  },
+  {
+   "h": "לְדָוִד",
+   "t": "le-david",
+   "g": {
+    "en": "to David",
+    "es": "David",
+    "pt": "Davi",
+    "fr": "David",
+    "ru": "Давид",
+    "ja": "ダビデ"
+   }
+  },
+  {
+   "h": "עַד־אָנָה",
+   "t": "ad-anah",
+   "g": {
+    "en": "until where?"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "תִּשְׁכָּחֵנִי",
+   "t": "tishkacheni",
+   "g": {
+    "en": "to forget me",
+    "es": "olvidar",
+    "fr": "oublier",
+    "ru": "забывать"
+   }
+  },
+  {
+   "h": "נֶצַח",
+   "t": "netzach",
+   "g": {
+    "en": "goal",
+    "ru": "вечность",
+    "ja": "永遠"
+   }
+  },
+  {
+   "h": "תַּסְתִּיר",
+   "t": "tastir",
+   "g": {
+    "en": "to hide",
+    "fr": "être caché",
+    "ru": "противоречить"
+   }
+  },
+  {
+   "h": "אֶת־פָּנֶיךָ",
+   "t": "et-paneikha",
+   "g": {
+    "en": "with your face",
+    "fr": "Préposition introduisant le complément d’objet visage",
+    "ja": "へ 顔"
+   }
+  },
+  {
+   "h": "מִמֶּנִּי",
+   "t": "mimmenni",
+   "g": {
+    "en": "from me",
+    "es": "de",
+    "fr": "de",
+    "ru": "из",
+    "ja": "から"
+   }
+  },
+  {
+   "h": "אָשִׁית",
+   "t": "ashit",
+   "g": {
+    "en": "to place",
+    "fr": "mettre"
+   }
+  },
+  {
+   "h": "עֵצוֹת",
+   "t": "etzot",
+   "g": {
+    "en": "counsel",
+    "es": "consejo",
+    "ru": "совет"
+   }
+  },
+  {
+   "h": "בְּנַפְשִׁי",
+   "t": "be-nafshi",
+   "g": {
+    "en": "in my soul",
+    "fr": "âme",
+    "ru": "душа",
+    "ar": "نفس",
+    "zh": "灵魂",
+    "id": "jiwa",
+    "ja": "魂"
+   }
+  },
+  {
+   "h": "יָגוֹן",
+   "t": "yagon",
+   "g": {
+    "en": "affliction",
+    "fr": "douleur",
+    "ru": "печаль"
+   }
+  },
+  {
+   "h": "בִּלְבָבִי",
+   "t": "bi-le-vavi",
+   "g": {
+    "en": "in my heart",
+    "fr": "cœur",
+    "zh": "心脏",
+    "ja": "心"
+   }
+  },
+  {
+   "h": "יוֹמָם",
+   "t": "yomam",
+   "g": {
+    "en": "by day",
+    "es": "de día",
+    "zh": "白天"
+   }
+  },
+  {
+   "h": "יָרוּם",
+   "t": "yarum",
+   "g": {
+    "en": "to be high actively, to rise or raise",
+    "fr": "s’élever"
+   }
+  },
+  {
+   "h": "אֹיְבִי",
+   "t": "oyvi",
+   "g": {
+    "en": "enemy me",
+    "fr": "ennemi"
+   }
+  },
+  {
+   "h": "עָלָי",
+   "t": "alai",
+   "g": {
+    "en": "above, over me",
+    "es": "sobre",
+    "fr": "sur",
+    "ru": "на",
+    "ja": "上"
+   }
+  },
+  {
+   "h": "הַבִּיטָה",
+   "t": "ha-bi-tah",
+   "g": {
+    "en": "to scan",
+    "fr": "regarder",
+    "ru": "прорастать"
+   }
+  },
+  {
+   "h": "עֲנֵנִי",
+   "t": "aneni",
+   "g": {
+    "en": "to answer me",
+    "fr": "affliger",
+    "ru": "угнетать",
+    "zh": "回答"
+   }
+  },
+  {
+   "h": "אֱלֹהָי",
+   "t": "elohai",
+   "g": {
+    "en": "my God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "הָאִירָה",
+   "t": "ha-irah",
+   "g": {
+    "en": "to be luminous",
+    "fr": "éclairer",
+    "ru": "светить",
+    "ko": "빛"
+   }
+  },
+  {
+   "h": "עֵינַי",
+   "t": "einai",
+   "g": {
+    "en": "my eye",
+    "es": "ojo",
+    "pt": "olho",
+    "fr": "œil",
+    "ru": "глаз",
+    "ar": "عين",
+    "zh": "眼睛",
+    "ja": "目"
+   }
+  },
+  {
+   "h": "פֶּן־אִישַׁן",
+   "t": "pen-ishan",
+   "g": {
+    "en": "removal to be slack or languid",
+    "fr": "ou dormir",
+    "ru": "чтобы спать"
+   }
+  },
+  {
+   "h": "הַמָּוֶת",
+   "t": "hammavet",
+   "g": {
+    "en": "the death",
+    "fr": "mort",
+    "ru": "смерть"
+   }
+  },
+  {
+   "h": "פֶּן־יֹאמַר",
+   "t": "pen-yomar",
+   "g": {
+    "en": "removal to say",
+    "fr": "ou dire",
+    "ru": "чтобы говорить"
+   }
+  },
+  {
+   "h": "יְכָלְתִּיו",
+   "t": "yekhalettiw",
+   "g": {
+    "en": "to be able, literally or morally him",
+    "fr": "pouvoir"
+   }
+  },
+  {
+   "h": "צָרַי",
+   "t": "tzarai",
+   "g": {
+    "en": "my distress",
+    "fr": "ennemi",
+    "ru": "притеснитель",
+    "zh": "仇敌"
+   }
+  },
+  {
+   "h": "יָגִילוּ",
+   "t": "yagilu",
+   "g": {
+    "en": "to spin round"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
+   }
+  },
+  {
+   "h": "אֶמּוֹט",
+   "t": "emmot",
+   "g": {
+    "en": "to waver"
+   }
+  },
+  {
+   "h": "וַאֲנִי",
+   "t": "va-ani",
+   "g": {
+    "en": "and I",
+    "es": "yo",
+    "fr": "je",
+    "de": "1. Person Singular",
+    "ru": "я",
+    "ar": "أنا",
+    "zh": "我",
+    "ja": "一人称単数代名詞"
+   }
+  },
+  {
+   "h": "בְּחַסְדְּךָ",
+   "t": "be-chasdekha",
+   "g": {
+    "en": "in your kindness",
+    "fr": "bonté",
+    "ru": "милость",
+    "ar": "نعمة"
+   }
+  },
+  {
+   "h": "בָטַחְתִּי",
+   "t": "vatachti",
+   "g": {
+    "en": "to trust",
+    "ru": "доверяться"
+   }
+  },
+  {
+   "h": "יָגֵל",
+   "t": "yagel",
+   "g": {
+    "en": "to spin round"
+   }
+  },
+  {
+   "h": "לִבִּי",
+   "t": "li-bi",
+   "g": {
+    "en": "my heart",
+    "es": "corazón",
+    "pt": "coração",
+    "fr": "cœur",
+    "ru": "сердце",
+    "zh": "心脏",
+    "ja": "心臓"
+   }
+  },
+  {
+   "h": "בִּישׁוּעָתֶךָ",
+   "t": "bi-shuatekha",
+   "g": {
+    "en": "in your salvation",
+    "fr": "salut",
+    "ru": "спасение"
+   }
+  },
+  {
+   "h": "אָשִׁירָה",
+   "t": "ashirah",
+   "g": {
+    "en": "to sing",
+    "es": "reservar"
+   }
+  },
+  {
+   "h": "לַיהוָה",
+   "t": "la-ihvah",
+   "g": {
+    "en": "to the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "גָמַל",
+   "t": "gamal",
+   "g": {
+    "en": "to treat a person",
+    "fr": "sevrer",
+    "ru": "воздавать",
+    "ar": "جمل",
+    "zh": "断奶",
+    "ja": "離乳"
+   }
+  }
+ ],
+ "text": "לַמְנַצֵּחַ מִזְמוֹר לְדָוִד\nעַד־אָנָה יְהוָה תִּשְׁכָּחֵנִי נֶצַח עַד־אָנָה תַּסְתִּיר אֶת־פָּנֶיךָ מִמֶּנִּי\nעַד־אָנָה אָשִׁית עֵצוֹת בְּנַפְשִׁי יָגוֹן בִּלְבָבִי יוֹמָם עַד־אָנָה יָרוּם אֹיְבִי עָלָי\nהַבִּיטָה עֲנֵנִי יְהוָה אֱלֹהָי הָאִירָה עֵינַי פֶּן־אִישַׁן הַמָּוֶת\nפֶּן־יֹאמַר אֹיְבִי יְכָלְתִּיו צָרַי יָגִילוּ כִּי אֶמּוֹט\nוַאֲנִי בְּחַסְדְּךָ בָטַחְתִּי יָגֵל לִבִּי בִּישׁוּעָתֶךָ אָשִׁירָה לַיהוָה כִּי גָמַל עָלָי"
+}

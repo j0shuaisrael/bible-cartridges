@@ -1,0 +1,840 @@
+{
+ "chapter": 75,
+ "title": "Psalm 75",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  [
+   5,
+   6,
+   7,
+   5,
+   8,
+   9,
+   10,
+   11
+  ],
+  [
+   12,
+   13,
+   14,
+   15,
+   16,
+   17
+  ],
+  [
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24
+  ],
+  [
+   25,
+   26,
+   27,
+   28,
+   29,
+   30
+  ],
+  [
+   29,
+   31,
+   32,
+   33,
+   34,
+   35
+  ],
+  [
+   12,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41
+  ],
+  [
+   42,
+   43,
+   44,
+   45,
+   46,
+   47
+  ],
+  [
+   12,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60
+  ],
+  [
+   61,
+   62,
+   63,
+   64,
+   65,
+   66
+  ],
+  [
+   67,
+   68,
+   69,
+   70,
+   71,
+   72
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "לַמְנַצֵּחַ",
+   "t": "la-mnattzeach",
+   "g": {
+    "en": "to to oversee"
+   }
+  },
+  {
+   "h": "אַל־תַּשְׁחֵת",
+   "t": "al-tashchet",
+   "g": {
+    "en": "'Thou must not destroy'"
+   }
+  },
+  {
+   "h": "מִזְמוֹר",
+   "t": "mizmor",
+   "g": {
+    "en": "psalm",
+    "ru": "псалом"
+   }
+  },
+  {
+   "h": "לְאָסָף",
+   "t": "le-asaf",
+   "g": {
+    "en": "to Asaph",
+    "ru": "Асаф"
+   }
+  },
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "הוֹדִינוּ",
+   "t": "hodinu",
+   "g": {
+    "en": "to praise",
+    "fr": "reconnaissant"
+   }
+  },
+  {
+   "h": "לְּךָ",
+   "t": "lekha",
+   "g": {
+    "en": "to you",
+    "fr": "à"
+   }
+  },
+  {
+   "h": "אֱלֹהִים",
+   "t": "elohim",
+   "g": {
+    "en": "God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "וְקָרוֹב",
+   "t": "ve-karov",
+   "g": {
+    "en": "and near",
+    "es": "cercano",
+    "fr": "proche",
+    "zh": "靠近"
+   }
+  },
+  {
+   "h": "שְׁמֶךָ",
+   "t": "shemekha",
+   "g": {
+    "en": "your name",
+    "es": "nombre",
+    "fr": "nom",
+    "ru": "имя",
+    "zh": "名字",
+    "ja": "名前"
+   }
+  },
+  {
+   "h": "סִפְּרוּ",
+   "t": "sipperu",
+   "g": {
+    "en": "to count, recount",
+    "es": "contar",
+    "fr": "compter",
+    "ru": "считать",
+    "ar": "سێفێر",
+    "zh": "数",
+    "ko": "책"
+   }
+  },
+  {
+   "h": "נִפְלְאוֹתֶיךָ",
+   "t": "nifleoteikha",
+   "g": {
+    "en": "wonderful you",
+    "fr": "être merveilleux",
+    "ar": "أعجوبة"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
+   }
+  },
+  {
+   "h": "אֶקַּח",
+   "t": "ekkach",
+   "g": {
+    "en": "to take",
+    "fr": "prendre",
+    "ru": "брать",
+    "ja": "～を取る"
+   }
+  },
+  {
+   "h": "מוֹעֵד",
+   "t": "moed",
+   "g": {
+    "en": "appointment",
+    "fr": "terme",
+    "ru": "праздник"
+   }
+  },
+  {
+   "h": "אֲנִי",
+   "t": "ani",
+   "g": {
+    "en": "I",
+    "es": "yo",
+    "fr": "je",
+    "de": "1. Person Singular",
+    "ru": "я",
+    "ar": "أنا",
+    "zh": "我",
+    "ja": "一人称単数代名詞"
+   }
+  },
+  {
+   "h": "מֵישָׁרִים",
+   "t": "meisharim",
+   "g": {
+    "en": "evenness"
+   }
+  },
+  {
+   "h": "אֶשְׁפֹּט",
+   "t": "eshpot",
+   "g": {
+    "en": "to judge",
+    "fr": "juger",
+    "ru": "судить",
+    "zh": "判断"
+   }
+  },
+  {
+   "h": "נְמֹגִים",
+   "t": "nemogim",
+   "g": {
+    "en": "to melt"
+   }
+  },
+  {
+   "h": "אֶרֶץ",
+   "t": "eretz",
+   "g": {
+    "en": "earth",
+    "es": "tierra",
+    "pt": "Terra",
+    "fr": "terre",
+    "ru": "страна",
+    "ar": "أرض",
+    "zh": "国家",
+    "ja": "大地"
+   }
+  },
+  {
+   "h": "וְכָל־יֹשְׁבֶיהָ",
+   "t": "ve-khal-yosheveiha",
+   "g": {
+    "en": "and all of to sit, dwell her",
+    "fr": "tous habiter",
+    "ru": "весь сидеть",
+    "ja": "全体 座る"
+   }
+  },
+  {
+   "h": "אָנֹכִי",
+   "t": "anokhi",
+   "g": {
+    "en": "I",
+    "es": "yo",
+    "fr": "je"
+   }
+  },
+  {
+   "h": "תִכַּנְתִּי",
+   "t": "tikkanti",
+   "g": {
+    "en": "to balance"
+   }
+  },
+  {
+   "h": "עַמּוּדֶיהָ",
+   "t": "ammudeiha",
+   "g": {
+    "en": "her column",
+    "es": "página",
+    "ru": "столб",
+    "zh": "柱子"
+   }
+  },
+  {
+   "h": "סֶּלָה",
+   "t": "selah",
+   "g": {
+    "en": "pause"
+   }
+  },
+  {
+   "h": "אָמַרְתִּי",
+   "t": "amarti",
+   "g": {
+    "en": "to say",
+    "es": "decir",
+    "fr": "dire",
+    "ru": "говорить",
+    "ja": "言う、話す"
+   }
+  },
+  {
+   "h": "לַהוֹלְלִים",
+   "t": "la-holelim",
+   "g": {
+    "en": "to to praise",
+    "fr": "louer"
+   }
+  },
+  {
+   "h": "אַל־תָּהֹלּוּ",
+   "t": "al-tahollu",
+   "g": {
+    "en": "not to praise",
+    "fr": "ne louer"
+   }
+  },
+  {
+   "h": "וְלָרְשָׁעִים",
+   "t": "ve-laresha'im",
+   "g": {
+    "en": "and to wicked",
+    "fr": "méchant",
+    "ru": "злодей",
+    "ja": "邪悪"
+   }
+  },
+  {
+   "h": "אַל־תָּרִימוּ",
+   "t": "al-tarimu",
+   "g": {
+    "en": "not to be high actively, to rise or raise",
+    "fr": "ne s’élever"
+   }
+  },
+  {
+   "h": "קָרֶן",
+   "t": "karen",
+   "g": {
+    "en": "horn",
+    "es": "cuerno",
+    "fr": "corne",
+    "ru": "рог"
+   }
+  },
+  {
+   "h": "לַמָּרוֹם",
+   "t": "la-marom",
+   "g": {
+    "en": "to altitude",
+    "ru": "высота"
+   }
+  },
+  {
+   "h": "קַרְנְכֶם",
+   "t": "karnekhem",
+   "g": {
+    "en": "your horn",
+    "es": "cuerno",
+    "fr": "corne",
+    "ru": "рог"
+   }
+  },
+  {
+   "h": "תְּדַבְּרוּ",
+   "t": "tedabberu",
+   "g": {
+    "en": "to speak",
+    "fr": "dire"
+   }
+  },
+  {
+   "h": "בְצַוָּאר",
+   "t": "ve-tzavvar",
+   "g": {
+    "en": "in back of the neck",
+    "es": "cuello",
+    "fr": "cou",
+    "ru": "шея"
+   }
+  },
+  {
+   "h": "עָתָק",
+   "t": "atak",
+   "g": {
+    "en": "impudent"
+   }
+  },
+  {
+   "h": "לֹא",
+   "t": "lo",
+   "g": {
+    "en": "not",
+    "es": "no",
+    "fr": "ne… pas",
+    "ru": "нет",
+    "ar": "لا",
+    "id": "tidak",
+    "ja": "ではない"
+   }
+  },
+  {
+   "h": "מִמּוֹצָא",
+   "t": "mimmotza",
+   "g": {
+    "en": "from going forth",
+    "ru": "исходный",
+    "id": "sumber"
+   }
+  },
+  {
+   "h": "וּמִמַּעֲרָב",
+   "t": "u-mimmaarav",
+   "g": {
+    "en": "and from west",
+    "pt": "oeste",
+    "ru": "запад",
+    "zh": "西方",
+    "ja": "西",
+    "ko": "서쪽"
+   }
+  },
+  {
+   "h": "וְלֹא",
+   "t": "ve-lo",
+   "g": {
+    "en": "and not",
+    "es": "no",
+    "fr": "ne",
+    "ru": "нет",
+    "id": "tidak",
+    "ja": "いいえ"
+   }
+  },
+  {
+   "h": "מִמִּדְבַּר",
+   "t": "mimmidbar",
+   "g": {
+    "en": "from pasture of",
+    "es": "desierto",
+    "fr": "désert",
+    "ru": "пустыня",
+    "zh": "沙漠",
+    "ja": "砂漠",
+    "ko": "사막"
+   }
+  },
+  {
+   "h": "הָרִים",
+   "t": "ha-rim",
+   "g": {
+    "en": "mountain",
+    "es": "montaña",
+    "pt": "montanha",
+    "fr": "mont",
+    "ru": "гора",
+    "zh": "山",
+    "ja": "山"
+   }
+  },
+  {
+   "h": "כִּי־אֱלֹהִים",
+   "t": "ki-elohim",
+   "g": {
+    "en": "for, because God",
+    "es": "porque dios",
+    "fr": "car Dieu",
+    "ja": "何故 神"
+   }
+  },
+  {
+   "h": "שֹׁפֵט",
+   "t": "shofet",
+   "g": {
+    "en": "to judge",
+    "fr": "juger",
+    "ru": "судить",
+    "zh": "判断"
+   }
+  },
+  {
+   "h": "זֶה",
+   "t": "zeh",
+   "g": {
+    "en": "this",
+    "es": "este",
+    "fr": "ça",
+    "ru": "этот",
+    "ja": "これ"
+   }
+  },
+  {
+   "h": "יַשְׁפִּיל",
+   "t": "yashpil",
+   "g": {
+    "en": "to depress or sink"
+   }
+  },
+  {
+   "h": "וְזֶה",
+   "t": "ve-zeh",
+   "g": {
+    "en": "and this",
+    "es": "este",
+    "fr": "ça",
+    "ru": "этот",
+    "ja": "これ"
+   }
+  },
+  {
+   "h": "יָרִים",
+   "t": "yarim",
+   "g": {
+    "en": "to be high actively, to rise or raise",
+    "fr": "s’élever"
+   }
+  },
+  {
+   "h": "כוֹס",
+   "t": "khos",
+   "g": {
+    "en": "cup",
+    "es": "vaso",
+    "fr": "coupe",
+    "ru": "стакан",
+    "ja": "コップ"
+   }
+  },
+  {
+   "h": "בְּיַד־יְהוָה",
+   "t": "be-yad-YHWH",
+   "g": {
+    "en": "in hand of the LORD",
+    "es": "mano el SEÑOR",
+    "pt": "mão Senhor",
+    "fr": "main l'Éternel",
+    "ru": "рука Господь",
+    "zh": "手 耶和华",
+    "id": "tangan TUHAN",
+    "ja": "手 主"
+   }
+  },
+  {
+   "h": "וְיַיִן",
+   "t": "ve-yayin",
+   "g": {
+    "en": "and wine",
+    "es": "vino",
+    "pt": "vinho",
+    "fr": "vin",
+    "ru": "вино",
+    "ja": "ワイン"
+   }
+  },
+  {
+   "h": "חָמַר",
+   "t": "chamar",
+   "g": {
+    "en": "to boil up"
+   }
+  },
+  {
+   "h": "מָלֵא",
+   "t": "male",
+   "g": {
+    "en": "to fill, be full",
+    "fr": "remplir",
+    "ru": "наполнять",
+    "ja": "満たす",
+    "ko": "채우다"
+   }
+  },
+  {
+   "h": "מֶסֶךְ",
+   "t": "mesekh",
+   "g": {
+    "en": "mixture",
+    "ru": "занавес",
+    "zh": "帘子"
+   }
+  },
+  {
+   "h": "וַיַּגֵּר",
+   "t": "va-yagger",
+   "g": {
+    "en": "and to flow"
+   }
+  },
+  {
+   "h": "מִזֶּה",
+   "t": "mizzeh",
+   "g": {
+    "en": "from this",
+    "es": "este",
+    "fr": "ça",
+    "ru": "этот",
+    "ja": "これ"
+   }
+  },
+  {
+   "h": "אַךְ־שְׁמָרֶיהָ",
+   "t": "akh-shemareiha",
+   "g": {
+    "en": "surely, only her something preserved"
+   }
+  },
+  {
+   "h": "יִמְצוּ",
+   "t": "yimtzu",
+   "g": {
+    "en": "to suck out"
+   }
+  },
+  {
+   "h": "יִשְׁתּוּ",
+   "t": "yishtu",
+   "g": {
+    "en": "to imbibe",
+    "fr": "boire",
+    "ru": "пить",
+    "zh": "喝",
+    "ja": "飲む"
+   }
+  },
+  {
+   "h": "כֹּל",
+   "t": "kol",
+   "g": {
+    "en": "all",
+    "es": "todo",
+    "fr": "tous",
+    "ru": "весь",
+    "ja": "全体"
+   }
+  },
+  {
+   "h": "רִשְׁעֵי־אָרֶץ",
+   "t": "rishei-aretz",
+   "g": {
+    "en": "wicked of earth",
+    "fr": "méchant terre",
+    "ru": "злодей страна",
+    "ja": "邪悪 大地"
+   }
+  },
+  {
+   "h": "וַאֲנִי",
+   "t": "va-ani",
+   "g": {
+    "en": "and I",
+    "es": "yo",
+    "fr": "je",
+    "de": "1. Person Singular",
+    "ru": "я",
+    "ar": "أنا",
+    "zh": "我",
+    "ja": "一人称単数代名詞"
+   }
+  },
+  {
+   "h": "אַגִּיד",
+   "t": "aggid",
+   "g": {
+    "en": "to front",
+    "fr": "dire",
+    "ru": "против",
+    "zh": "反对",
+    "ja": "反対"
+   }
+  },
+  {
+   "h": "לְעֹלָם",
+   "t": "le-olam",
+   "g": {
+    "en": "to forever",
+    "es": "mundo",
+    "fr": "monde",
+    "ru": "мир",
+    "zh": "世界",
+    "id": "dunia",
+    "ja": "世界"
+   }
+  },
+  {
+   "h": "אֲזַמְּרָה",
+   "t": "azammerah",
+   "g": {
+    "en": "to sing praise"
+   }
+  },
+  {
+   "h": "לֵאלֹהֵי",
+   "t": "lelohei",
+   "g": {
+    "en": "to God of",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "יַעֲקֹב",
+   "t": "yaakov",
+   "g": {
+    "en": "Jacob",
+    "pt": "Jacó",
+    "ru": "Иаков",
+    "zh": "雅各",
+    "ja": "ヤコブ"
+   }
+  },
+  {
+   "h": "וְכָל־קַרְנֵי",
+   "t": "ve-khal-karnei",
+   "g": {
+    "en": "and all of horn of",
+    "es": "todo cuerno",
+    "fr": "tous corne",
+    "ru": "весь рог"
+   }
+  },
+  {
+   "h": "רְשָׁעִים",
+   "t": "resha'im",
+   "g": {
+    "en": "the wicked",
+    "es": "los malvados",
+    "fr": "méchant",
+    "ru": "злодей",
+    "ja": "悪人"
+   }
+  },
+  {
+   "h": "אֲגַדֵּעַ",
+   "t": "agaddea",
+   "g": {
+    "en": "to fell a tree",
+    "ru": "отрубать"
+   }
+  },
+  {
+   "h": "תְּרוֹמַמְנָה",
+   "t": "teromamnah",
+   "g": {
+    "en": "to be high actively, to rise or raise",
+    "fr": "s’élever"
+   }
+  },
+  {
+   "h": "קַרְנוֹת",
+   "t": "karnot",
+   "g": {
+    "en": "horn of",
+    "es": "cuerno",
+    "fr": "corne",
+    "ru": "рог"
+   }
+  },
+  {
+   "h": "צַדִּיק",
+   "t": "tzaddik",
+   "g": {
+    "en": "just",
+    "fr": "juste",
+    "ru": "праведник",
+    "ja": "正しい"
+   }
+  }
+ ],
+ "text": "לַמְנַצֵּחַ אַל־תַּשְׁחֵת מִזְמוֹר לְאָסָף שִׁיר\nהוֹדִינוּ לְּךָ אֱלֹהִים הוֹדִינוּ וְקָרוֹב שְׁמֶךָ סִפְּרוּ נִפְלְאוֹתֶיךָ\nכִּי אֶקַּח מוֹעֵד אֲנִי מֵישָׁרִים אֶשְׁפֹּט\nנְמֹגִים אֶרֶץ וְכָל־יֹשְׁבֶיהָ אָנֹכִי תִכַּנְתִּי עַמּוּדֶיהָ סֶּלָה\nאָמַרְתִּי לַהוֹלְלִים אַל־תָּהֹלּוּ וְלָרְשָׁעִים אַל־תָּרִימוּ קָרֶן\nאַל־תָּרִימוּ לַמָּרוֹם קַרְנְכֶם תְּדַבְּרוּ בְצַוָּאר עָתָק\nכִּי לֹא מִמּוֹצָא וּמִמַּעֲרָב וְלֹא מִמִּדְבַּר הָרִים\nכִּי־אֱלֹהִים שֹׁפֵט זֶה יַשְׁפִּיל וְזֶה יָרִים\nכִּי כוֹס בְּיַד־יְהוָה וְיַיִן חָמַר מָלֵא מֶסֶךְ וַיַּגֵּר מִזֶּה אַךְ־שְׁמָרֶיהָ יִמְצוּ יִשְׁתּוּ כֹּל רִשְׁעֵי־אָרֶץ\nוַאֲנִי אַגִּיד לְעֹלָם אֲזַמְּרָה לֵאלֹהֵי יַעֲקֹב\nוְכָל־קַרְנֵי רְשָׁעִים אֲגַדֵּעַ תְּרוֹמַמְנָה קַרְנוֹת צַדִּיק"
+}

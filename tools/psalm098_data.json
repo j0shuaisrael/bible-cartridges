@@ -1,0 +1,722 @@
+{
+ "chapter": 98,
+ "title": "Psalm 98",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  [
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17
+  ],
+  [
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27
+  ],
+  [
+   28,
+   2,
+   29,
+   30,
+   31,
+   32
+  ],
+  [
+   33,
+   2,
+   34,
+   34,
+   35,
+   36
+  ],
+  [
+   37,
+   35,
+   38,
+   28,
+   39,
+   40,
+   12
+  ],
+  [
+   41,
+   42,
+   43,
+   44,
+   45,
+   46
+  ],
+  [
+   47,
+   48,
+   49,
+   50,
+   51
+  ],
+  [
+   39,
+   12,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "מִזְמוֹר",
+   "t": "mizmor",
+   "g": {
+    "en": "psalm",
+    "ru": "псалом"
+   }
+  },
+  {
+   "h": "שִׁירוּ",
+   "t": "shiru",
+   "g": {
+    "en": "to sing",
+    "es": "reservar"
+   }
+  },
+  {
+   "h": "לַיהוָה",
+   "t": "la-ihvah",
+   "g": {
+    "en": "to the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "חָדָשׁ",
+   "t": "chadash",
+   "g": {
+    "en": "new",
+    "es": "nuevo",
+    "ru": "новый",
+    "ar": "جديد",
+    "zh": "新",
+    "id": "baru",
+    "ja": "新しい",
+    "ko": "달"
+   }
+  },
+  {
+   "h": "כִּי־נִפְלָאוֹת",
+   "t": "ki-niflaot",
+   "g": {
+    "en": "for, because wonderful",
+    "fr": "car être merveilleux"
+   }
+  },
+  {
+   "h": "עָשָׂה",
+   "t": "asah",
+   "g": {
+    "en": "to do or make",
+    "es": "hacer",
+    "fr": "faire",
+    "ru": "делать",
+    "ja": "する"
+   }
+  },
+  {
+   "h": "הוֹשִׁיעָה־לּוֹ",
+   "t": "hoshiah-lo",
+   "g": {
+    "en": "to save, deliver to him"
+   }
+  },
+  {
+   "h": "יְמִינוֹ",
+   "t": "yemino",
+   "g": {
+    "en": "his right hand",
+    "es": "derecha",
+    "fr": "droite",
+    "ru": "правый",
+    "zh": "右手",
+    "ko": "오른쪽"
+   }
+  },
+  {
+   "h": "וּזְרוֹעַ",
+   "t": "u-zeroa",
+   "g": {
+    "en": "and arm, or the foreleg of",
+    "es": "brazo",
+    "fr": "agile",
+    "ru": "рука",
+    "zh": "手臂"
+   }
+  },
+  {
+   "h": "קָדְשׁוֹ",
+   "t": "kadesho",
+   "g": {
+    "en": "his holiness"
+   }
+  },
+  {
+   "h": "הוֹדִיעַ",
+   "t": "hodia",
+   "g": {
+    "en": "to know",
+    "fr": "savoir",
+    "ru": "знать",
+    "ja": "知る"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "יְשׁוּעָתוֹ",
+   "t": "yeshuato",
+   "g": {
+    "en": "his salvation",
+    "fr": "salut",
+    "ru": "спасение"
+   }
+  },
+  {
+   "h": "לְעֵינֵי",
+   "t": "le-einei",
+   "g": {
+    "en": "to eye of",
+    "es": "ojo",
+    "pt": "olho",
+    "fr": "œil",
+    "ru": "глаз",
+    "ar": "عين",
+    "zh": "眼睛",
+    "ja": "目"
+   }
+  },
+  {
+   "h": "הַגּוֹיִם",
+   "t": "haggoyim",
+   "g": {
+    "en": "the foreign nation",
+    "es": "nación",
+    "fr": "nation",
+    "ru": "народ"
+   }
+  },
+  {
+   "h": "גִּלָּה",
+   "t": "gillah",
+   "g": {
+    "en": "to denude",
+    "fr": "se dénuder",
+    "ru": "скитаться"
+   }
+  },
+  {
+   "h": "צִדְקָתוֹ",
+   "t": "tzidkato",
+   "g": {
+    "en": "his righteousness",
+    "fr": "justice",
+    "ru": "милостыня"
+   }
+  },
+  {
+   "h": "זָכַר",
+   "t": "zakhar",
+   "g": {
+    "en": "to remember",
+    "fr": "souvenir",
+    "ru": "помнить",
+    "ar": "تذكر",
+    "ja": "覚えている"
+   }
+  },
+  {
+   "h": "חַסְדּוֹ",
+   "t": "chasdo",
+   "g": {
+    "en": "his kindness",
+    "fr": "bonté",
+    "ru": "милость",
+    "ar": "نعمة"
+   }
+  },
+  {
+   "h": "וֶאֱמוּנָתוֹ",
+   "t": "ve-emunato",
+   "g": {
+    "en": "and his faithfulness",
+    "es": "fe",
+    "ru": "вера",
+    "ja": "信仰"
+   }
+  },
+  {
+   "h": "לְבֵית",
+   "t": "le-veit",
+   "g": {
+    "en": "to house of",
+    "es": "casa",
+    "pt": "casa",
+    "fr": "maison",
+    "ru": "дом",
+    "zh": "房屋",
+    "id": "rumah",
+    "ja": "家",
+    "ko": "집"
+   }
+  },
+  {
+   "h": "יִשְׂרָאֵל",
+   "t": "yisrael",
+   "g": {
+    "en": "Israel",
+    "es": "Israel",
+    "pt": "Israel",
+    "fr": "Israël",
+    "de": "Staat",
+    "ru": "Израиль",
+    "zh": "以色列",
+    "hi": "इज़राइल",
+    "ja": "イスラエル",
+    "ko": "이스라엘"
+   }
+  },
+  {
+   "h": "רָאוּ",
+   "t": "rau",
+   "g": {
+    "en": "to see",
+    "fr": "voir",
+    "ru": "видеть",
+    "zh": "看见"
+   }
+  },
+  {
+   "h": "כָל־אַפְסֵי־אָרֶץ",
+   "t": "khal-afsei-aretz",
+   "g": {
+    "en": "all of cessation of earth",
+    "ru": "весь ноль страна",
+    "ja": "全体 ゼロ 大地"
+   }
+  },
+  {
+   "h": "אֵת",
+   "t": "et",
+   "g": {
+    "en": "object marker"
+   }
+  },
+  {
+   "h": "יְשׁוּעַת",
+   "t": "yeshuat",
+   "g": {
+    "en": "salvation of",
+    "fr": "salut",
+    "ru": "спасение"
+   }
+  },
+  {
+   "h": "אֱלֹהֵינוּ",
+   "t": "eloheinu",
+   "g": {
+    "en": "our God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "הָרִיעוּ",
+   "t": "ha-riu",
+   "g": {
+    "en": "to mar"
+   }
+  },
+  {
+   "h": "כָּל־הָאָרֶץ",
+   "t": "kal-haaretz",
+   "g": {
+    "en": "all of the earth",
+    "es": "todo tierra",
+    "fr": "tous terre",
+    "ru": "весь страна",
+    "ja": "全体 大地"
+   }
+  },
+  {
+   "h": "פִּצְחוּ",
+   "t": "pitzchu",
+   "g": {
+    "en": "to break out"
+   }
+  },
+  {
+   "h": "וְרַנְּנוּ",
+   "t": "ve-rannenu",
+   "g": {
+    "en": "and to shout for joy"
+   }
+  },
+  {
+   "h": "וְזַמֵּרוּ",
+   "t": "ve-zammeru",
+   "g": {
+    "en": "and to sing praise"
+   }
+  },
+  {
+   "h": "זַמְּרוּ",
+   "t": "zammeru",
+   "g": {
+    "en": "to sing praise"
+   }
+  },
+  {
+   "h": "בְּכִנּוֹר",
+   "t": "be-khinnor",
+   "g": {
+    "en": "in harp",
+    "es": "violín",
+    "fr": "harpe"
+   }
+  },
+  {
+   "h": "וְקוֹל",
+   "t": "ve-kol",
+   "g": {
+    "en": "and voice or sound of",
+    "es": "voz",
+    "fr": "voix",
+    "ru": "голос",
+    "zh": "声音",
+    "ja": "音"
+   }
+  },
+  {
+   "h": "זִמְרָה",
+   "t": "zimrah",
+   "g": {
+    "en": "song",
+    "fr": "meilleur produit",
+    "ru": "пение"
+   }
+  },
+  {
+   "h": "בַּחֲצֹצְרוֹת",
+   "t": "ba-chatzotzerot",
+   "g": {
+    "en": "in trumpet"
+   }
+  },
+  {
+   "h": "שׁוֹפָר",
+   "t": "shofar",
+   "g": {
+    "en": "cornet or curved horn",
+    "pt": "xofar",
+    "ru": "труба"
+   }
+  },
+  {
+   "h": "לִפְנֵי",
+   "t": "li-fnei",
+   "g": {
+    "en": "to face of",
+    "es": "cara",
+    "fr": "visage",
+    "ru": "лицо",
+    "zh": "脸",
+    "ja": "顔",
+    "ko": "얼굴"
+   }
+  },
+  {
+   "h": "הַמֶּלֶךְ",
+   "t": "hammelekh",
+   "g": {
+    "en": "the king",
+    "es": "rey",
+    "fr": "roi",
+    "ru": "царь",
+    "zh": "国王",
+    "ja": "王"
+   }
+  },
+  {
+   "h": "יִרְעַם",
+   "t": "yiram",
+   "g": {
+    "en": "to tumble"
+   }
+  },
+  {
+   "h": "הַיָּם",
+   "t": "hayyam",
+   "g": {
+    "en": "the sea or large body of water",
+    "es": "mar",
+    "pt": "mar",
+    "fr": "mer",
+    "ru": "море",
+    "ar": "يم",
+    "zh": "海",
+    "ja": "海",
+    "ko": "바다"
+   }
+  },
+  {
+   "h": "וּמְלֹאוֹ",
+   "t": "u-meloo",
+   "g": {
+    "en": "and his fulness",
+    "fr": "groupe",
+    "ko": "채우다"
+   }
+  },
+  {
+   "h": "תֵּבֵל",
+   "t": "tevel",
+   "g": {
+    "en": "earth",
+    "ru": "вселенная",
+    "zh": "世界",
+    "ja": "世界"
+   }
+  },
+  {
+   "h": "וְיֹשְׁבֵי",
+   "t": "ve-yoshevei",
+   "g": {
+    "en": "and to sit, dwell of",
+    "fr": "habiter",
+    "ru": "сидеть",
+    "ja": "座る"
+   }
+  },
+  {
+   "h": "בָהּ",
+   "t": "vah",
+   "g": {
+    "en": "in her",
+    "es": "en",
+    "fr": "dans"
+   }
+  },
+  {
+   "h": "נְהָרוֹת",
+   "t": "neharot",
+   "g": {
+    "en": "stream",
+    "es": "río",
+    "pt": "rio",
+    "fr": "rivière",
+    "ru": "река",
+    "zh": "河",
+    "ja": "川"
+   }
+  },
+  {
+   "h": "יִמְחֲאוּ־כָף",
+   "t": "yimchau-khaf",
+   "g": {
+    "en": "to rub or strike the hands together hollow hand or palm"
+   }
+  },
+  {
+   "h": "יַחַד",
+   "t": "yachad",
+   "g": {
+    "en": "together",
+    "ru": "вместе"
+   }
+  },
+  {
+   "h": "הָרִים",
+   "t": "ha-rim",
+   "g": {
+    "en": "mountain",
+    "es": "montaña",
+    "pt": "montanha",
+    "fr": "mont",
+    "ru": "гора",
+    "zh": "山",
+    "ja": "山"
+   }
+  },
+  {
+   "h": "יְרַנֵּנוּ",
+   "t": "yerannenu",
+   "g": {
+    "en": "to shout for joy"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
+   }
+  },
+  {
+   "h": "בָא",
+   "t": "va",
+   "g": {
+    "en": "to go or come",
+    "fr": "venir"
+   }
+  },
+  {
+   "h": "לִשְׁפֹּט",
+   "t": "li-shpot",
+   "g": {
+    "en": "to to judge of",
+    "fr": "juger",
+    "ru": "судить",
+    "zh": "判断"
+   }
+  },
+  {
+   "h": "הָאָרֶץ",
+   "t": "haaretz",
+   "g": {
+    "en": "the earth",
+    "es": "tierra",
+    "pt": "Terra",
+    "fr": "terre",
+    "ru": "страна",
+    "ar": "أرض",
+    "zh": "国家",
+    "ja": "大地"
+   }
+  },
+  {
+   "h": "יִשְׁפֹּט־תֵּבֵל",
+   "t": "yishpot-tevel",
+   "g": {
+    "en": "to judge earth",
+    "ru": "судить вселенная",
+    "zh": "判断 世界"
+   }
+  },
+  {
+   "h": "בְּצֶדֶק",
+   "t": "be-tzedek",
+   "g": {
+    "en": "in righteousness",
+    "pt": "justiça",
+    "de": "astronomisch",
+    "ru": "справедливость",
+    "zh": "公正",
+    "id": "keadilan",
+    "ja": "正義"
+   }
+  },
+  {
+   "h": "וְעַמִּים",
+   "t": "ve-ammim",
+   "g": {
+    "en": "and people",
+    "es": "pueblo",
+    "pt": "povo",
+    "fr": "peuple",
+    "ru": "народ",
+    "zh": "人民",
+    "ja": "国々"
+   }
+  },
+  {
+   "h": "בְּמֵישָׁרִים",
+   "t": "be-meisharim",
+   "g": {
+    "en": "in evenness"
+   }
+  }
+ ],
+ "text": "מִזְמוֹר שִׁירוּ לַיהוָה שִׁיר חָדָשׁ כִּי־נִפְלָאוֹת עָשָׂה הוֹשִׁיעָה־לּוֹ יְמִינוֹ וּזְרוֹעַ קָדְשׁוֹ\nהוֹדִיעַ יְהוָה יְשׁוּעָתוֹ לְעֵינֵי הַגּוֹיִם גִּלָּה צִדְקָתוֹ\nזָכַר חַסְדּוֹ וֶאֱמוּנָתוֹ לְבֵית יִשְׂרָאֵל רָאוּ כָל־אַפְסֵי־אָרֶץ אֵת יְשׁוּעַת אֱלֹהֵינוּ\nהָרִיעוּ לַיהוָה כָּל־הָאָרֶץ פִּצְחוּ וְרַנְּנוּ וְזַמֵּרוּ\nזַמְּרוּ לַיהוָה בְּכִנּוֹר בְּכִנּוֹר וְקוֹל זִמְרָה\nבַּחֲצֹצְרוֹת וְקוֹל שׁוֹפָר הָרִיעוּ לִפְנֵי הַמֶּלֶךְ יְהוָה\nיִרְעַם הַיָּם וּמְלֹאוֹ תֵּבֵל וְיֹשְׁבֵי בָהּ\nנְהָרוֹת יִמְחֲאוּ־כָף יַחַד הָרִים יְרַנֵּנוּ\nלִפְנֵי יְהוָה כִּי בָא לִשְׁפֹּט הָאָרֶץ יִשְׁפֹּט־תֵּבֵל בְּצֶדֶק וְעַמִּים בְּמֵישָׁרִים"
+}

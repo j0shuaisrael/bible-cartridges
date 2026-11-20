@@ -1,0 +1,344 @@
+{
+ "chapter": 131,
+ "title": "Psalm 131",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  [
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   15
+  ],
+  [
+   21,
+   22,
+   23,
+   24,
+   25
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "הַמַּעֲלוֹת",
+   "t": "hammaalot",
+   "g": {
+    "en": "the elevation",
+    "es": "escalera",
+    "ru": "подъём"
+   }
+  },
+  {
+   "h": "לְדָוִד",
+   "t": "le-david",
+   "g": {
+    "en": "to David",
+    "es": "David",
+    "pt": "Davi",
+    "fr": "David",
+    "ru": "Давид",
+    "ja": "ダビデ"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "לֹא־גָבַהּ",
+   "t": "lo-gavah",
+   "g": {
+    "en": "not to soar",
+    "ru": "нет стать"
+   }
+  },
+  {
+   "h": "לִבִּי",
+   "t": "li-bi",
+   "g": {
+    "en": "my heart",
+    "es": "corazón",
+    "pt": "coração",
+    "fr": "cœur",
+    "ru": "сердце",
+    "zh": "心脏",
+    "ja": "心臓"
+   }
+  },
+  {
+   "h": "וְלֹא־רָמוּ",
+   "t": "ve-lo-ramu",
+   "g": {
+    "en": "and not to be high actively, to rise or raise",
+    "fr": "ne s’élever"
+   }
+  },
+  {
+   "h": "עֵינַי",
+   "t": "einai",
+   "g": {
+    "en": "my eye",
+    "es": "ojo",
+    "pt": "olho",
+    "fr": "œil",
+    "ru": "глаз",
+    "ar": "عين",
+    "zh": "眼睛",
+    "ja": "目"
+   }
+  },
+  {
+   "h": "וְלֹא־הִלַּכְתִּי",
+   "t": "ve-lo-hillakhti",
+   "g": {
+    "en": "and not to walk",
+    "es": "no ir",
+    "fr": "ne aller",
+    "ru": "нет идти",
+    "ja": "いいえ いく"
+   }
+  },
+  {
+   "h": "בִּגְדֹלוֹת",
+   "t": "bi-gdolot",
+   "g": {
+    "en": "in great",
+    "es": "grande",
+    "fr": "grand",
+    "ru": "большой",
+    "zh": "大",
+    "ja": "大きな",
+    "ko": "크다"
+   }
+  },
+  {
+   "h": "וּבְנִפְלָאוֹת",
+   "t": "u-ve-niflaot",
+   "g": {
+    "en": "and in wonderful",
+    "fr": "être merveilleux",
+    "ar": "أعجوبة"
+   }
+  },
+  {
+   "h": "מִמֶּנִּי",
+   "t": "mimmenni",
+   "g": {
+    "en": "from me",
+    "es": "de",
+    "fr": "de",
+    "ru": "из",
+    "ja": "から"
+   }
+  },
+  {
+   "h": "אִם־לֹא",
+   "t": "im-lo",
+   "g": {
+    "en": "if not"
+   }
+  },
+  {
+   "h": "שִׁוִּיתִי",
+   "t": "shivviti",
+   "g": {
+    "en": "to level",
+    "ru": "уравнивать"
+   }
+  },
+  {
+   "h": "וְדוֹמַמְתִּי",
+   "t": "ve-domamti",
+   "g": {
+    "en": "and to be dumb",
+    "ru": "кровоточить"
+   }
+  },
+  {
+   "h": "נַפְשִׁי",
+   "t": "nafshi",
+   "g": {
+    "en": "my soul",
+    "fr": "âme",
+    "ru": "душа",
+    "ar": "نفس",
+    "zh": "灵魂",
+    "id": "jiwa",
+    "ja": "魂"
+   }
+  },
+  {
+   "h": "כְּגָמֻל",
+   "t": "ke-gamul",
+   "g": {
+    "en": "like to treat a person",
+    "fr": "sevrer",
+    "ru": "воздавать",
+    "ar": "جمل",
+    "zh": "断奶",
+    "ja": "離乳"
+   }
+  },
+  {
+   "h": "עֲלֵי",
+   "t": "alei",
+   "g": {
+    "en": "above, over",
+    "es": "sobre",
+    "fr": "sur",
+    "ru": "на",
+    "ja": "上"
+   }
+  },
+  {
+   "h": "אִמּוֹ",
+   "t": "immo",
+   "g": {
+    "en": "his mother",
+    "es": "madre",
+    "fr": "mère",
+    "ru": "мать",
+    "zh": "母亲",
+    "ja": "母親",
+    "ko": "어머니"
+   }
+  },
+  {
+   "h": "כַּגָּמֻל",
+   "t": "kaggamul",
+   "g": {
+    "en": "like to treat a person",
+    "fr": "sevrer",
+    "ru": "воздавать",
+    "ar": "جمل",
+    "zh": "断奶",
+    "ja": "離乳"
+   }
+  },
+  {
+   "h": "עָלַי",
+   "t": "alai",
+   "g": {
+    "en": "above, over me",
+    "es": "sobre",
+    "fr": "sur",
+    "ru": "на",
+    "ja": "上"
+   }
+  },
+  {
+   "h": "יַחֵל",
+   "t": "yachel",
+   "g": {
+    "en": "to wait",
+    "fr": "attendre"
+   }
+  },
+  {
+   "h": "יִשְׂרָאֵל",
+   "t": "yisrael",
+   "g": {
+    "en": "Israel",
+    "es": "Israel",
+    "pt": "Israel",
+    "fr": "Israël",
+    "de": "Staat",
+    "ru": "Израиль",
+    "zh": "以色列",
+    "hi": "इज़राइल",
+    "ja": "イスラエル",
+    "ko": "이스라엘"
+   }
+  },
+  {
+   "h": "אֶל־יְהוָה",
+   "t": "el-YHWH",
+   "g": {
+    "en": "to, toward the LORD",
+    "fr": "à l'Éternel",
+    "ru": "к Господь",
+    "ar": "إله الرب",
+    "ja": "～へ、～に向かって、～に向けて 主",
+    "ko": "신 여호와"
+   }
+  },
+  {
+   "h": "מֵעַתָּה",
+   "t": "meattah",
+   "g": {
+    "en": "from at this time",
+    "fr": "maintenant",
+    "ru": "итак"
+   }
+  },
+  {
+   "h": "וְעַד־עוֹלָם",
+   "t": "ve-ad-olam",
+   "g": {
+    "en": "and until forever",
+    "fr": "jusqu'à monde",
+    "ru": "до мир",
+    "ja": "まで 世界"
+   }
+  }
+ ],
+ "text": "שִׁיר הַמַּעֲלוֹת לְדָוִד יְהוָה לֹא־גָבַהּ לִבִּי וְלֹא־רָמוּ עֵינַי וְלֹא־הִלַּכְתִּי בִּגְדֹלוֹת וּבְנִפְלָאוֹת מִמֶּנִּי\nאִם־לֹא שִׁוִּיתִי וְדוֹמַמְתִּי נַפְשִׁי כְּגָמֻל עֲלֵי אִמּוֹ כַּגָּמֻל עָלַי נַפְשִׁי\nיַחֵל יִשְׂרָאֵל אֶל־יְהוָה מֵעַתָּה וְעַד־עוֹלָם"
+}

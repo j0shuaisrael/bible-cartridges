@@ -1,0 +1,625 @@
+{
+ "chapter": 149,
+ "title": "Psalm 149",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  [
+   8,
+   9,
+   10,
+   11,
+   12,
+   13
+  ],
+  [
+   14,
+   15,
+   16,
+   17,
+   18,
+   19
+  ],
+  [
+   20,
+   21,
+   22,
+   23,
+   24,
+   25
+  ],
+  [
+   26,
+   7,
+   27,
+   28,
+   29
+  ],
+  [
+   30,
+   31,
+   32,
+   33,
+   34,
+   35
+  ],
+  [
+   36,
+   37,
+   38,
+   39,
+   40
+  ],
+  [
+   41,
+   42,
+   43,
+   44,
+   45,
+   46
+  ],
+  [
+   36,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   0
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "הַלְלוּ־יָהּ",
+   "t": "ha-le-lu-yah",
+   "g": {
+    "en": "to praise the LORD",
+    "fr": "louer l'Éternel"
+   }
+  },
+  {
+   "h": "שִׁירוּ",
+   "t": "shiru",
+   "g": {
+    "en": "to sing",
+    "es": "reservar"
+   }
+  },
+  {
+   "h": "לַיהוָה",
+   "t": "la-ihvah",
+   "g": {
+    "en": "to the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "חָדָשׁ",
+   "t": "chadash",
+   "g": {
+    "en": "new",
+    "es": "nuevo",
+    "ru": "новый",
+    "ar": "جديد",
+    "zh": "新",
+    "id": "baru",
+    "ja": "新しい",
+    "ko": "달"
+   }
+  },
+  {
+   "h": "תְּהִלָּתוֹ",
+   "t": "tehillato",
+   "g": {
+    "en": "his praise"
+   }
+  },
+  {
+   "h": "בִּקְהַל",
+   "t": "bi-khal",
+   "g": {
+    "en": "in assemblage of",
+    "es": "muchedumbre",
+    "fr": "assemblée",
+    "ru": "народ"
+   }
+  },
+  {
+   "h": "חֲסִידִים",
+   "t": "chasidim",
+   "g": {
+    "en": "godly",
+    "fr": "pieux"
+   }
+  },
+  {
+   "h": "יִשְׂמַח",
+   "t": "yismach",
+   "g": {
+    "en": "to rejoice",
+    "ru": "радоваться",
+    "ko": "행복하다"
+   }
+  },
+  {
+   "h": "יִשְׂרָאֵל",
+   "t": "yisrael",
+   "g": {
+    "en": "Israel",
+    "es": "Israel",
+    "pt": "Israel",
+    "fr": "Israël",
+    "de": "Staat",
+    "ru": "Израиль",
+    "zh": "以色列",
+    "hi": "इज़राइल",
+    "ja": "イスラエル",
+    "ko": "이스라엘"
+   }
+  },
+  {
+   "h": "בְּעֹשָׂיו",
+   "t": "be-osaiw",
+   "g": {
+    "en": "in to do or make him",
+    "es": "hacer",
+    "fr": "faire",
+    "ru": "делать",
+    "ja": "する"
+   }
+  },
+  {
+   "h": "בְּנֵי־צִיּוֹן",
+   "t": "be-nei-tzion",
+   "g": {
+    "en": "son of Zion",
+    "es": "hijo Sion",
+    "ru": "сын Сион",
+    "ja": "息子 シオン"
+   }
+  },
+  {
+   "h": "יָגִילוּ",
+   "t": "yagilu",
+   "g": {
+    "en": "to spin round"
+   }
+  },
+  {
+   "h": "בְמַלְכָּם",
+   "t": "ve-malkam",
+   "g": {
+    "en": "in their king",
+    "es": "rey",
+    "fr": "roi",
+    "ru": "царь",
+    "zh": "国王",
+    "ja": "王"
+   }
+  },
+  {
+   "h": "יְהַלְלוּ",
+   "t": "yehallu",
+   "g": {
+    "en": "to praise",
+    "fr": "louer"
+   }
+  },
+  {
+   "h": "שְׁמוֹ",
+   "t": "shemo",
+   "g": {
+    "en": "his name",
+    "es": "nombre",
+    "fr": "nom",
+    "ru": "имя",
+    "zh": "名字",
+    "ja": "名前"
+   }
+  },
+  {
+   "h": "בְמָחוֹל",
+   "t": "ve-machol",
+   "g": {
+    "en": "in dance",
+    "zh": "舞"
+   }
+  },
+  {
+   "h": "בְּתֹף",
+   "t": "be-tof",
+   "g": {
+    "en": "in tambourine",
+    "fr": "tambourin"
+   }
+  },
+  {
+   "h": "וְכִנּוֹר",
+   "t": "ve-khinnor",
+   "g": {
+    "en": "and harp",
+    "es": "violín",
+    "fr": "harpe"
+   }
+  },
+  {
+   "h": "יְזַמְּרוּ־לוֹ",
+   "t": "yezammeru-lo",
+   "g": {
+    "en": "to sing praise to him"
+   }
+  },
+  {
+   "h": "כִּי־רוֹצֶה",
+   "t": "ki-rotzeh",
+   "g": {
+    "en": "for, because to be pleased with",
+    "es": "porque querer",
+    "fr": "car vouloir",
+    "ja": "何故 欲しがる"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "בְּעַמּוֹ",
+   "t": "be-ammo",
+   "g": {
+    "en": "in his people",
+    "es": "pueblo",
+    "pt": "povo",
+    "fr": "peuple",
+    "ru": "народ",
+    "zh": "人民",
+    "ja": "国々"
+   }
+  },
+  {
+   "h": "יְפָאֵר",
+   "t": "yefaer",
+   "g": {
+    "en": "to gleam",
+    "es": "decorar",
+    "ar": "فحامة"
+   }
+  },
+  {
+   "h": "עֲנָוִים",
+   "t": "anavim",
+   "g": {
+    "en": "depressed, in mind or circumstances"
+   }
+  },
+  {
+   "h": "בִּישׁוּעָה",
+   "t": "bi-shuah",
+   "g": {
+    "en": "in salvation",
+    "fr": "salut",
+    "ru": "спасение"
+   }
+  },
+  {
+   "h": "יַעְלְזוּ",
+   "t": "yalezu",
+   "g": {
+    "en": "to jump for joy"
+   }
+  },
+  {
+   "h": "בְּכָבוֹד",
+   "t": "be-khavod",
+   "g": {
+    "en": "in glory",
+    "es": "honra",
+    "fr": "honneur",
+    "ru": "уважение",
+    "id": "kehormatan",
+    "ja": "名誉"
+   }
+  },
+  {
+   "h": "יְרַנְּנוּ",
+   "t": "yerannenu",
+   "g": {
+    "en": "to shout for joy"
+   }
+  },
+  {
+   "h": "עַל־מִשְׁכְּבוֹתָם",
+   "t": "al-mishkevotam",
+   "g": {
+    "en": "above, over their bed",
+    "fr": "sur lit"
+   }
+  },
+  {
+   "h": "רוֹמְמוֹת",
+   "t": "romemot",
+   "g": {
+    "en": "exaltation of"
+   }
+  },
+  {
+   "h": "אֵל",
+   "t": "el",
+   "g": {
+    "en": "God",
+    "fr": "El",
+    "ru": "божество",
+    "ar": "إله",
+    "zh": "神",
+    "ja": "かみ",
+    "ko": "신"
+   }
+  },
+  {
+   "h": "בִּגְרוֹנָם",
+   "t": "bi-gronam",
+   "g": {
+    "en": "in their throat",
+    "ru": "горло",
+    "ko": "목구멍"
+   }
+  },
+  {
+   "h": "וְחֶרֶב",
+   "t": "ve-cherev",
+   "g": {
+    "en": "and drought",
+    "es": "espada",
+    "fr": "épée",
+    "ru": "меч",
+    "ar": "سيف",
+    "ja": "つるぎ",
+    "ko": "검"
+   }
+  },
+  {
+   "h": "פִּיפִיּוֹת",
+   "t": "pifiot",
+   "g": {
+    "en": "edge or tooth"
+   }
+  },
+  {
+   "h": "בְּיָדָם",
+   "t": "be-yadam",
+   "g": {
+    "en": "in their hand",
+    "es": "mano",
+    "pt": "mão",
+    "fr": "main",
+    "ru": "рука",
+    "zh": "手",
+    "id": "tangan",
+    "ja": "手"
+   }
+  },
+  {
+   "h": "לַעֲשׂוֹת",
+   "t": "la-asot",
+   "g": {
+    "en": "to to do or make of",
+    "es": "hacer",
+    "fr": "faire",
+    "ru": "делать",
+    "ja": "する"
+   }
+  },
+  {
+   "h": "נְקָמָה",
+   "t": "nekamah",
+   "g": {
+    "en": "avengement",
+    "ru": "месть"
+   }
+  },
+  {
+   "h": "בַּגּוֹיִם",
+   "t": "ba-goyim",
+   "g": {
+    "en": "in foreign nation",
+    "es": "nación",
+    "fr": "nation",
+    "ru": "народ"
+   }
+  },
+  {
+   "h": "תּוֹכֵחוֹת",
+   "t": "tokhechot",
+   "g": {
+    "en": "chastisement"
+   }
+  },
+  {
+   "h": "בַּלְאֻמִּים",
+   "t": "ba-le-ummim",
+   "g": {
+    "en": "not community",
+    "fr": "ne peuple"
+   }
+  },
+  {
+   "h": "לֶאְסֹר",
+   "t": "le-sor",
+   "g": {
+    "en": "to to yoke or hitch of",
+    "fr": "attacher",
+    "ru": "арестовывать"
+   }
+  },
+  {
+   "h": "מַלְכֵיהֶם",
+   "t": "malkheihem",
+   "g": {
+    "en": "their king",
+    "es": "rey",
+    "fr": "roi",
+    "ru": "царь",
+    "zh": "国王",
+    "ja": "王"
+   }
+  },
+  {
+   "h": "בְּזִקִּים",
+   "t": "be-zikkim",
+   "g": {
+    "en": "in what leaps forth"
+   }
+  },
+  {
+   "h": "וְנִכְבְּדֵיהֶם",
+   "t": "ve-nikhbedeihem",
+   "g": {
+    "en": "and to be heavy them",
+    "es": "imponer",
+    "fr": "s'alourdir",
+    "ko": "간"
+   }
+  },
+  {
+   "h": "בְּכַבְלֵי",
+   "t": "be-khavlei",
+   "g": {
+    "en": "in fetter of",
+    "ru": "оковы"
+   }
+  },
+  {
+   "h": "בַרְזֶל",
+   "t": "va-rzel",
+   "g": {
+    "en": "iron",
+    "es": "hierro",
+    "fr": "fer",
+    "ru": "железо",
+    "zh": "铁",
+    "id": "besi",
+    "ja": "鉄",
+    "ko": "철"
+   }
+  },
+  {
+   "h": "בָּהֶם",
+   "t": "bahem",
+   "g": {
+    "en": "in them",
+    "es": "en",
+    "fr": "dans"
+   }
+  },
+  {
+   "h": "מִשְׁפָּט",
+   "t": "mishpat",
+   "g": {
+    "en": "judgment",
+    "fr": "justice",
+    "ru": "суд",
+    "ja": "法律"
+   }
+  },
+  {
+   "h": "כָּתוּב",
+   "t": "katuv",
+   "g": {
+    "en": "to grave",
+    "es": "escribir",
+    "fr": "écrire",
+    "ru": "писать",
+    "zh": "写",
+    "ja": "書く"
+   }
+  },
+  {
+   "h": "הָדָר",
+   "t": "hadar",
+   "g": {
+    "en": "magnificence",
+    "ja": "栄光"
+   }
+  },
+  {
+   "h": "הוּא",
+   "t": "hu",
+   "g": {
+    "en": "he",
+    "es": "él",
+    "fr": "il",
+    "de": "persönliches Fürwort",
+    "ru": "он",
+    "ja": "彼"
+   }
+  },
+  {
+   "h": "לְכָל־חֲסִידָיו",
+   "t": "le-khal-chasidaiw",
+   "g": {
+    "en": "to all of his godly",
+    "fr": "tous pieux"
+   }
+  }
+ ],
+ "text": "הַלְלוּ־יָהּ שִׁירוּ לַיהוָה שִׁיר חָדָשׁ תְּהִלָּתוֹ בִּקְהַל חֲסִידִים\nיִשְׂמַח יִשְׂרָאֵל בְּעֹשָׂיו בְּנֵי־צִיּוֹן יָגִילוּ בְמַלְכָּם\nיְהַלְלוּ שְׁמוֹ בְמָחוֹל בְּתֹף וְכִנּוֹר יְזַמְּרוּ־לוֹ\nכִּי־רוֹצֶה יְהוָה בְּעַמּוֹ יְפָאֵר עֲנָוִים בִּישׁוּעָה\nיַעְלְזוּ חֲסִידִים בְּכָבוֹד יְרַנְּנוּ עַל־מִשְׁכְּבוֹתָם\nרוֹמְמוֹת אֵל בִּגְרוֹנָם וְחֶרֶב פִּיפִיּוֹת בְּיָדָם\nלַעֲשׂוֹת נְקָמָה בַּגּוֹיִם תּוֹכֵחוֹת בַּלְאֻמִּים\nלֶאְסֹר מַלְכֵיהֶם בְּזִקִּים וְנִכְבְּדֵיהֶם בְּכַבְלֵי בַרְזֶל\nלַעֲשׂוֹת בָּהֶם מִשְׁפָּט כָּתוּב הָדָר הוּא לְכָל־חֲסִידָיו הַלְלוּ־יָהּ"
+}

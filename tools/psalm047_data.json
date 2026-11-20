@@ -1,0 +1,614 @@
+{
+ "chapter": 47,
+ "title": "Psalm 47",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2
+  ],
+  [
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ],
+  [
+   9,
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  [
+   15,
+   16,
+   17,
+   18,
+   19,
+   20
+  ],
+  [
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27
+  ],
+  [
+   28,
+   29,
+   30,
+   31,
+   7,
+   32
+  ],
+  [
+   33,
+   29,
+   34,
+   33,
+   35,
+   34
+  ],
+  [
+   36,
+   12,
+   37,
+   29,
+   33,
+   38
+  ],
+  [
+   39,
+   29,
+   40,
+   29,
+   41,
+   42,
+   43
+  ],
+  [
+   44,
+   16,
+   45,
+   46,
+   47,
+   48,
+   36,
+   6,
+   49,
+   50,
+   51
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "לַמְנַצֵּחַ",
+   "t": "la-mnattzeach",
+   "g": {
+    "en": "to to oversee"
+   }
+  },
+  {
+   "h": "לִבְנֵי־קֹרַח",
+   "t": "li-ve-nei-korach",
+   "g": {
+    "en": "to son of Korach",
+    "es": "hijo hielo",
+    "fr": "fils froid",
+    "ru": "сын лёд",
+    "zh": "儿子 冰"
+   }
+  },
+  {
+   "h": "מִזְמוֹר",
+   "t": "mizmor",
+   "g": {
+    "en": "psalm",
+    "ru": "псалом"
+   }
+  },
+  {
+   "h": "כָּל־הָעַמִּים",
+   "t": "kal-haammim",
+   "g": {
+    "en": "all of the people",
+    "es": "todo pueblo",
+    "fr": "tous peuple",
+    "ru": "весь народ",
+    "ja": "全体 国々"
+   }
+  },
+  {
+   "h": "תִּקְעוּ־כָף",
+   "t": "tiku-khaf",
+   "g": {
+    "en": "to clatter hollow hand or palm",
+    "es": "tocar cuchara",
+    "fr": "installer plan",
+    "ru": "трубить ложка"
+   }
+  },
+  {
+   "h": "הָרִיעוּ",
+   "t": "ha-riu",
+   "g": {
+    "en": "to mar"
+   }
+  },
+  {
+   "h": "לֵאלֹהִים",
+   "t": "lelohim",
+   "g": {
+    "en": "to God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "בְּקוֹל",
+   "t": "be-kol",
+   "g": {
+    "en": "in voice or sound of",
+    "es": "voz",
+    "fr": "voix",
+    "ru": "голос",
+    "zh": "声音",
+    "ja": "音"
+   }
+  },
+  {
+   "h": "רִנָּה",
+   "t": "rinnah",
+   "g": {
+    "en": "creaking"
+   }
+  },
+  {
+   "h": "כִּי־יְהוָה",
+   "t": "ki-YHWH",
+   "g": {
+    "en": "for, because the LORD",
+    "es": "porque el SEÑOR",
+    "fr": "car l'Éternel",
+    "ja": "何故 主"
+   }
+  },
+  {
+   "h": "עֶלְיוֹן",
+   "t": "elyon",
+   "g": {
+    "en": "Most High",
+    "es": "elevado",
+    "ru": "верхний"
+   }
+  },
+  {
+   "h": "נוֹרָא",
+   "t": "nora",
+   "g": {
+    "en": "to fear",
+    "fr": "avoir peur",
+    "ru": "бояться",
+    "zh": "害怕"
+   }
+  },
+  {
+   "h": "מֶלֶךְ",
+   "t": "melekh",
+   "g": {
+    "en": "king of",
+    "es": "rey",
+    "fr": "roi",
+    "ru": "царь",
+    "zh": "国王",
+    "ja": "王"
+   }
+  },
+  {
+   "h": "גָּדוֹל",
+   "t": "gadol",
+   "g": {
+    "en": "great",
+    "es": "grande",
+    "fr": "grand",
+    "ru": "большой",
+    "zh": "大",
+    "ja": "大きな",
+    "ko": "크다"
+   }
+  },
+  {
+   "h": "עַל־כָּל־הָאָרֶץ",
+   "t": "al-kal-haaretz",
+   "g": {
+    "en": "above, over all of the earth",
+    "es": "sobre todo tierra",
+    "fr": "sur tous terre",
+    "ru": "на весь страна",
+    "ja": "上 全体 大地"
+   }
+  },
+  {
+   "h": "יַדְבֵּר",
+   "t": "yadber",
+   "g": {
+    "en": "to speak",
+    "fr": "dire"
+   }
+  },
+  {
+   "h": "עַמִּים",
+   "t": "ammim",
+   "g": {
+    "en": "people",
+    "es": "pueblo",
+    "pt": "povo",
+    "fr": "peuple",
+    "ru": "народ",
+    "zh": "人民",
+    "ja": "国々"
+   }
+  },
+  {
+   "h": "תַּחְתֵּינוּ",
+   "t": "tachteinu",
+   "g": {
+    "en": "under us",
+    "fr": "sous"
+   }
+  },
+  {
+   "h": "וּלְאֻמִּים",
+   "t": "u-le-ummim",
+   "g": {
+    "en": "and community",
+    "fr": "peuple"
+   }
+  },
+  {
+   "h": "תַּחַת",
+   "t": "tachat",
+   "g": {
+    "en": "under",
+    "fr": "sous"
+   }
+  },
+  {
+   "h": "רַגְלֵינוּ",
+   "t": "ragleinu",
+   "g": {
+    "en": "our foot",
+    "es": "pie",
+    "pt": "pé",
+    "fr": "pied",
+    "ru": "нога",
+    "zh": "腿",
+    "ja": "あし"
+   }
+  },
+  {
+   "h": "יִבְחַר־לָנוּ",
+   "t": "yivchar-lanu",
+   "g": {
+    "en": "to try to us",
+    "fr": "choisir à"
+   }
+  },
+  {
+   "h": "אֶת־נַחֲלָתֵנוּ",
+   "t": "et-nachalatenu",
+   "g": {
+    "en": "object marker our inheritance"
+   }
+  },
+  {
+   "h": "אֶת",
+   "t": "et",
+   "g": {
+    "en": "object marker"
+   }
+  },
+  {
+   "h": "גְּאוֹן",
+   "t": "geon",
+   "g": {
+    "en": "arrogance or majesty of",
+    "ru": "гений"
+   }
+  },
+  {
+   "h": "יַעֲקֹב",
+   "t": "yaakov",
+   "g": {
+    "en": "Jacob",
+    "pt": "Jacó",
+    "ru": "Иаков",
+    "zh": "雅各",
+    "ja": "ヤコブ"
+   }
+  },
+  {
+   "h": "אֲשֶׁר־אָהֵב",
+   "t": "asher-ahev",
+   "g": {
+    "en": "who, which to love",
+    "fr": "qui aimer",
+    "ru": "который любить"
+   }
+  },
+  {
+   "h": "סֶלָה",
+   "t": "selah",
+   "g": {
+    "en": "pause"
+   }
+  },
+  {
+   "h": "עָלָה",
+   "t": "alah",
+   "g": {
+    "en": "to go up",
+    "es": "elevar",
+    "fr": "monter",
+    "ru": "восходить",
+    "ja": "上昇"
+   }
+  },
+  {
+   "h": "אֱלֹהִים",
+   "t": "elohim",
+   "g": {
+    "en": "God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "בִּתְרוּעָה",
+   "t": "bi-truah",
+   "g": {
+    "en": "in clamor"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "שׁוֹפָר",
+   "t": "shofar",
+   "g": {
+    "en": "cornet or curved horn",
+    "pt": "xofar",
+    "ru": "труба"
+   }
+  },
+  {
+   "h": "זַמְּרוּ",
+   "t": "zammeru",
+   "g": {
+    "en": "to sing praise"
+   }
+  },
+  {
+   "h": "זַמֵּרוּ",
+   "t": "zammeru",
+   "g": {
+    "en": "to sing praise"
+   }
+  },
+  {
+   "h": "לְמַלְכֵּנוּ",
+   "t": "le-malkenu",
+   "g": {
+    "en": "to our king",
+    "es": "rey",
+    "fr": "roi",
+    "ru": "царь",
+    "zh": "国王",
+    "ja": "王"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
+   }
+  },
+  {
+   "h": "כָּל־הָאָרֶץ",
+   "t": "kal-haaretz",
+   "g": {
+    "en": "all of the earth",
+    "es": "todo tierra",
+    "fr": "tous terre",
+    "ru": "весь страна",
+    "ja": "全体 大地"
+   }
+  },
+  {
+   "h": "מַשְׂכִּיל",
+   "t": "maskil",
+   "g": {
+    "en": "instructive"
+   }
+  },
+  {
+   "h": "מָלַךְ",
+   "t": "malakh",
+   "g": {
+    "en": "to reign",
+    "fr": "régner",
+    "ru": "царствовать",
+    "zh": "统治",
+    "ja": "司る"
+   }
+  },
+  {
+   "h": "עַל־גּוֹיִם",
+   "t": "al-goyim",
+   "g": {
+    "en": "above, over foreign nation",
+    "es": "sobre nación",
+    "fr": "sur nation",
+    "ru": "на народ"
+   }
+  },
+  {
+   "h": "יָשַׁב",
+   "t": "yashav",
+   "g": {
+    "en": "to sit, dwell",
+    "fr": "habiter",
+    "ru": "сидеть",
+    "ja": "座る"
+   }
+  },
+  {
+   "h": "עַל־כִּסֵּא",
+   "t": "al-kisse",
+   "g": {
+    "en": "above, over covered of",
+    "es": "sobre silla",
+    "fr": "sur trône"
+   }
+  },
+  {
+   "h": "קָדְשׁוֹ",
+   "t": "kadesho",
+   "g": {
+    "en": "his holiness"
+   }
+  },
+  {
+   "h": "נְדִיבֵי",
+   "t": "nedivei",
+   "g": {
+    "en": "voluntary of",
+    "ru": "щедрый"
+   }
+  },
+  {
+   "h": "נֶאֱסָפוּ",
+   "t": "neesafu",
+   "g": {
+    "en": "to gather for any purpose",
+    "fr": "amasser",
+    "ru": "собирать"
+   }
+  },
+  {
+   "h": "עַם",
+   "t": "am",
+   "g": {
+    "en": "people of",
+    "es": "pueblo",
+    "pt": "povo",
+    "fr": "peuple",
+    "ru": "народ",
+    "zh": "人民",
+    "ja": "国々"
+   }
+  },
+  {
+   "h": "אֱלֹהֵי",
+   "t": "elohei",
+   "g": {
+    "en": "God of",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "אַבְרָהָם",
+   "t": "avraham",
+   "g": {
+    "en": "Abraham",
+    "pt": "Abraão",
+    "ru": "Авраам",
+    "zh": "亚伯拉罕",
+    "ja": "アブラハム"
+   }
+  },
+  {
+   "h": "מָגִנֵּי־אֶרֶץ",
+   "t": "maginnei-eretz",
+   "g": {
+    "en": "shield of earth",
+    "fr": "bouclier terre",
+    "ru": "щит страна",
+    "ja": "盾 大地"
+   }
+  },
+  {
+   "h": "מְאֹד",
+   "t": "meod",
+   "g": {
+    "en": "very",
+    "fr": "très",
+    "ru": "очень"
+   }
+  },
+  {
+   "h": "נַעֲלָה",
+   "t": "naalah",
+   "g": {
+    "en": "to go up",
+    "es": "elevar",
+    "fr": "monter",
+    "ru": "восходить",
+    "ja": "上昇"
+   }
+  }
+ ],
+ "text": "לַמְנַצֵּחַ לִבְנֵי־קֹרַח מִזְמוֹר\nכָּל־הָעַמִּים תִּקְעוּ־כָף הָרִיעוּ לֵאלֹהִים בְּקוֹל רִנָּה\nכִּי־יְהוָה עֶלְיוֹן נוֹרָא מֶלֶךְ גָּדוֹל עַל־כָּל־הָאָרֶץ\nיַדְבֵּר עַמִּים תַּחְתֵּינוּ וּלְאֻמִּים תַּחַת רַגְלֵינוּ\nיִבְחַר־לָנוּ אֶת־נַחֲלָתֵנוּ אֶת גְּאוֹן יַעֲקֹב אֲשֶׁר־אָהֵב סֶלָה\nעָלָה אֱלֹהִים בִּתְרוּעָה יְהוָה בְּקוֹל שׁוֹפָר\nזַמְּרוּ אֱלֹהִים זַמֵּרוּ זַמְּרוּ לְמַלְכֵּנוּ זַמֵּרוּ\nכִּי מֶלֶךְ כָּל־הָאָרֶץ אֱלֹהִים זַמְּרוּ מַשְׂכִּיל\nמָלַךְ אֱלֹהִים עַל־גּוֹיִם אֱלֹהִים יָשַׁב עַל־כִּסֵּא קָדְשׁוֹ\nנְדִיבֵי עַמִּים נֶאֱסָפוּ עַם אֱלֹהֵי אַבְרָהָם כִּי לֵאלֹהִים מָגִנֵּי־אֶרֶץ מְאֹד נַעֲלָה"
+}

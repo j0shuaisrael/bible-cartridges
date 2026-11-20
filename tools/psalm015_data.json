@@ -1,0 +1,498 @@
+{
+ "chapter": 15,
+ "title": "Psalm 15",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  [
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  [
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22
+  ],
+  [
+   23,
+   24,
+   25,
+   26,
+   2,
+   27,
+   28,
+   29,
+   30,
+   31
+  ],
+  [
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   37,
+   40,
+   41
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "מִזְמוֹר",
+   "t": "mizmor",
+   "g": {
+    "en": "psalm",
+    "ru": "псалом"
+   }
+  },
+  {
+   "h": "לְדָוִד",
+   "t": "le-david",
+   "g": {
+    "en": "to David",
+    "es": "David",
+    "pt": "Davi",
+    "fr": "David",
+    "ru": "Давид",
+    "ja": "ダビデ"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "מִי־יָגוּר",
+   "t": "mi-yagur",
+   "g": {
+    "en": "who? to turn aside from the road",
+    "fr": "qui habiter"
+   }
+  },
+  {
+   "h": "בְּאָהֳלֶךָ",
+   "t": "be-aholekha",
+   "g": {
+    "en": "in your tent",
+    "fr": "tente",
+    "ru": "палатка",
+    "ja": "天幕"
+   }
+  },
+  {
+   "h": "מִי־יִשְׁכֹּן",
+   "t": "mi-yishkon",
+   "g": {
+    "en": "who? to reside or permanently stay",
+    "fr": "qui placer",
+    "ru": "кто обитать",
+    "zh": "谁 居住"
+   }
+  },
+  {
+   "h": "בְּהַר",
+   "t": "be-har",
+   "g": {
+    "en": "in mountain of",
+    "es": "montaña",
+    "pt": "montanha",
+    "fr": "mont",
+    "ru": "гора",
+    "zh": "山",
+    "ja": "山"
+   }
+  },
+  {
+   "h": "קָדְשֶׁךָ",
+   "t": "kadeshekha",
+   "g": {
+    "en": "your holiness"
+   }
+  },
+  {
+   "h": "הוֹלֵךְ",
+   "t": "holekhe",
+   "g": {
+    "en": "to walk",
+    "es": "ir",
+    "fr": "aller",
+    "ru": "идти",
+    "ar": "ذهب",
+    "zh": "去",
+    "ja": "いく"
+   }
+  },
+  {
+   "h": "תָּמִים",
+   "t": "tamim",
+   "g": {
+    "en": "entire",
+    "fr": "innocent"
+   }
+  },
+  {
+   "h": "וּפֹעֵל",
+   "t": "u-foel",
+   "g": {
+    "en": "and to do or make",
+    "ru": "действовать"
+   }
+  },
+  {
+   "h": "צֶדֶק",
+   "t": "tzedek",
+   "g": {
+    "en": "righteousness",
+    "pt": "justiça",
+    "de": "astronomisch",
+    "ru": "справедливость",
+    "zh": "公正",
+    "id": "keadilan",
+    "ja": "正義"
+   }
+  },
+  {
+   "h": "וְדֹבֵר",
+   "t": "ve-dover",
+   "g": {
+    "en": "and to speak",
+    "fr": "dire"
+   }
+  },
+  {
+   "h": "אֱמֶת",
+   "t": "emet",
+   "g": {
+    "en": "truth",
+    "es": "verdad",
+    "fr": "vérité",
+    "ru": "правда",
+    "ar": "حقيقة",
+    "zh": "真相",
+    "ja": "西"
+   }
+  },
+  {
+   "h": "בִּלְבָבוֹ",
+   "t": "bi-le-vavo",
+   "g": {
+    "en": "in his heart",
+    "fr": "cœur",
+    "zh": "心脏",
+    "ja": "心"
+   }
+  },
+  {
+   "h": "לֹא־רָגַל",
+   "t": "lo-ragal",
+   "g": {
+    "en": "not to walk along",
+    "fr": "ne espionner",
+    "ru": "нет ходить"
+   }
+  },
+  {
+   "h": "עַל־לְשֹׁנוֹ",
+   "t": "al-le-shono",
+   "g": {
+    "en": "above, over his tongue, used literally",
+    "es": "sobre lengua",
+    "fr": "sur langage",
+    "ru": "на язык"
+   }
+  },
+  {
+   "h": "לֹא־עָשָׂה",
+   "t": "lo-asah",
+   "g": {
+    "en": "not to do or make",
+    "es": "no hacer",
+    "fr": "ne faire",
+    "ru": "нет делать",
+    "ja": "いいえ する"
+   }
+  },
+  {
+   "h": "לְרֵעֵהוּ",
+   "t": "le-reehu",
+   "g": {
+    "en": "to his associate",
+    "fr": "mal",
+    "ru": "зло",
+    "zh": "坏事",
+    "ja": "邪悪"
+   }
+  },
+  {
+   "h": "רָעָה",
+   "t": "raah",
+   "g": {
+    "en": "evil",
+    "es": "malo",
+    "fr": "mal",
+    "ru": "зло",
+    "zh": "坏事",
+    "ja": "邪悪"
+   }
+  },
+  {
+   "h": "וְחֶרְפָּה",
+   "t": "ve-cherpah",
+   "g": {
+    "en": "and contumely, disgrace",
+    "fr": "offense",
+    "ru": "позор"
+   }
+  },
+  {
+   "h": "לֹא־נָשָׂא",
+   "t": "lo-nasa",
+   "g": {
+    "en": "not to lift",
+    "fr": "ne lever",
+    "ru": "нет нести"
+   }
+  },
+  {
+   "h": "עַל־קְרֹבוֹ",
+   "t": "al-kerovo",
+   "g": {
+    "en": "above, over his near",
+    "es": "sobre cercano",
+    "fr": "sur proche"
+   }
+  },
+  {
+   "h": "נִבְזֶה",
+   "t": "nivzeh",
+   "g": {
+    "en": "to disesteem",
+    "fr": "mépriser"
+   }
+  },
+  {
+   "h": "בְּעֵינָיו",
+   "t": "be-einaiw",
+   "g": {
+    "en": "in his eye",
+    "es": "ojo",
+    "pt": "olho",
+    "fr": "œil",
+    "ru": "глаз",
+    "ar": "عين",
+    "zh": "眼睛",
+    "ja": "目"
+   }
+  },
+  {
+   "h": "נִמְאָס",
+   "t": "nimas",
+   "g": {
+    "en": "to spurn"
+   }
+  },
+  {
+   "h": "וְאֶת־יִרְאֵי",
+   "t": "ve-et-yirei",
+   "g": {
+    "en": "and object marker fearing of"
+   }
+  },
+  {
+   "h": "יְכַבֵּד",
+   "t": "yekhabbed",
+   "g": {
+    "en": "to be heavy",
+    "es": "imponer",
+    "fr": "s'alourdir",
+    "ko": "간"
+   }
+  },
+  {
+   "h": "נִשְׁבַּע",
+   "t": "nishba",
+   "g": {
+    "en": "to seven oneself",
+    "fr": "jurer",
+    "ru": "клясться",
+    "zh": "饱"
+   }
+  },
+  {
+   "h": "לְהָרַע",
+   "t": "le-hara",
+   "g": {
+    "en": "to to spoil of",
+    "fr": "faire du mal"
+   }
+  },
+  {
+   "h": "וְלֹא",
+   "t": "ve-lo",
+   "g": {
+    "en": "and not",
+    "es": "no",
+    "fr": "ne",
+    "ru": "нет",
+    "id": "tidak",
+    "ja": "いいえ"
+   }
+  },
+  {
+   "h": "יָמִר",
+   "t": "yamir",
+   "g": {
+    "en": "to alter",
+    "ru": "менять"
+   }
+  },
+  {
+   "h": "כַּסְפּוֹ",
+   "t": "kaspo",
+   "g": {
+    "en": "his silver",
+    "es": "plata",
+    "fr": "argent",
+    "ru": "серебро",
+    "zh": "银",
+    "ja": "お金"
+   }
+  },
+  {
+   "h": "לֹא־נָתַן",
+   "t": "lo-natan",
+   "g": {
+    "en": "not to give",
+    "es": "no dar",
+    "fr": "ne donner",
+    "ru": "нет дать",
+    "ja": "いいえ 与える"
+   }
+  },
+  {
+   "h": "בְּנֶשֶׁךְ",
+   "t": "be-neshekh",
+   "g": {
+    "en": "in interest on a debt"
+   }
+  },
+  {
+   "h": "וְשֹׁחַד",
+   "t": "ve-shochad",
+   "g": {
+    "en": "and donation"
+   }
+  },
+  {
+   "h": "עַל־נָקִי",
+   "t": "al-naki",
+   "g": {
+    "en": "above, over innocent",
+    "fr": "sur libre",
+    "ru": "на чистый"
+   }
+  },
+  {
+   "h": "לֹא",
+   "t": "lo",
+   "g": {
+    "en": "not",
+    "es": "no",
+    "fr": "ne… pas",
+    "ru": "нет",
+    "ar": "لا",
+    "id": "tidak",
+    "ja": "ではない"
+   }
+  },
+  {
+   "h": "לָקָח",
+   "t": "lakach",
+   "g": {
+    "en": "to take",
+    "fr": "prendre",
+    "ru": "брать",
+    "ja": "～を取る"
+   }
+  },
+  {
+   "h": "עֹשֵׂה־אֵלֶּה",
+   "t": "oseh-elleh",
+   "g": {
+    "en": "to do or make of these or those",
+    "ru": "делать эти"
+   }
+  },
+  {
+   "h": "יִמּוֹט",
+   "t": "yimmot",
+   "g": {
+    "en": "to waver"
+   }
+  },
+  {
+   "h": "לְעוֹלָם",
+   "t": "le-olam",
+   "g": {
+    "en": "to forever",
+    "es": "mundo",
+    "fr": "monde",
+    "ru": "мир",
+    "zh": "世界",
+    "id": "dunia",
+    "ja": "世界"
+   }
+  }
+ ],
+ "text": "מִזְמוֹר לְדָוִד יְהוָה מִי־יָגוּר בְּאָהֳלֶךָ מִי־יִשְׁכֹּן בְּהַר קָדְשֶׁךָ\nהוֹלֵךְ תָּמִים וּפֹעֵל צֶדֶק וְדֹבֵר אֱמֶת בִּלְבָבוֹ\nלֹא־רָגַל עַל־לְשֹׁנוֹ לֹא־עָשָׂה לְרֵעֵהוּ רָעָה וְחֶרְפָּה לֹא־נָשָׂא עַל־קְרֹבוֹ\nנִבְזֶה בְּעֵינָיו נִמְאָס וְאֶת־יִרְאֵי יְהוָה יְכַבֵּד נִשְׁבַּע לְהָרַע וְלֹא יָמִר\nכַּסְפּוֹ לֹא־נָתַן בְּנֶשֶׁךְ וְשֹׁחַד עַל־נָקִי לֹא לָקָח עֹשֵׂה־אֵלֶּה לֹא יִמּוֹט לְעוֹלָם"
+}

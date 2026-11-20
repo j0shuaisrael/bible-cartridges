@@ -1,0 +1,515 @@
+{
+ "chapter": 43,
+ "title": "Psalm 43",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  [
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18
+  ],
+  [
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25
+  ],
+  [
+   26,
+   27,
+   1,
+   28,
+   29,
+   30,
+   31,
+   32,
+   1,
+   33
+  ],
+  [
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "שָׁפְטֵנִי",
+   "t": "shafeteni",
+   "g": {
+    "en": "to judge me",
+    "fr": "juger",
+    "ru": "судить",
+    "zh": "判断"
+   }
+  },
+  {
+   "h": "אֱלֹהִים",
+   "t": "elohim",
+   "g": {
+    "en": "God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "וְרִיבָה",
+   "t": "ve-rivah",
+   "g": {
+    "en": "and to toss",
+    "fr": "se quereller"
+   }
+  },
+  {
+   "h": "רִיבִי",
+   "t": "rivi",
+   "g": {
+    "en": "my contest",
+    "fr": "querelle",
+    "ru": "ссора",
+    "zh": "打斗"
+   }
+  },
+  {
+   "h": "מִגּוֹי",
+   "t": "miggoi",
+   "g": {
+    "en": "from foreign nation",
+    "es": "nación",
+    "fr": "nation",
+    "ru": "народ"
+   }
+  },
+  {
+   "h": "לֹא־חָסִיד",
+   "t": "lo-chasid",
+   "g": {
+    "en": "not godly",
+    "fr": "ne pieux"
+   }
+  },
+  {
+   "h": "מֵאִישׁ",
+   "t": "meish",
+   "g": {
+    "en": "from man of",
+    "es": "hombre",
+    "fr": "homme",
+    "ru": "мужчина",
+    "ar": "رجل",
+    "zh": "男人",
+    "ja": "男"
+   }
+  },
+  {
+   "h": "מִרְמָה",
+   "t": "mirmah",
+   "g": {
+    "en": "fraud",
+    "fr": "fraude"
+   }
+  },
+  {
+   "h": "וְעַוְלָה",
+   "t": "ve-avlah",
+   "g": {
+    "en": "and evil",
+    "ru": "ярмо"
+   }
+  },
+  {
+   "h": "תְפַלְּטֵנִי",
+   "t": "tefalleteni",
+   "g": {
+    "en": "to slip out me"
+   }
+  },
+  {
+   "h": "כִּי־אַתָּה",
+   "t": "ki-attah",
+   "g": {
+    "en": "for, because you",
+    "es": "porque tú",
+    "fr": "car tu"
+   }
+  },
+  {
+   "h": "אֱלֹהֵי",
+   "t": "elohei",
+   "g": {
+    "en": "God of",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "מָעוּזִּי",
+   "t": "mauzzi",
+   "g": {
+    "en": "my fortified place",
+    "ru": "крепость"
+   }
+  },
+  {
+   "h": "לָמָה",
+   "t": "lamah",
+   "g": {
+    "en": "to what",
+    "es": "que",
+    "fr": "quoi",
+    "ru": "что",
+    "ja": "何"
+   }
+  },
+  {
+   "h": "זְנַחְתָּנִי",
+   "t": "zenachtani",
+   "g": {
+    "en": "reject, forsake me"
+   }
+  },
+  {
+   "h": "לָמָּה־קֹדֵר",
+   "t": "lammah-koder",
+   "g": {
+    "en": "to what to be ashy"
+   }
+  },
+  {
+   "h": "אֶתְהַלֵּךְ",
+   "t": "ethallekhe",
+   "g": {
+    "en": "to walk",
+    "es": "ir",
+    "fr": "aller",
+    "ru": "идти",
+    "ar": "ذهب",
+    "zh": "去",
+    "ja": "いく"
+   }
+  },
+  {
+   "h": "בְּלַחַץ",
+   "t": "be-la-chatz",
+   "g": {
+    "en": "in distress of",
+    "ru": "давление",
+    "zh": "压力",
+    "id": "tekanan",
+    "ja": "圧力"
+   }
+  },
+  {
+   "h": "אוֹיֵב",
+   "t": "oyev",
+   "g": {
+    "en": "enemy",
+    "fr": "ennemi"
+   }
+  },
+  {
+   "h": "שְׁלַח־אוֹרְךָ",
+   "t": "shelach-orekha",
+   "g": {
+    "en": "to send your illumination or luminary",
+    "es": "enviar luz",
+    "fr": "envoyer lumière",
+    "ru": "посылать свет"
+   }
+  },
+  {
+   "h": "וַאֲמִתְּךָ",
+   "t": "va-amittekha",
+   "g": {
+    "en": "and your truth",
+    "es": "verdad",
+    "fr": "vérité",
+    "ru": "правда",
+    "ar": "حقيقة",
+    "zh": "真相",
+    "ja": "西"
+   }
+  },
+  {
+   "h": "הֵמָּה",
+   "t": "hemmah",
+   "g": {
+    "en": "they",
+    "es": "ellos",
+    "fr": "eux",
+    "de": "sie",
+    "ru": "они",
+    "zh": "他们",
+    "id": "mereka"
+   }
+  },
+  {
+   "h": "יַנְחוּנִי",
+   "t": "yanchuni",
+   "g": {
+    "en": "to guide me",
+    "fr": "mener"
+   }
+  },
+  {
+   "h": "יְבִיאוּנִי",
+   "t": "yeviuni",
+   "g": {
+    "en": "to go or come me",
+    "fr": "venir"
+   }
+  },
+  {
+   "h": "אֶל־הַר־קָדְשְׁךָ",
+   "t": "el-har-kadeshekha",
+   "g": {
+    "en": "to, toward mountain of your holiness"
+   }
+  },
+  {
+   "h": "וְאֶל־מִשְׁכְּנוֹתֶיךָ",
+   "t": "ve-el-mishkenoteikha",
+   "g": {
+    "en": "and to, toward your residence",
+    "ru": "к жилище"
+   }
+  },
+  {
+   "h": "וְאָבוֹאָה",
+   "t": "ve-avoah",
+   "g": {
+    "en": "and to go or come",
+    "fr": "venir"
+   }
+  },
+  {
+   "h": "אֶל־מִזְבַּח",
+   "t": "el-mizbach",
+   "g": {
+    "en": "to, toward altar of",
+    "fr": "à autel",
+    "ru": "к алтарь",
+    "ja": "～へ、～に向かって、～に向けて 祭壇"
+   }
+  },
+  {
+   "h": "אֶל־אֵל",
+   "t": "el-el",
+   "g": {
+    "en": "to, toward God of",
+    "fr": "à El",
+    "ru": "к божество",
+    "ar": "إله إله",
+    "ja": "～へ、～に向かって、～に向けて かみ",
+    "ko": "신 신"
+   }
+  },
+  {
+   "h": "שִׂמְחַת",
+   "t": "simchat",
+   "g": {
+    "en": "blithesomeness or glee, of",
+    "fr": "joie",
+    "ru": "радость"
+   }
+  },
+  {
+   "h": "גִּילִי",
+   "t": "gili",
+   "g": {
+    "en": "my revolution",
+    "ru": "возраст",
+    "zh": "年代",
+    "ja": "年齢"
+   }
+  },
+  {
+   "h": "וְאוֹדְךָ",
+   "t": "ve-odekha",
+   "g": {
+    "en": "and to praise you",
+    "fr": "reconnaissant"
+   }
+  },
+  {
+   "h": "בְכִנּוֹר",
+   "t": "ve-khinnor",
+   "g": {
+    "en": "in harp",
+    "es": "violín",
+    "fr": "harpe"
+   }
+  },
+  {
+   "h": "אֱלֹהָי",
+   "t": "elohai",
+   "g": {
+    "en": "my God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "מַה־תִּשְׁתּוֹחֲחִי",
+   "t": "mah-tishtochachi",
+   "g": {
+    "en": "what to sink or depress"
+   }
+  },
+  {
+   "h": "נַפְשִׁי",
+   "t": "nafshi",
+   "g": {
+    "en": "my soul",
+    "fr": "âme",
+    "ru": "душа",
+    "ar": "نفس",
+    "zh": "灵魂",
+    "id": "jiwa",
+    "ja": "魂"
+   }
+  },
+  {
+   "h": "וּמַה־תֶּהֱמִי",
+   "t": "u-mah-tehemi",
+   "g": {
+    "en": "and what to make a loud sound"
+   }
+  },
+  {
+   "h": "עָלָי",
+   "t": "alai",
+   "g": {
+    "en": "above, over me",
+    "es": "sobre",
+    "fr": "sur",
+    "ru": "на",
+    "ja": "上"
+   }
+  },
+  {
+   "h": "הוֹחִילִי",
+   "t": "hochili",
+   "g": {
+    "en": "to wait",
+    "fr": "attendre"
+   }
+  },
+  {
+   "h": "לֵאלֹהִים",
+   "t": "lelohim",
+   "g": {
+    "en": "to God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "כִּי־עוֹד",
+   "t": "ki-od",
+   "g": {
+    "en": "for, because iteration or continuance",
+    "fr": "car encore",
+    "ja": "何故 まだ"
+   }
+  },
+  {
+   "h": "אוֹדֶנּוּ",
+   "t": "odennu",
+   "g": {
+    "en": "to praise him",
+    "fr": "reconnaissant"
+   }
+  },
+  {
+   "h": "יְשׁוּעֹת",
+   "t": "yeshuot",
+   "g": {
+    "en": "salvation of",
+    "fr": "salut",
+    "ru": "спасение"
+   }
+  },
+  {
+   "h": "פָּנַי",
+   "t": "panai",
+   "g": {
+    "en": "my face",
+    "es": "cara",
+    "fr": "visage",
+    "ru": "лицо",
+    "zh": "脸",
+    "ja": "顔",
+    "ko": "얼굴"
+   }
+  },
+  {
+   "h": "וֵאלֹהָי",
+   "t": "ve-lohai",
+   "g": {
+    "en": "and my God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  }
+ ],
+ "text": "שָׁפְטֵנִי אֱלֹהִים וְרִיבָה רִיבִי מִגּוֹי לֹא־חָסִיד מֵאִישׁ מִרְמָה וְעַוְלָה תְפַלְּטֵנִי\nכִּי־אַתָּה אֱלֹהֵי מָעוּזִּי לָמָה זְנַחְתָּנִי לָמָּה־קֹדֵר אֶתְהַלֵּךְ בְּלַחַץ אוֹיֵב\nשְׁלַח־אוֹרְךָ וַאֲמִתְּךָ הֵמָּה יַנְחוּנִי יְבִיאוּנִי אֶל־הַר־קָדְשְׁךָ וְאֶל־מִשְׁכְּנוֹתֶיךָ\nוְאָבוֹאָה אֶל־מִזְבַּח אֱלֹהִים אֶל־אֵל שִׂמְחַת גִּילִי וְאוֹדְךָ בְכִנּוֹר אֱלֹהִים אֱלֹהָי\nמַה־תִּשְׁתּוֹחֲחִי נַפְשִׁי וּמַה־תֶּהֱמִי עָלָי הוֹחִילִי לֵאלֹהִים כִּי־עוֹד אוֹדֶנּוּ יְשׁוּעֹת פָּנַי וֵאלֹהָי"
+}

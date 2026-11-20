@@ -1,0 +1,520 @@
+{
+ "chapter": 130,
+ "title": "Psalm 130",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  [
+   13,
+   14,
+   5,
+   15,
+   16
+  ],
+  [
+   17,
+   18,
+   19,
+   20
+  ],
+  [
+   21,
+   4,
+   22,
+   23,
+   24,
+   25
+  ],
+  [
+   23,
+   26,
+   27,
+   28,
+   29,
+   28
+  ],
+  [
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37
+  ],
+  [
+   38,
+   39,
+   40,
+   41,
+   42
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "הַמַּעֲלוֹת",
+   "t": "hammaalot",
+   "g": {
+    "en": "the elevation",
+    "es": "escalera",
+    "ru": "подъём"
+   }
+  },
+  {
+   "h": "מִמַּעֲמַקִּים",
+   "t": "mimmaamakkim",
+   "g": {
+    "en": "from deep"
+   }
+  },
+  {
+   "h": "קְרָאתִיךָ",
+   "t": "keratikha",
+   "g": {
+    "en": "to call out to you",
+    "fr": "appeler",
+    "ru": "звать",
+    "zh": "叫"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "אֲדֹנָי",
+   "t": "adonai",
+   "g": {
+    "en": "my Lord",
+    "ru": "Адонай",
+    "ja": "主"
+   }
+  },
+  {
+   "h": "שִׁמְעָה",
+   "t": "shimah",
+   "g": {
+    "en": "to hear intelligently",
+    "fr": "entendre",
+    "ru": "слышать",
+    "ja": "聞く"
+   }
+  },
+  {
+   "h": "בְקוֹלִי",
+   "t": "ve-koli",
+   "g": {
+    "en": "in my voice or sound",
+    "es": "voz",
+    "fr": "voix",
+    "ru": "голос",
+    "zh": "声音",
+    "ja": "音"
+   }
+  },
+  {
+   "h": "תִּהְיֶינָה",
+   "t": "tihyeinah",
+   "g": {
+    "en": "to be",
+    "es": "ser",
+    "fr": "être",
+    "ru": "быть",
+    "zh": "存在",
+    "ja": "である"
+   }
+  },
+  {
+   "h": "אָזְנֶיךָ",
+   "t": "azeneikha",
+   "g": {
+    "en": "your ear",
+    "es": "oreja",
+    "fr": "oreille",
+    "ja": "耳"
+   }
+  },
+  {
+   "h": "קַשֻּׁבוֹת",
+   "t": "kasshuvot",
+   "g": {
+    "en": "hearkening"
+   }
+  },
+  {
+   "h": "לְקוֹל",
+   "t": "le-kol",
+   "g": {
+    "en": "to voice or sound of",
+    "es": "voz",
+    "fr": "voix",
+    "ru": "голос",
+    "zh": "声音",
+    "ja": "音"
+   }
+  },
+  {
+   "h": "תַּחֲנוּנָי",
+   "t": "tachanunai",
+   "g": {
+    "en": "my earnest prayer"
+   }
+  },
+  {
+   "h": "אִם־עֲוֺנוֹת",
+   "t": "im-anot",
+   "g": {
+    "en": "if iniquity"
+   }
+  },
+  {
+   "h": "תִּשְׁמָר־יָהּ",
+   "t": "tishmar-yah",
+   "g": {
+    "en": "to keep, guard the LORD",
+    "fr": "garder l'Éternel",
+    "ru": "ограждать Господь",
+    "zh": "看守 耶和华",
+    "ja": "保つ 主"
+   }
+  },
+  {
+   "h": "מִי",
+   "t": "mi",
+   "g": {
+    "en": "who?",
+    "es": "quien",
+    "fr": "qui",
+    "ru": "кто",
+    "zh": "谁",
+    "ja": "だれ"
+   }
+  },
+  {
+   "h": "יַעֲמֹד",
+   "t": "yaamod",
+   "g": {
+    "en": "to stand",
+    "es": "pararse",
+    "fr": "se tenir",
+    "ru": "стоять",
+    "ja": "立つ"
+   }
+  },
+  {
+   "h": "כִּי־עִמְּךָ",
+   "t": "ki-immekha",
+   "g": {
+    "en": "for, because with you",
+    "es": "porque con",
+    "fr": "car avec"
+   }
+  },
+  {
+   "h": "הַסְּלִיחָה",
+   "t": "ha-selichah",
+   "g": {
+    "en": "the pardon",
+    "es": "perdón",
+    "ru": "извинение"
+   }
+  },
+  {
+   "h": "לְמַעַן",
+   "t": "le-maan",
+   "g": {
+    "en": "for the sake of"
+   }
+  },
+  {
+   "h": "תִּוָּרֵא",
+   "t": "tivvare",
+   "g": {
+    "en": "to fear",
+    "fr": "avoir peur",
+    "ru": "бояться",
+    "zh": "害怕"
+   }
+  },
+  {
+   "h": "קִוִּיתִי",
+   "t": "kivviti",
+   "g": {
+    "en": "to bind together",
+    "fr": "attendre"
+   }
+  },
+  {
+   "h": "קִוְּתָה",
+   "t": "kivtah",
+   "g": {
+    "en": "to bind together",
+    "fr": "attendre"
+   }
+  },
+  {
+   "h": "נַפְשִׁי",
+   "t": "nafshi",
+   "g": {
+    "en": "my soul",
+    "fr": "âme",
+    "ru": "душа",
+    "ar": "نفس",
+    "zh": "灵魂",
+    "id": "jiwa",
+    "ja": "魂"
+   }
+  },
+  {
+   "h": "וְלִדְבָרוֹ",
+   "t": "ve-li-dvaro",
+   "g": {
+    "en": "and to his word",
+    "es": "palabra",
+    "fr": "parole",
+    "ru": "слово",
+    "zh": "词语",
+    "ja": "言葉"
+   }
+  },
+  {
+   "h": "הוֹחָלְתִּי",
+   "t": "hochaletti",
+   "g": {
+    "en": "to wait",
+    "fr": "attendre"
+   }
+  },
+  {
+   "h": "לַאדֹנָי",
+   "t": "la-donai",
+   "g": {
+    "en": "to my Lord",
+    "ru": "Адонай",
+    "ja": "主"
+   }
+  },
+  {
+   "h": "מִשֹּׁמְרִים",
+   "t": "misshomerim",
+   "g": {
+    "en": "from to keep, guard",
+    "fr": "garder",
+    "ru": "ограждать",
+    "zh": "看守",
+    "ja": "保つ"
+   }
+  },
+  {
+   "h": "לַבֹּקֶר",
+   "t": "la-boker",
+   "g": {
+    "en": "to dawn",
+    "es": "controlador",
+    "fr": "matin",
+    "ru": "утро",
+    "zh": "牛",
+    "ja": "うし"
+   }
+  },
+  {
+   "h": "שֹׁמְרִים",
+   "t": "shomerim",
+   "g": {
+    "en": "to keep, guard",
+    "fr": "garder",
+    "ru": "ограждать",
+    "zh": "看守",
+    "ja": "保つ"
+   }
+  },
+  {
+   "h": "יַחֵל",
+   "t": "yachel",
+   "g": {
+    "en": "to wait",
+    "fr": "attendre"
+   }
+  },
+  {
+   "h": "יִשְׂרָאֵל",
+   "t": "yisrael",
+   "g": {
+    "en": "Israel",
+    "es": "Israel",
+    "pt": "Israel",
+    "fr": "Israël",
+    "de": "Staat",
+    "ru": "Израиль",
+    "zh": "以色列",
+    "hi": "इज़राइल",
+    "ja": "イスラエル",
+    "ko": "이스라엘"
+   }
+  },
+  {
+   "h": "אֶל־יְהוָה",
+   "t": "el-YHWH",
+   "g": {
+    "en": "to, toward the LORD",
+    "fr": "à l'Éternel",
+    "ru": "к Господь",
+    "ar": "إله الرب",
+    "ja": "～へ、～に向かって、～に向けて 主",
+    "ko": "신 여호와"
+   }
+  },
+  {
+   "h": "כִּי־עִם־יְהוָה",
+   "t": "ki-im-YHWH",
+   "g": {
+    "en": "for, because with the LORD",
+    "es": "porque con el SEÑOR",
+    "fr": "car avec l'Éternel"
+   }
+  },
+  {
+   "h": "הַחֶסֶד",
+   "t": "hachesed",
+   "g": {
+    "en": "the kindness",
+    "fr": "bonté",
+    "ru": "милость",
+    "ar": "نعمة"
+   }
+  },
+  {
+   "h": "וְהַרְבֵּה",
+   "t": "ve-ha-rbeh",
+   "g": {
+    "en": "and to increase",
+    "fr": "se multiplier",
+    "ru": "размножаться",
+    "zh": "增加"
+   }
+  },
+  {
+   "h": "עִמּוֹ",
+   "t": "immo",
+   "g": {
+    "en": "with him",
+    "es": "con",
+    "fr": "avec",
+    "ru": "вместе",
+    "ar": "مع",
+    "zh": "和",
+    "id": "dengan"
+   }
+  },
+  {
+   "h": "פְדוּת",
+   "t": "fedut",
+   "g": {
+    "en": "distinction"
+   }
+  },
+  {
+   "h": "וְהוּא",
+   "t": "ve-hu",
+   "g": {
+    "en": "and he",
+    "es": "él",
+    "fr": "il",
+    "de": "persönliches Fürwort",
+    "ru": "он",
+    "ja": "彼"
+   }
+  },
+  {
+   "h": "יִפְדֶּה",
+   "t": "yifdeh",
+   "g": {
+    "en": "to sever"
+   }
+  },
+  {
+   "h": "אֶת־יִשְׂרָאֵל",
+   "t": "et-yisrael",
+   "g": {
+    "en": "object marker Israel"
+   }
+  },
+  {
+   "h": "מִכֹּל",
+   "t": "mikkol",
+   "g": {
+    "en": "from all of",
+    "es": "todo",
+    "fr": "tous",
+    "ru": "весь",
+    "ja": "全体"
+   }
+  },
+  {
+   "h": "עֲוֺנֹתָיו",
+   "t": "anotaiw",
+   "g": {
+    "en": "his iniquity",
+    "fr": "faute",
+    "ru": "грех"
+   }
+  }
+ ],
+ "text": "שִׁיר הַמַּעֲלוֹת מִמַּעֲמַקִּים קְרָאתִיךָ יְהוָה\nאֲדֹנָי שִׁמְעָה בְקוֹלִי תִּהְיֶינָה אָזְנֶיךָ קַשֻּׁבוֹת לְקוֹל תַּחֲנוּנָי\nאִם־עֲוֺנוֹת תִּשְׁמָר־יָהּ אֲדֹנָי מִי יַעֲמֹד\nכִּי־עִמְּךָ הַסְּלִיחָה לְמַעַן תִּוָּרֵא\nקִוִּיתִי יְהוָה קִוְּתָה נַפְשִׁי וְלִדְבָרוֹ הוֹחָלְתִּי\nנַפְשִׁי לַאדֹנָי מִשֹּׁמְרִים לַבֹּקֶר שֹׁמְרִים לַבֹּקֶר\nיַחֵל יִשְׂרָאֵל אֶל־יְהוָה כִּי־עִם־יְהוָה הַחֶסֶד וְהַרְבֵּה עִמּוֹ פְדוּת\nוְהוּא יִפְדֶּה אֶת־יִשְׂרָאֵל מִכֹּל עֲוֺנֹתָיו"
+}

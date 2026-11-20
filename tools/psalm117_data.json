@@ -1,0 +1,158 @@
+{
+ "chapter": 117,
+ "title": "Psalm 117",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "הַלְלוּ",
+   "t": "ha-le-lu",
+   "g": {
+    "en": "to praise",
+    "fr": "louer"
+   }
+  },
+  {
+   "h": "אֶת־יְהוָה",
+   "t": "et-YHWH",
+   "g": {
+    "en": "object marker the LORD"
+   }
+  },
+  {
+   "h": "כָּל־גּוֹיִם",
+   "t": "kal-goyim",
+   "g": {
+    "en": "all of foreign nation",
+    "es": "todo nación",
+    "fr": "tous nation",
+    "ru": "весь народ"
+   }
+  },
+  {
+   "h": "שַׁבְּחוּהוּ",
+   "t": "shabbechuhu",
+   "g": {
+    "en": "to address in aloud tone him"
+   }
+  },
+  {
+   "h": "כָּל־הָאֻמִּים",
+   "t": "kal-haummim",
+   "g": {
+    "en": "all of the collection",
+    "es": "todo antebrazo",
+    "fr": "tous coudée",
+    "ru": "весь средний",
+    "ja": "全体 キュビト"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
+   }
+  },
+  {
+   "h": "גָבַר",
+   "t": "gavar",
+   "g": {
+    "en": "to be strong",
+    "fr": "surmonter",
+    "ru": "быть",
+    "zh": "强壮"
+   }
+  },
+  {
+   "h": "עָלֵינוּ",
+   "t": "aleinu",
+   "g": {
+    "en": "above, over us",
+    "es": "sobre",
+    "fr": "sur",
+    "ru": "на",
+    "ja": "上"
+   }
+  },
+  {
+   "h": "חַסְדּוֹ",
+   "t": "chasdo",
+   "g": {
+    "en": "his kindness",
+    "fr": "bonté",
+    "ru": "милость",
+    "ar": "نعمة"
+   }
+  },
+  {
+   "h": "וֶאֱמֶת־יְהוָה",
+   "t": "ve-emet-YHWH",
+   "g": {
+    "en": "and truth of the LORD",
+    "es": "verdad el SEÑOR",
+    "fr": "vérité l'Éternel",
+    "ru": "правда Господь",
+    "ar": "حقيقة الرب",
+    "zh": "真相 耶和华",
+    "ja": "西 主"
+   }
+  },
+  {
+   "h": "לְעוֹלָם",
+   "t": "le-olam",
+   "g": {
+    "en": "to forever",
+    "es": "mundo",
+    "fr": "monde",
+    "ru": "мир",
+    "zh": "世界",
+    "id": "dunia",
+    "ja": "世界"
+   }
+  },
+  {
+   "h": "הַלְלוּ־יָהּ",
+   "t": "ha-le-lu-yah",
+   "g": {
+    "en": "to praise the LORD",
+    "fr": "louer l'Éternel"
+   }
+  }
+ ],
+ "text": "הַלְלוּ אֶת־יְהוָה כָּל־גּוֹיִם שַׁבְּחוּהוּ כָּל־הָאֻמִּים\nכִּי גָבַר עָלֵינוּ חַסְדּוֹ וֶאֱמֶת־יְהוָה לְעוֹלָם הַלְלוּ־יָהּ"
+}

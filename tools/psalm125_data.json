@@ -1,0 +1,490 @@
+{
+ "chapter": 125,
+ "title": "Psalm 125",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  [
+   8,
+   9,
+   10,
+   11,
+   12,
+   10,
+   13,
+   14,
+   15
+  ],
+  [
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   23,
+   26,
+   27
+  ],
+  [
+   28,
+   29,
+   30,
+   31,
+   32
+  ],
+  [
+   33,
+   34,
+   35,
+   29,
+   36,
+   37,
+   38,
+   39
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "הַמַּעֲלוֹת",
+   "t": "hammaalot",
+   "g": {
+    "en": "the elevation",
+    "es": "escalera",
+    "ru": "подъём"
+   }
+  },
+  {
+   "h": "הַבֹּטְחִים",
+   "t": "habbotechim",
+   "g": {
+    "en": "the to trust",
+    "ru": "доверяться"
+   }
+  },
+  {
+   "h": "בַּיהוָה",
+   "t": "ba-ihvah",
+   "g": {
+    "en": "in the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "כְּהַר־צִיּוֹן",
+   "t": "ke-har-tzion",
+   "g": {
+    "en": "like mountain of Zion",
+    "es": "montaña Sion",
+    "ru": "гора Сион",
+    "ja": "山 シオン"
+   }
+  },
+  {
+   "h": "לֹא־יִמּוֹט",
+   "t": "lo-yimmot",
+   "g": {
+    "en": "not to waver"
+   }
+  },
+  {
+   "h": "לְעוֹלָם",
+   "t": "le-olam",
+   "g": {
+    "en": "to forever",
+    "es": "mundo",
+    "fr": "monde",
+    "ru": "мир",
+    "zh": "世界",
+    "id": "dunia",
+    "ja": "世界"
+   }
+  },
+  {
+   "h": "יֵשֵׁב",
+   "t": "yeshev",
+   "g": {
+    "en": "to sit, dwell",
+    "fr": "habiter",
+    "ru": "сидеть",
+    "ja": "座る"
+   }
+  },
+  {
+   "h": "יְרוּשָׁלִַם",
+   "t": "yerushalam",
+   "g": {
+    "en": "Jerushalaim or Jerushalem"
+   }
+  },
+  {
+   "h": "הָרִים",
+   "t": "ha-rim",
+   "g": {
+    "en": "mountain",
+    "es": "montaña",
+    "pt": "montanha",
+    "fr": "mont",
+    "ru": "гора",
+    "zh": "山",
+    "ja": "山"
+   }
+  },
+  {
+   "h": "סָבִיב",
+   "t": "saviv",
+   "g": {
+    "en": "around"
+   }
+  },
+  {
+   "h": "לָהּ",
+   "t": "lah",
+   "g": {
+    "en": "to her",
+    "fr": "à"
+   }
+  },
+  {
+   "h": "וַיהוָה",
+   "t": "va-ihvah",
+   "g": {
+    "en": "and the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "לְעַמּוֹ",
+   "t": "le-ammo",
+   "g": {
+    "en": "to his people",
+    "es": "pueblo",
+    "pt": "povo",
+    "fr": "peuple",
+    "ru": "народ",
+    "zh": "人民",
+    "ja": "国々"
+   }
+  },
+  {
+   "h": "מֵעַתָּה",
+   "t": "meattah",
+   "g": {
+    "en": "from at this time",
+    "fr": "maintenant",
+    "ru": "итак"
+   }
+  },
+  {
+   "h": "וְעַד־עוֹלָם",
+   "t": "ve-ad-olam",
+   "g": {
+    "en": "and until forever",
+    "fr": "jusqu'à monde",
+    "ru": "до мир",
+    "ja": "まで 世界"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
+   }
+  },
+  {
+   "h": "לֹא",
+   "t": "lo",
+   "g": {
+    "en": "not",
+    "es": "no",
+    "fr": "ne… pas",
+    "ru": "нет",
+    "ar": "لا",
+    "id": "tidak",
+    "ja": "ではない"
+   }
+  },
+  {
+   "h": "יָנוּחַ",
+   "t": "yanuach",
+   "g": {
+    "en": "to rest",
+    "fr": "placer"
+   }
+  },
+  {
+   "h": "שֵׁבֶט",
+   "t": "shevet",
+   "g": {
+    "en": "scion of",
+    "fr": "sceptre",
+    "ru": "племя",
+    "zh": "部落"
+   }
+  },
+  {
+   "h": "הָרֶשַׁע",
+   "t": "haresha",
+   "g": {
+    "en": "the wrong",
+    "ru": "злоба",
+    "ja": "邪悪"
+   }
+  },
+  {
+   "h": "עַל",
+   "t": "al",
+   "g": {
+    "en": "above, over",
+    "es": "sobre",
+    "fr": "sur",
+    "ru": "на",
+    "ja": "上"
+   }
+  },
+  {
+   "h": "גּוֹרַל",
+   "t": "goral",
+   "g": {
+    "en": "pebble of",
+    "ru": "судьба"
+   }
+  },
+  {
+   "h": "הַצַּדִּיקִים",
+   "t": "hattzaddikim",
+   "g": {
+    "en": "the just",
+    "fr": "juste",
+    "ru": "праведник",
+    "ja": "正しい"
+   }
+  },
+  {
+   "h": "לְמַעַן",
+   "t": "le-maan",
+   "g": {
+    "en": "for the sake of"
+   }
+  },
+  {
+   "h": "לֹא־יִשְׁלְחוּ",
+   "t": "lo-yishlechu",
+   "g": {
+    "en": "not to send",
+    "es": "no enviar",
+    "fr": "ne envoyer",
+    "ru": "нет посылать"
+   }
+  },
+  {
+   "h": "בְּעַוְלָתָה",
+   "t": "be-avlatah",
+   "g": {
+    "en": "in evil",
+    "ru": "ярмо"
+   }
+  },
+  {
+   "h": "יְדֵיהֶם",
+   "t": "yedeihem",
+   "g": {
+    "en": "their hand",
+    "es": "mano",
+    "pt": "mão",
+    "fr": "main",
+    "ru": "рука",
+    "zh": "手",
+    "id": "tangan",
+    "ja": "手"
+   }
+  },
+  {
+   "h": "הֵיטִיבָה",
+   "t": "heitivah",
+   "g": {
+    "en": "to be make well",
+    "fr": "bien",
+    "ru": "быть"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "לַטּוֹבִים",
+   "t": "la-tovim",
+   "g": {
+    "en": "to good in the widest sense",
+    "es": "bueno",
+    "fr": "bon",
+    "ru": "хороший",
+    "ar": "جيد",
+    "zh": "好",
+    "ko": "좋다"
+   }
+  },
+  {
+   "h": "וְלִישָׁרִים",
+   "t": "ve-li-sharim",
+   "g": {
+    "en": "and to straight",
+    "es": "recto",
+    "ru": "прямой",
+    "ja": "まっすぐ"
+   }
+  },
+  {
+   "h": "בְּלִבּוֹתָם",
+   "t": "be-li-botam",
+   "g": {
+    "en": "in their heart",
+    "ru": "лава"
+   }
+  },
+  {
+   "h": "וְהַמַּטִּים",
+   "t": "ve-hammattim",
+   "g": {
+    "en": "and the to stretch or spread out",
+    "fr": "planter",
+    "ru": "сворачиваться"
+   }
+  },
+  {
+   "h": "עֲקַלְקַלּוֹתָם",
+   "t": "akalkallotam",
+   "g": {
+    "en": "their winding"
+   }
+  },
+  {
+   "h": "יוֹלִיכֵם",
+   "t": "yolikhem",
+   "g": {
+    "en": "to walk them",
+    "ru": "идти"
+   }
+  },
+  {
+   "h": "אֶת־פֹּעֲלֵי",
+   "t": "et-poalei",
+   "g": {
+    "en": "with to do or make of"
+   }
+  },
+  {
+   "h": "הָאָוֶן",
+   "t": "haaven",
+   "g": {
+    "en": "the iniquity",
+    "ru": "сила",
+    "zh": "力量",
+    "ja": "苦労"
+   }
+  },
+  {
+   "h": "שָׁלוֹם",
+   "t": "shalom",
+   "g": {
+    "en": "peace",
+    "es": "paz",
+    "fr": "paix",
+    "de": "Judentum",
+    "ru": "благополучие",
+    "ar": "مرحبا",
+    "zh": "和平",
+    "ja": "平和"
+   }
+  },
+  {
+   "h": "עַל־יִשְׂרָאֵל",
+   "t": "al-yisrael",
+   "g": {
+    "en": "above, over Israel",
+    "es": "sobre Israel",
+    "fr": "sur Israël",
+    "ru": "на Израиль",
+    "ja": "上 イスラエル"
+   }
+  }
+ ],
+ "text": "שִׁיר הַמַּעֲלוֹת הַבֹּטְחִים בַּיהוָה כְּהַר־צִיּוֹן לֹא־יִמּוֹט לְעוֹלָם יֵשֵׁב\nיְרוּשָׁלִַם הָרִים סָבִיב לָהּ וַיהוָה סָבִיב לְעַמּוֹ מֵעַתָּה וְעַד־עוֹלָם\nכִּי לֹא יָנוּחַ שֵׁבֶט הָרֶשַׁע עַל גּוֹרַל הַצַּדִּיקִים לְמַעַן לֹא־יִשְׁלְחוּ הַצַּדִּיקִים בְּעַוְלָתָה יְדֵיהֶם\nהֵיטִיבָה יְהוָה לַטּוֹבִים וְלִישָׁרִים בְּלִבּוֹתָם\nוְהַמַּטִּים עֲקַלְקַלּוֹתָם יוֹלִיכֵם יְהוָה אֶת־פֹּעֲלֵי הָאָוֶן שָׁלוֹם עַל־יִשְׂרָאֵל"
+}

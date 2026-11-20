@@ -1,0 +1,514 @@
+{
+ "chapter": 128,
+ "title": "Psalm 128",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  [
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13
+  ],
+  [
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23
+  ],
+  [
+   24,
+   25,
+   26,
+   27,
+   28,
+   4
+  ],
+  [
+   29,
+   4,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36
+  ],
+  [
+   37,
+   38,
+   39,
+   40
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "הַמַּעֲלוֹת",
+   "t": "hammaalot",
+   "g": {
+    "en": "the elevation",
+    "es": "escalera",
+    "ru": "подъём"
+   }
+  },
+  {
+   "h": "אַשְׁרֵי",
+   "t": "ashrei",
+   "g": {
+    "en": "happy is",
+    "es": "dichoso es",
+    "fr": "bonheur"
+   }
+  },
+  {
+   "h": "כָּל־יְרֵא",
+   "t": "kal-yere",
+   "g": {
+    "en": "all of fearing of",
+    "fr": "tous avoir peur"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "הַהֹלֵךְ",
+   "t": "haholekhe",
+   "g": {
+    "en": "the to walk",
+    "es": "ir",
+    "fr": "aller",
+    "ru": "идти",
+    "ar": "ذهب",
+    "zh": "去",
+    "ja": "いく"
+   }
+  },
+  {
+   "h": "בִּדְרָכָיו",
+   "t": "bi-drakhaiw",
+   "g": {
+    "en": "in his way",
+    "es": "camino",
+    "fr": "chemin",
+    "ru": "дорога",
+    "ja": "道"
+   }
+  },
+  {
+   "h": "יְגִיעַ",
+   "t": "yegia",
+   "g": {
+    "en": "toil of",
+    "fr": "travail dur"
+   }
+  },
+  {
+   "h": "כַּפֶּיךָ",
+   "t": "kappeikha",
+   "g": {
+    "en": "your hollow hand or palm",
+    "es": "cuchara",
+    "fr": "plan",
+    "ru": "ложка",
+    "zh": "掌",
+    "id": "sendok"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
+   }
+  },
+  {
+   "h": "תֹאכֵל",
+   "t": "tokhel",
+   "g": {
+    "en": "to eat",
+    "es": "comer",
+    "fr": "manger",
+    "ru": "есть",
+    "zh": "吃",
+    "ja": "食べる",
+    "ko": "먹다"
+   }
+  },
+  {
+   "h": "אַשְׁרֶיךָ",
+   "t": "ashreikha",
+   "g": {
+    "en": "your happiness",
+    "fr": "bonheur"
+   }
+  },
+  {
+   "h": "וְטוֹב",
+   "t": "ve-tov",
+   "g": {
+    "en": "and good in the widest sense",
+    "es": "bueno",
+    "fr": "bon",
+    "ru": "хороший",
+    "ar": "جيد",
+    "zh": "好",
+    "ko": "좋다"
+   }
+  },
+  {
+   "h": "לָךְ",
+   "t": "lakhe",
+   "g": {
+    "en": "to you",
+    "fr": "à"
+   }
+  },
+  {
+   "h": "אֶשְׁתְּךָ",
+   "t": "eshtekha",
+   "g": {
+    "en": "your woman",
+    "es": "esposa",
+    "fr": "femme",
+    "ru": "женщина",
+    "zh": "女人",
+    "ja": "女",
+    "ko": "여자"
+   }
+  },
+  {
+   "h": "כְּגֶפֶן",
+   "t": "ke-gefen",
+   "g": {
+    "en": "like vine",
+    "pt": "videira",
+    "fr": "vigne",
+    "ru": "виноградная лоза"
+   }
+  },
+  {
+   "h": "פֹּרִיָּה",
+   "t": "poriyyah",
+   "g": {
+    "en": "to bear fruit",
+    "fr": "fécond",
+    "ru": "плодиться",
+    "ar": "النطق العبري الحديث",
+    "zh": "结果"
+   }
+  },
+  {
+   "h": "בְּיַרְכְּתֵי",
+   "t": "be-yarketei",
+   "g": {
+    "en": "in flank of",
+    "fr": "mouillage",
+    "ru": "поясница"
+   }
+  },
+  {
+   "h": "בֵיתֶךָ",
+   "t": "veitekha",
+   "g": {
+    "en": "your house",
+    "es": "casa",
+    "pt": "casa",
+    "fr": "maison",
+    "ru": "дом",
+    "zh": "房屋",
+    "id": "rumah",
+    "ja": "家",
+    "ko": "집"
+   }
+  },
+  {
+   "h": "בָּנֶיךָ",
+   "t": "baneikha",
+   "g": {
+    "en": "your son",
+    "es": "hijo",
+    "fr": "fils",
+    "ru": "сын",
+    "zh": "儿子",
+    "ja": "息子"
+   }
+  },
+  {
+   "h": "כִּשְׁתִלֵי",
+   "t": "kishtilei",
+   "g": {
+    "en": "like sprig of"
+   }
+  },
+  {
+   "h": "זֵיתִים",
+   "t": "zeitim",
+   "g": {
+    "en": "olive, the tree",
+    "es": "aceituna",
+    "pt": "oliva",
+    "fr": "olive",
+    "ru": "олива",
+    "zh": "橄榄",
+    "ja": "オリーブ"
+   }
+  },
+  {
+   "h": "סָבִיב",
+   "t": "saviv",
+   "g": {
+    "en": "around"
+   }
+  },
+  {
+   "h": "לְשֻׁלְחָנֶךָ",
+   "t": "le-shulchanekha",
+   "g": {
+    "en": "to your table",
+    "es": "mesa"
+   }
+  },
+  {
+   "h": "הִנֵּה",
+   "t": "hinneh",
+   "g": {
+    "en": "lo!",
+    "es": "aquí"
+   }
+  },
+  {
+   "h": "כִי־כֵן",
+   "t": "khi-khen",
+   "g": {
+    "en": "for, because so, thus",
+    "fr": "car ainsi",
+    "ja": "何故 はい"
+   }
+  },
+  {
+   "h": "יְבֹרַךְ",
+   "t": "yevorakh",
+   "g": {
+    "en": "to bless",
+    "fr": "bénir",
+    "ru": "благословлять"
+   }
+  },
+  {
+   "h": "גָּבֶר",
+   "t": "gaver",
+   "g": {
+    "en": "valiant man or warrior",
+    "pt": "homem",
+    "ru": "мужчина",
+    "zh": "男人",
+    "ja": "成人男性"
+   }
+  },
+  {
+   "h": "יְרֵא",
+   "t": "yere",
+   "g": {
+    "en": "fearing of",
+    "fr": "avoir peur"
+   }
+  },
+  {
+   "h": "יְבָרֶכְךָ",
+   "t": "yevarekhkha",
+   "g": {
+    "en": "to bless you",
+    "fr": "bénir",
+    "ru": "благословлять"
+   }
+  },
+  {
+   "h": "מִצִּיּוֹן",
+   "t": "mittzion",
+   "g": {
+    "en": "from Zion",
+    "es": "Sion",
+    "ru": "Сион",
+    "ja": "シオン"
+   }
+  },
+  {
+   "h": "וּרְאֵה",
+   "t": "u-reeh",
+   "g": {
+    "en": "and to see",
+    "fr": "voir",
+    "ru": "видеть",
+    "zh": "看见"
+   }
+  },
+  {
+   "h": "בְּטוּב",
+   "t": "be-tuv",
+   "g": {
+    "en": "in good of",
+    "es": "favor",
+    "fr": "bon",
+    "ru": "добро",
+    "ar": "جيد",
+    "zh": "好",
+    "ja": "善",
+    "ko": "좋다"
+   }
+  },
+  {
+   "h": "יְרוּשָׁלִָם",
+   "t": "yerushalam",
+   "g": {
+    "en": "Jerushalaim or Jerushalem"
+   }
+  },
+  {
+   "h": "כֹּל",
+   "t": "kol",
+   "g": {
+    "en": "all",
+    "es": "todo",
+    "fr": "tous",
+    "ru": "весь",
+    "ja": "全体"
+   }
+  },
+  {
+   "h": "יְמֵי",
+   "t": "yemei",
+   "g": {
+    "en": "day of",
+    "es": "día",
+    "pt": "dia",
+    "fr": "jour",
+    "de": "Tag",
+    "ru": "день",
+    "zh": "白天",
+    "id": "hari",
+    "ja": "日"
+   }
+  },
+  {
+   "h": "חַיֶּיךָ",
+   "t": "chayyeikha",
+   "g": {
+    "en": "your life",
+    "fr": "vivant",
+    "ru": "живой",
+    "ar": "حي",
+    "zh": "活着"
+   }
+  },
+  {
+   "h": "וּרְאֵה־בָנִים",
+   "t": "u-reeh-vanim",
+   "g": {
+    "en": "and to see son",
+    "fr": "voir fils",
+    "ru": "видеть сын",
+    "zh": "看见 儿子"
+   }
+  },
+  {
+   "h": "לְבָנֶיךָ",
+   "t": "le-vaneikha",
+   "g": {
+    "en": "to your son",
+    "es": "hijo",
+    "fr": "fils",
+    "ru": "сын",
+    "zh": "儿子",
+    "ja": "息子"
+   }
+  },
+  {
+   "h": "שָׁלוֹם",
+   "t": "shalom",
+   "g": {
+    "en": "peace",
+    "es": "paz",
+    "fr": "paix",
+    "de": "Judentum",
+    "ru": "благополучие",
+    "ar": "مرحبا",
+    "zh": "和平",
+    "ja": "平和"
+   }
+  },
+  {
+   "h": "עַל־יִשְׂרָאֵל",
+   "t": "al-yisrael",
+   "g": {
+    "en": "above, over Israel",
+    "es": "sobre Israel",
+    "fr": "sur Israël",
+    "ru": "на Израиль",
+    "ja": "上 イスラエル"
+   }
+  }
+ ],
+ "text": "שִׁיר הַמַּעֲלוֹת אַשְׁרֵי כָּל־יְרֵא יְהוָה הַהֹלֵךְ בִּדְרָכָיו\nיְגִיעַ כַּפֶּיךָ כִּי תֹאכֵל אַשְׁרֶיךָ וְטוֹב לָךְ\nאֶשְׁתְּךָ כְּגֶפֶן פֹּרִיָּה בְּיַרְכְּתֵי בֵיתֶךָ בָּנֶיךָ כִּשְׁתִלֵי זֵיתִים סָבִיב לְשֻׁלְחָנֶךָ\nהִנֵּה כִי־כֵן יְבֹרַךְ גָּבֶר יְרֵא יְהוָה\nיְבָרֶכְךָ יְהוָה מִצִּיּוֹן וּרְאֵה בְּטוּב יְרוּשָׁלִָם כֹּל יְמֵי חַיֶּיךָ\nוּרְאֵה־בָנִים לְבָנֶיךָ שָׁלוֹם עַל־יִשְׂרָאֵל"
+}

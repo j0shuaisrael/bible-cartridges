@@ -1,0 +1,709 @@
+{
+ "chapter": 6,
+ "title": "Psalm 6",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  [
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  [
+   10,
+   5,
+   11,
+   12,
+   13,
+   5,
+   11,
+   14,
+   15
+  ],
+  [
+   16,
+   17,
+   18,
+   19,
+   20,
+   5,
+   21
+  ],
+  [
+   22,
+   5,
+   23,
+   24,
+   25,
+   26,
+   27
+  ],
+  [
+   11,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33
+  ],
+  [
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41
+  ],
+  [
+   42,
+   43,
+   44,
+   45,
+   46
+  ],
+  [
+   47,
+   48,
+   49,
+   50,
+   51,
+   5,
+   52,
+   53
+  ],
+  [
+   54,
+   5,
+   55,
+   5,
+   56,
+   57
+  ],
+  [
+   58,
+   59,
+   18,
+   60,
+   61,
+   58,
+   62
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "לַמְנַצֵּחַ",
+   "t": "la-mnattzeach",
+   "g": {
+    "en": "to to oversee"
+   }
+  },
+  {
+   "h": "בִּנְגִינוֹת",
+   "t": "bi-nginot",
+   "g": {
+    "en": "in instrumental music",
+    "ru": "игра",
+    "zh": "演奏"
+   }
+  },
+  {
+   "h": "עַל־הַשְּׁמִינִית",
+   "t": "al-ha-sheminit",
+   "g": {
+    "en": "above, over the probably an eight-stringed lyre",
+    "ru": "на восьмая"
+   }
+  },
+  {
+   "h": "מִזְמוֹר",
+   "t": "mizmor",
+   "g": {
+    "en": "psalm",
+    "ru": "псалом"
+   }
+  },
+  {
+   "h": "לְדָוִד",
+   "t": "le-david",
+   "g": {
+    "en": "to David",
+    "es": "David",
+    "pt": "Davi",
+    "fr": "David",
+    "ru": "Давид",
+    "ja": "ダビデ"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "אַל־בְּאַפְּךָ",
+   "t": "al-be-appekha",
+   "g": {
+    "en": "not in your anger",
+    "fr": "ne nez"
+   }
+  },
+  {
+   "h": "תוֹכִיחֵנִי",
+   "t": "tokhicheni",
+   "g": {
+    "en": "to be right me",
+    "fr": "reprocher"
+   }
+  },
+  {
+   "h": "וְאַל־בַּחֲמָתְךָ",
+   "t": "ve-al-ba-chamatekha",
+   "g": {
+    "en": "and not in your heat",
+    "fr": "ne fureur"
+   }
+  },
+  {
+   "h": "תְיַסְּרֵנִי",
+   "t": "teyassereni",
+   "g": {
+    "en": "to chastise me"
+   }
+  },
+  {
+   "h": "חָנֵּנִי",
+   "t": "channeni",
+   "g": {
+    "en": "to be gracious me",
+    "fr": "avoir pitié",
+    "ru": "помиловать"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
+   }
+  },
+  {
+   "h": "אֻמְלַל־אָנִי",
+   "t": "umlal-ani",
+   "g": {
+    "en": "sick I"
+   }
+  },
+  {
+   "h": "רְפָאֵנִי",
+   "t": "refaeni",
+   "g": {
+    "en": "to mend me",
+    "fr": "guérir",
+    "ru": "лечить",
+    "zh": "治疗",
+    "ja": "治る"
+   }
+  },
+  {
+   "h": "נִבְהֲלוּ",
+   "t": "nivhalu",
+   "g": {
+    "en": "to tremble inwardly",
+    "fr": "terrifier"
+   }
+  },
+  {
+   "h": "עֲצָמָי",
+   "t": "atzamai",
+   "g": {
+    "en": "my bone",
+    "es": "hueso",
+    "fr": "os",
+    "ru": "кость",
+    "zh": "骨",
+    "ja": "骨"
+   }
+  },
+  {
+   "h": "וְנַפְשִׁי",
+   "t": "ve-nafshi",
+   "g": {
+    "en": "and my soul",
+    "fr": "âme",
+    "ru": "душа",
+    "ar": "نفس",
+    "zh": "灵魂",
+    "id": "jiwa",
+    "ja": "魂"
+   }
+  },
+  {
+   "h": "נִבְהֲלָה",
+   "t": "nivhalah",
+   "g": {
+    "en": "to tremble inwardly",
+    "fr": "terrifier"
+   }
+  },
+  {
+   "h": "מְאֹד",
+   "t": "meod",
+   "g": {
+    "en": "very",
+    "fr": "très",
+    "ru": "очень"
+   }
+  },
+  {
+   "h": "ואת",
+   "t": "w-t",
+   "g": {
+    "en": "and you",
+    "es": "tú",
+    "fr": "tu",
+    "de": "du",
+    "ru": "ты",
+    "ar": "أنت",
+    "zh": "你"
+   }
+  },
+  {
+   "h": "וְאַתָּה",
+   "t": "ve-attah",
+   "g": {
+    "en": "and you",
+    "es": "tú",
+    "fr": "tu",
+    "de": "du",
+    "ru": "ты",
+    "ar": "أنت",
+    "zh": "你"
+   }
+  },
+  {
+   "h": "עַד־מָתָי",
+   "t": "ad-matai",
+   "g": {
+    "en": "until extent"
+   }
+  },
+  {
+   "h": "שׁוּבָה",
+   "t": "shuvah",
+   "g": {
+    "en": "to turn back",
+    "fr": "retourner"
+   }
+  },
+  {
+   "h": "חַלְּצָה",
+   "t": "challetzah",
+   "g": {
+    "en": "to pull off",
+    "ru": "снимать"
+   }
+  },
+  {
+   "h": "נַפְשִׁי",
+   "t": "nafshi",
+   "g": {
+    "en": "my soul",
+    "fr": "âme",
+    "ru": "душа",
+    "ar": "نفس",
+    "zh": "灵魂",
+    "id": "jiwa",
+    "ja": "魂"
+   }
+  },
+  {
+   "h": "הוֹשִׁיעֵנִי",
+   "t": "hoshieni",
+   "g": {
+    "en": "to save, deliver me"
+   }
+  },
+  {
+   "h": "לְמַעַן",
+   "t": "le-maan",
+   "g": {
+    "en": "for the sake of"
+   }
+  },
+  {
+   "h": "חַסְדֶּךָ",
+   "t": "chasdekha",
+   "g": {
+    "en": "your kindness",
+    "fr": "bonté",
+    "ru": "милость",
+    "ar": "نعمة"
+   }
+  },
+  {
+   "h": "אֵין",
+   "t": "ein",
+   "g": {
+    "en": "nothing",
+    "fr": "ne pas",
+    "ru": "не",
+    "ja": "ない"
+   }
+  },
+  {
+   "h": "בַּמָּוֶת",
+   "t": "ba-mavet",
+   "g": {
+    "en": "in death",
+    "fr": "mort",
+    "ru": "смерть"
+   }
+  },
+  {
+   "h": "זִכְרֶךָ",
+   "t": "zikhrekha",
+   "g": {
+    "en": "your memento, abstractly recollection",
+    "fr": "mâle",
+    "ru": "мужчина",
+    "ar": "رجل",
+    "ja": "雄"
+   }
+  },
+  {
+   "h": "בִּשְׁאוֹל",
+   "t": "bi-shol",
+   "g": {
+    "en": "in Sheol",
+    "pt": "xeol",
+    "ru": "ад",
+    "ja": "黄泉"
+   }
+  },
+  {
+   "h": "מִי",
+   "t": "mi",
+   "g": {
+    "en": "who?",
+    "es": "quien",
+    "fr": "qui",
+    "ru": "кто",
+    "zh": "谁",
+    "ja": "だれ"
+   }
+  },
+  {
+   "h": "יוֹדֶה־לָּךְ",
+   "t": "yodeh-lakhe",
+   "g": {
+    "en": "to praise to you",
+    "fr": "reconnaissant à"
+   }
+  },
+  {
+   "h": "יָגַעְתִּי",
+   "t": "yagati",
+   "g": {
+    "en": "to gasp"
+   }
+  },
+  {
+   "h": "בְּאַנְחָתִי",
+   "t": "be-anchati",
+   "g": {
+    "en": "in my sighing",
+    "ru": "стон"
+   }
+  },
+  {
+   "h": "אַשְׂחֶה",
+   "t": "ascheh",
+   "g": {
+    "en": "to swim",
+    "ru": "нагибаться"
+   }
+  },
+  {
+   "h": "בְכָל־לַיְלָה",
+   "t": "ve-khal-la-ylah",
+   "g": {
+    "en": "in all of night",
+    "ru": "весь ночь"
+   }
+  },
+  {
+   "h": "מִטָּתִי",
+   "t": "mittati",
+   "g": {
+    "en": "my bed forsleeping or eating",
+    "es": "cama",
+    "fr": "bâton",
+    "ru": "посох",
+    "zh": "棍",
+    "ja": "棒"
+   }
+  },
+  {
+   "h": "בְּדִמְעָתִי",
+   "t": "be-dimati",
+   "g": {
+    "en": "in my weeping",
+    "es": "lágrima",
+    "ru": "слеза"
+   }
+  },
+  {
+   "h": "עַרְשִׂי",
+   "t": "arsi",
+   "g": {
+    "en": "my couch",
+    "ru": "ложе"
+   }
+  },
+  {
+   "h": "אַמְסֶה",
+   "t": "amseh",
+   "g": {
+    "en": "to dissolve"
+   }
+  },
+  {
+   "h": "עָשְׁשָׁה",
+   "t": "asheshah",
+   "g": {
+    "en": "probably to shrink"
+   }
+  },
+  {
+   "h": "מִכַּעַס",
+   "t": "mikkaas",
+   "g": {
+    "en": "from vexation",
+    "ru": "гнев",
+    "ja": "怒り"
+   }
+  },
+  {
+   "h": "עֵינִי",
+   "t": "eini",
+   "g": {
+    "en": "my eye",
+    "es": "ojo",
+    "pt": "olho",
+    "fr": "œil",
+    "ru": "глаз",
+    "ar": "عين",
+    "zh": "眼睛",
+    "ja": "目"
+   }
+  },
+  {
+   "h": "עָתְקָה",
+   "t": "atekah",
+   "g": {
+    "en": "to remove figuratively, to grow old",
+    "fr": "avancer"
+   }
+  },
+  {
+   "h": "בְּכָל־צוֹרְרָי",
+   "t": "be-khal-tzorerai",
+   "g": {
+    "en": "in all of to cramp me",
+    "fr": "tous être angoissé"
+   }
+  },
+  {
+   "h": "סוּרוּ",
+   "t": "suru",
+   "g": {
+    "en": "to turn off",
+    "fr": "retirer",
+    "ru": "сворачивать"
+   }
+  },
+  {
+   "h": "מִמֶּנִּי",
+   "t": "mimmenni",
+   "g": {
+    "en": "from me",
+    "es": "de",
+    "fr": "de",
+    "ru": "из",
+    "ja": "から"
+   }
+  },
+  {
+   "h": "כָּל־פֹּעֲלֵי",
+   "t": "kal-poalei",
+   "g": {
+    "en": "all of to do or make of",
+    "ru": "весь действовать"
+   }
+  },
+  {
+   "h": "אָוֶן",
+   "t": "aven",
+   "g": {
+    "en": "iniquity",
+    "ru": "сила",
+    "zh": "力量",
+    "ja": "苦労"
+   }
+  },
+  {
+   "h": "כִּי־שָׁמַע",
+   "t": "ki-shama",
+   "g": {
+    "en": "for, because to hear intelligently",
+    "fr": "car entendre",
+    "ja": "何故 聞く"
+   }
+  },
+  {
+   "h": "קוֹל",
+   "t": "kol",
+   "g": {
+    "en": "voice or sound of",
+    "es": "voz",
+    "fr": "voix",
+    "ru": "голос",
+    "zh": "声音",
+    "ja": "音"
+   }
+  },
+  {
+   "h": "בִּכְיִי",
+   "t": "bi-khe-yi",
+   "g": {
+    "en": "my weeping",
+    "fr": "pleur",
+    "ru": "плач"
+   }
+  },
+  {
+   "h": "שָׁמַע",
+   "t": "shama",
+   "g": {
+    "en": "to hear intelligently",
+    "fr": "entendre",
+    "ru": "слышать",
+    "ja": "聞く"
+   }
+  },
+  {
+   "h": "תְּחִנָּתִי",
+   "t": "techinnati",
+   "g": {
+    "en": "my graciousness",
+    "ru": "станция",
+    "ja": "駅"
+   }
+  },
+  {
+   "h": "תְּפִלָּתִי",
+   "t": "tefillati",
+   "g": {
+    "en": "my intercession, supplication",
+    "es": "plegaria",
+    "ru": "молитва",
+    "ja": "祈り"
+   }
+  },
+  {
+   "h": "יִקָּח",
+   "t": "yikkach",
+   "g": {
+    "en": "to take",
+    "fr": "prendre",
+    "ru": "брать",
+    "ja": "～を取る"
+   }
+  },
+  {
+   "h": "יֵבֹשׁוּ",
+   "t": "yevoshu",
+   "g": {
+    "en": "to be ashamed",
+    "fr": "honteux",
+    "ru": "стыдиться"
+   }
+  },
+  {
+   "h": "וְיִבָּהֲלוּ",
+   "t": "ve-yibbahalu",
+   "g": {
+    "en": "and to tremble inwardly",
+    "fr": "terrifier"
+   }
+  },
+  {
+   "h": "כָּל־אֹיְבָי",
+   "t": "kal-oyvai",
+   "g": {
+    "en": "all of enemy me",
+    "fr": "tous ennemi"
+   }
+  },
+  {
+   "h": "יָשֻׁבוּ",
+   "t": "yashuvu",
+   "g": {
+    "en": "to turn back",
+    "fr": "retourner"
+   }
+  },
+  {
+   "h": "רָגַע",
+   "t": "raga",
+   "g": {
+    "en": "wink",
+    "ru": "момент",
+    "zh": "瞬间",
+    "ja": "瞬間"
+   }
+  }
+ ],
+ "text": "לַמְנַצֵּחַ בִּנְגִינוֹת עַל־הַשְּׁמִינִית מִזְמוֹר לְדָוִד\nיְהוָה אַל־בְּאַפְּךָ תוֹכִיחֵנִי וְאַל־בַּחֲמָתְךָ תְיַסְּרֵנִי\nחָנֵּנִי יְהוָה כִּי אֻמְלַל־אָנִי רְפָאֵנִי יְהוָה כִּי נִבְהֲלוּ עֲצָמָי\nוְנַפְשִׁי נִבְהֲלָה מְאֹד ואת וְאַתָּה יְהוָה עַד־מָתָי\nשׁוּבָה יְהוָה חַלְּצָה נַפְשִׁי הוֹשִׁיעֵנִי לְמַעַן חַסְדֶּךָ\nכִּי אֵין בַּמָּוֶת זִכְרֶךָ בִּשְׁאוֹל מִי יוֹדֶה־לָּךְ\nיָגַעְתִּי בְּאַנְחָתִי אַשְׂחֶה בְכָל־לַיְלָה מִטָּתִי בְּדִמְעָתִי עַרְשִׂי אַמְסֶה\nעָשְׁשָׁה מִכַּעַס עֵינִי עָתְקָה בְּכָל־צוֹרְרָי\nסוּרוּ מִמֶּנִּי כָּל־פֹּעֲלֵי אָוֶן כִּי־שָׁמַע יְהוָה קוֹל בִּכְיִי\nשָׁמַע יְהוָה תְּחִנָּתִי יְהוָה תְּפִלָּתִי יִקָּח\nיֵבֹשׁוּ וְיִבָּהֲלוּ מְאֹד כָּל־אֹיְבָי יָשֻׁבוּ יֵבֹשׁוּ רָגַע"
+}

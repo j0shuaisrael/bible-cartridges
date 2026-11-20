@@ -1,0 +1,284 @@
+{
+ "chapter": 150,
+ "title": "Psalm 150",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  [
+   3,
+   6,
+   3,
+   7,
+   8
+  ],
+  [
+   3,
+   9,
+   10,
+   3,
+   11,
+   12
+  ],
+  [
+   3,
+   13,
+   14,
+   3,
+   15,
+   16
+  ],
+  [
+   3,
+   17,
+   3,
+   18,
+   19
+  ],
+  [
+   20,
+   21,
+   22,
+   23,
+   0
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "הַלְלוּ־יָהּ",
+   "t": "ha-le-lu-yah",
+   "g": {
+    "en": "to praise the LORD",
+    "fr": "louer l'Éternel"
+   }
+  },
+  {
+   "h": "הַלְלוּ־אֵל",
+   "t": "ha-le-lu-el",
+   "g": {
+    "en": "to praise God",
+    "fr": "louer El"
+   }
+  },
+  {
+   "h": "בְּקָדְשׁוֹ",
+   "t": "be-kadesho",
+   "g": {
+    "en": "in his holiness"
+   }
+  },
+  {
+   "h": "הַלְלוּהוּ",
+   "t": "ha-le-luhu",
+   "g": {
+    "en": "to praise him",
+    "fr": "louer"
+   }
+  },
+  {
+   "h": "בִּרְקִיעַ",
+   "t": "bi-rkia",
+   "g": {
+    "en": "in expanse of",
+    "pt": "céu",
+    "fr": "firmament",
+    "ru": "небосвод",
+    "ja": "大空"
+   }
+  },
+  {
+   "h": "עֻזּוֹ",
+   "t": "uzzo",
+   "g": {
+    "en": "his strength",
+    "ja": "力"
+   }
+  },
+  {
+   "h": "בִגְבוּרֹתָיו",
+   "t": "vi-gvurotaiw",
+   "g": {
+    "en": "in his force",
+    "ru": "героизм"
+   }
+  },
+  {
+   "h": "כְּרֹב",
+   "t": "ke-rov",
+   "g": {
+    "en": "like abundance of",
+    "fr": "nombre",
+    "ru": "ребе",
+    "zh": "拉比"
+   }
+  },
+  {
+   "h": "גֻּדְלוֹ",
+   "t": "gudlo",
+   "g": {
+    "en": "his magnitude",
+    "es": "tamaño"
+   }
+  },
+  {
+   "h": "בְּתֵקַע",
+   "t": "be-teka",
+   "g": {
+    "en": "in blast of a trumpet of",
+    "es": "enchufe",
+    "ru": "штепсель"
+   }
+  },
+  {
+   "h": "שׁוֹפָר",
+   "t": "shofar",
+   "g": {
+    "en": "cornet or curved horn",
+    "pt": "xofar",
+    "ru": "труба"
+   }
+  },
+  {
+   "h": "בְּנֵבֶל",
+   "t": "be-nevel",
+   "g": {
+    "en": "in skin-bag for liquids of",
+    "pt": "harpa",
+    "ru": "арфа"
+   }
+  },
+  {
+   "h": "וְכִנּוֹר",
+   "t": "ve-khinnor",
+   "g": {
+    "en": "and harp",
+    "es": "violín",
+    "fr": "harpe"
+   }
+  },
+  {
+   "h": "בְּתֹף",
+   "t": "be-tof",
+   "g": {
+    "en": "in tambourine",
+    "fr": "tambourin"
+   }
+  },
+  {
+   "h": "וּמָחוֹל",
+   "t": "u-machol",
+   "g": {
+    "en": "and dance",
+    "zh": "舞"
+   }
+  },
+  {
+   "h": "בְּמִנִּים",
+   "t": "be-minnim",
+   "g": {
+    "en": "in musical chord",
+    "es": "maná",
+    "ru": "манна",
+    "ja": "マナ"
+   }
+  },
+  {
+   "h": "וְעֻגָב",
+   "t": "ve-ugav",
+   "g": {
+    "en": "and reed-instrument of music",
+    "es": "flauta",
+    "pt": "órgão",
+    "fr": "flute"
+   }
+  },
+  {
+   "h": "בְצִלְצְלֵי־שָׁמַע",
+   "t": "ve-tziltzelei-shama",
+   "g": {
+    "en": "in clatter of something heard"
+   }
+  },
+  {
+   "h": "בְּצִלְצְלֵי",
+   "t": "be-tziltzelei",
+   "g": {
+    "en": "in clatter of"
+   }
+  },
+  {
+   "h": "תְרוּעָה",
+   "t": "teruah",
+   "g": {
+    "en": "clamor"
+   }
+  },
+  {
+   "h": "כֹּל",
+   "t": "kol",
+   "g": {
+    "en": "all",
+    "es": "todo",
+    "fr": "tous",
+    "ru": "весь",
+    "ja": "全体"
+   }
+  },
+  {
+   "h": "הַנְּשָׁמָה",
+   "t": "ha-neshamah",
+   "g": {
+    "en": "the puff",
+    "fr": "respiration",
+    "ru": "душа"
+   }
+  },
+  {
+   "h": "תְּהַלֵּל",
+   "t": "tehallel",
+   "g": {
+    "en": "to praise",
+    "fr": "louer"
+   }
+  },
+  {
+   "h": "יָהּ",
+   "t": "yah",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  }
+ ],
+ "text": "הַלְלוּ־יָהּ הַלְלוּ־אֵל בְּקָדְשׁוֹ הַלְלוּהוּ בִּרְקִיעַ עֻזּוֹ\nהַלְלוּהוּ בִגְבוּרֹתָיו הַלְלוּהוּ כְּרֹב גֻּדְלוֹ\nהַלְלוּהוּ בְּתֵקַע שׁוֹפָר הַלְלוּהוּ בְּנֵבֶל וְכִנּוֹר\nהַלְלוּהוּ בְּתֹף וּמָחוֹל הַלְלוּהוּ בְּמִנִּים וְעֻגָב\nהַלְלוּהוּ בְצִלְצְלֵי־שָׁמַע הַלְלוּהוּ בְּצִלְצְלֵי תְרוּעָה\nכֹּל הַנְּשָׁמָה תְּהַלֵּל יָהּ הַלְלוּ־יָהּ"
+}

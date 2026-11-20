@@ -1,0 +1,535 @@
+{
+ "chapter": 127,
+ "title": "Psalm 127",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   3,
+   10,
+   6,
+   11,
+   12
+  ],
+  [
+   6,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23
+  ],
+  [
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30
+  ],
+  [
+   31,
+   32,
+   20,
+   33,
+   34
+  ],
+  [
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "הַמַּעֲלוֹת",
+   "t": "hammaalot",
+   "g": {
+    "en": "the elevation",
+    "es": "escalera",
+    "ru": "подъём"
+   }
+  },
+  {
+   "h": "לִשְׁלֹמֹה",
+   "t": "li-shlomoh",
+   "g": {
+    "en": "to Shelomah",
+    "pt": "Salomão",
+    "fr": "Salomon",
+    "ru": "Соломон",
+    "ja": "ソロモン"
+   }
+  },
+  {
+   "h": "אִם־יְהוָה",
+   "t": "im-YHWH",
+   "g": {
+    "en": "if the LORD"
+   }
+  },
+  {
+   "h": "לֹא־יִבְנֶה",
+   "t": "lo-yivneh",
+   "g": {
+    "en": "not to build",
+    "fr": "ne construire",
+    "ru": "нет строить"
+   }
+  },
+  {
+   "h": "בַיִת",
+   "t": "va-yit",
+   "g": {
+    "en": "house",
+    "es": "casa",
+    "pt": "casa",
+    "fr": "maison",
+    "ru": "дом",
+    "zh": "房屋",
+    "id": "rumah",
+    "ja": "家",
+    "ko": "집"
+   }
+  },
+  {
+   "h": "שָׁוְא",
+   "t": "shav",
+   "g": {
+    "en": "evil, literally or morally",
+    "fr": "niqqud",
+    "ru": "шва",
+    "ja": "嘘"
+   }
+  },
+  {
+   "h": "עָמְלוּ",
+   "t": "amelu",
+   "g": {
+    "en": "to toil",
+    "ru": "работать"
+   }
+  },
+  {
+   "h": "בוֹנָיו",
+   "t": "vonaiw",
+   "g": {
+    "en": "to build him",
+    "fr": "construire",
+    "ru": "строить",
+    "ko": "짓다"
+   }
+  },
+  {
+   "h": "בּוֹ",
+   "t": "bo",
+   "g": {
+    "en": "in him",
+    "es": "en",
+    "fr": "dans"
+   }
+  },
+  {
+   "h": "לֹא־יִשְׁמָר־עִיר",
+   "t": "lo-yishmar-ir",
+   "g": {
+    "en": "not to keep, guard city in the widest sense",
+    "fr": "ne garder ville",
+    "ru": "нет ограждать город",
+    "ja": "いいえ 保つ 都市"
+   }
+  },
+  {
+   "h": "שָׁקַד",
+   "t": "shakad",
+   "g": {
+    "en": "to be alert"
+   }
+  },
+  {
+   "h": "שׁוֹמֵר",
+   "t": "shomer",
+   "g": {
+    "en": "to keep, guard",
+    "fr": "garder",
+    "ru": "ограждать",
+    "zh": "看守",
+    "ja": "保つ"
+   }
+  },
+  {
+   "h": "לָכֶם",
+   "t": "lakhem",
+   "g": {
+    "en": "to you",
+    "fr": "à"
+   }
+  },
+  {
+   "h": "מַשְׁכִּימֵי",
+   "t": "mashkimei",
+   "g": {
+    "en": "to load up of",
+    "fr": "se lever"
+   }
+  },
+  {
+   "h": "קוּם",
+   "t": "kum",
+   "g": {
+    "en": "to rise of",
+    "fr": "se lever",
+    "ru": "вставать"
+   }
+  },
+  {
+   "h": "מְאַחֲרֵי־שֶׁבֶת",
+   "t": "meacharei-shevet",
+   "g": {
+    "en": "to loiter of to sit, dwell of",
+    "fr": "retarder habiter"
+   }
+  },
+  {
+   "h": "אֹכְלֵי",
+   "t": "okhelei",
+   "g": {
+    "en": "to eat of",
+    "es": "comer",
+    "fr": "manger",
+    "ru": "есть",
+    "zh": "吃",
+    "ja": "食べる",
+    "ko": "먹다"
+   }
+  },
+  {
+   "h": "לֶחֶם",
+   "t": "le-chem",
+   "g": {
+    "en": "food",
+    "es": "pan",
+    "pt": "pão",
+    "fr": "pain",
+    "ru": "хлеб",
+    "zh": "面包",
+    "ja": "パン"
+   }
+  },
+  {
+   "h": "הָעֲצָבִים",
+   "t": "haatzavim",
+   "g": {
+    "en": "the earthen vessel",
+    "pt": "nervo",
+    "fr": "souffrance",
+    "ru": "нерв",
+    "ja": "かなしみ"
+   }
+  },
+  {
+   "h": "כֵּן",
+   "t": "ken",
+   "g": {
+    "en": "so, thus",
+    "fr": "ainsi",
+    "ru": "так",
+    "zh": "是",
+    "ja": "はい"
+   }
+  },
+  {
+   "h": "יִתֵּן",
+   "t": "yitten",
+   "g": {
+    "en": "it gives",
+    "es": "da",
+    "fr": "donner",
+    "ru": "дать",
+    "ja": "与える"
+   }
+  },
+  {
+   "h": "לִידִידוֹ",
+   "t": "li-dido",
+   "g": {
+    "en": "to his loved"
+   }
+  },
+  {
+   "h": "שֵׁנָא",
+   "t": "shena",
+   "g": {
+    "en": "sleep",
+    "es": "año",
+    "pt": "ano",
+    "fr": "année",
+    "ru": "год",
+    "zh": "年",
+    "id": "tahun",
+    "ja": "年"
+   }
+  },
+  {
+   "h": "הִנֵּה",
+   "t": "hinneh",
+   "g": {
+    "en": "lo!",
+    "es": "aquí"
+   }
+  },
+  {
+   "h": "נַחֲלַת",
+   "t": "nachalat",
+   "g": {
+    "en": "inheritance of",
+    "fr": "héritage",
+    "ru": "наследство"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "בָּנִים",
+   "t": "banim",
+   "g": {
+    "en": "son",
+    "es": "hijo",
+    "fr": "fils",
+    "ru": "сын",
+    "zh": "儿子",
+    "ja": "息子"
+   }
+  },
+  {
+   "h": "שָׂכָר",
+   "t": "sakhar",
+   "g": {
+    "en": "payment of contract",
+    "fr": "récompense",
+    "ru": "зарплата",
+    "ja": "賃金"
+   }
+  },
+  {
+   "h": "פְּרִי",
+   "t": "peri",
+   "g": {
+    "en": "fruit of",
+    "es": "fruta",
+    "fr": "fruit",
+    "ru": "плод",
+    "zh": "水果",
+    "ja": "くだもの"
+   }
+  },
+  {
+   "h": "הַבָּטֶן",
+   "t": "habbaten",
+   "g": {
+    "en": "the belly",
+    "es": "vientre",
+    "fr": "ventre",
+    "ru": "живот",
+    "ja": "腹部"
+   }
+  },
+  {
+   "h": "כְּחִצִּים",
+   "t": "ke-chittzim",
+   "g": {
+    "en": "like piercer",
+    "es": "flecha",
+    "fr": "flèche",
+    "ru": "стрела",
+    "zh": "箭",
+    "ja": "矢"
+   }
+  },
+  {
+   "h": "בְּיַד־גִּבּוֹר",
+   "t": "be-yad-gibbor",
+   "g": {
+    "en": "in hand of powerful",
+    "fr": "main brave"
+   }
+  },
+  {
+   "h": "בְּנֵי",
+   "t": "be-nei",
+   "g": {
+    "en": "son of",
+    "es": "hijo",
+    "fr": "fils",
+    "ru": "сын",
+    "zh": "儿子",
+    "ja": "息子"
+   }
+  },
+  {
+   "h": "הַנְּעוּרִים",
+   "t": "ha-neurim",
+   "g": {
+    "en": "the youth, the state or the persons"
+   }
+  },
+  {
+   "h": "אַשְׁרֵי",
+   "t": "ashrei",
+   "g": {
+    "en": "happy is",
+    "es": "dichoso es",
+    "fr": "bonheur"
+   }
+  },
+  {
+   "h": "הַגֶּבֶר",
+   "t": "haggever",
+   "g": {
+    "en": "the valiant man or warrior",
+    "pt": "homem",
+    "ru": "мужчина",
+    "zh": "男人",
+    "ja": "成人男性"
+   }
+  },
+  {
+   "h": "אֲשֶׁר",
+   "t": "asher",
+   "g": {
+    "en": "who",
+    "es": "que",
+    "fr": "qui",
+    "ru": "который",
+    "ja": "関係代名詞"
+   }
+  },
+  {
+   "h": "מִלֵּא",
+   "t": "mille",
+   "g": {
+    "en": "to fill, be full",
+    "fr": "remplir",
+    "ru": "наполнять",
+    "ja": "満たす",
+    "ko": "채우다"
+   }
+  },
+  {
+   "h": "אֶת־אַשְׁפָּתוֹ",
+   "t": "et-ashpato",
+   "g": {
+    "en": "object marker his quiver or arrow-case"
+   }
+  },
+  {
+   "h": "מֵהֶם",
+   "t": "mehem",
+   "g": {
+    "en": "from them"
+   }
+  },
+  {
+   "h": "לֹא־יֵבֹשׁוּ",
+   "t": "lo-yevoshu",
+   "g": {
+    "en": "not to be ashamed",
+    "fr": "ne honteux",
+    "ru": "нет стыдиться"
+   }
+  },
+  {
+   "h": "כִּי־יְדַבְּרוּ",
+   "t": "ki-yedabberu",
+   "g": {
+    "en": "for, because to speak",
+    "fr": "car dire"
+   }
+  },
+  {
+   "h": "אֶת־אוֹיְבִים",
+   "t": "et-oyvim",
+   "g": {
+    "en": "with enemy",
+    "fr": "Préposition introduisant le complément d’objet ennemi"
+   }
+  },
+  {
+   "h": "בַּשָּׁעַר",
+   "t": "ba-shaar",
+   "g": {
+    "en": "in opening",
+    "es": "pelo",
+    "fr": "porte",
+    "ru": "ворота",
+    "zh": "门口",
+    "ja": "髪"
+   }
+  }
+ ],
+ "text": "שִׁיר הַמַּעֲלוֹת לִשְׁלֹמֹה אִם־יְהוָה לֹא־יִבְנֶה בַיִת שָׁוְא עָמְלוּ בוֹנָיו בּוֹ אִם־יְהוָה לֹא־יִשְׁמָר־עִיר שָׁוְא שָׁקַד שׁוֹמֵר\nשָׁוְא לָכֶם מַשְׁכִּימֵי קוּם מְאַחֲרֵי־שֶׁבֶת אֹכְלֵי לֶחֶם הָעֲצָבִים כֵּן יִתֵּן לִידִידוֹ שֵׁנָא\nהִנֵּה נַחֲלַת יְהוָה בָּנִים שָׂכָר פְּרִי הַבָּטֶן\nכְּחִצִּים בְּיַד־גִּבּוֹר כֵּן בְּנֵי הַנְּעוּרִים\nאַשְׁרֵי הַגֶּבֶר אֲשֶׁר מִלֵּא אֶת־אַשְׁפָּתוֹ מֵהֶם לֹא־יֵבֹשׁוּ כִּי־יְדַבְּרוּ אֶת־אוֹיְבִים בַּשָּׁעַר"
+}

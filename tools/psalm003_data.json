@@ -1,0 +1,694 @@
+{
+ "chapter": 3,
+ "title": "Psalm 3",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  [
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  [
+   9,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18
+  ],
+  [
+   19,
+   6,
+   20,
+   21,
+   22,
+   23,
+   24
+  ],
+  [
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   18
+  ],
+  [
+   31,
+   32,
+   33,
+   34,
+   35,
+   6,
+   36
+  ],
+  [
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   11
+  ],
+  [
+   43,
+   6,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51
+  ],
+  [
+   52,
+   53,
+   54,
+   55,
+   56
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "מִזְמוֹר",
+   "t": "mizmor",
+   "g": {
+    "en": "psalm",
+    "ru": "псалом"
+   }
+  },
+  {
+   "h": "לְדָוִד",
+   "t": "le-david",
+   "g": {
+    "en": "to David",
+    "es": "David",
+    "pt": "Davi",
+    "fr": "David",
+    "ru": "Давид",
+    "ja": "ダビデ"
+   }
+  },
+  {
+   "h": "בְּבָרְחוֹ",
+   "t": "be-varecho",
+   "g": {
+    "en": "in to bolt him",
+    "fr": "s’enfuir",
+    "ru": "сбегать"
+   }
+  },
+  {
+   "h": "מִפְּנֵי",
+   "t": "mippenei",
+   "g": {
+    "en": "from face of",
+    "es": "cara",
+    "fr": "visage",
+    "ru": "лицо",
+    "zh": "脸",
+    "ja": "顔",
+    "ko": "얼굴"
+   }
+  },
+  {
+   "h": "אַבְשָׁלוֹם",
+   "t": "avshalom",
+   "g": {
+    "en": "Abshalom"
+   }
+  },
+  {
+   "h": "בְּנוֹ",
+   "t": "be-no",
+   "g": {
+    "en": "his son",
+    "es": "hijo",
+    "fr": "fils",
+    "ru": "сын",
+    "zh": "儿子",
+    "ja": "息子"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "מָה־רַבּוּ",
+   "t": "mah-rabbu",
+   "g": {
+    "en": "what to cast together",
+    "fr": "quoi augmenter"
+   }
+  },
+  {
+   "h": "צָרָי",
+   "t": "tzarai",
+   "g": {
+    "en": "my distress",
+    "fr": "ennemi",
+    "ru": "притеснитель",
+    "zh": "仇敌"
+   }
+  },
+  {
+   "h": "רַבִּים",
+   "t": "rabbim",
+   "g": {
+    "en": "abundant",
+    "fr": "grand",
+    "ru": "многочисленный",
+    "zh": "许多"
+   }
+  },
+  {
+   "h": "קָמִים",
+   "t": "kamim",
+   "g": {
+    "en": "to rise",
+    "fr": "se lever",
+    "ru": "вставать"
+   }
+  },
+  {
+   "h": "עָלָי",
+   "t": "alai",
+   "g": {
+    "en": "above, over me",
+    "es": "sobre",
+    "fr": "sur",
+    "ru": "на",
+    "ja": "上"
+   }
+  },
+  {
+   "h": "אֹמְרִים",
+   "t": "omerim",
+   "g": {
+    "en": "to say",
+    "es": "decir",
+    "fr": "dire",
+    "ru": "говорить",
+    "ja": "言う、話す"
+   }
+  },
+  {
+   "h": "לְנַפְשִׁי",
+   "t": "le-nafshi",
+   "g": {
+    "en": "to my soul",
+    "fr": "âme",
+    "ru": "душа",
+    "ar": "نفس",
+    "zh": "灵魂",
+    "id": "jiwa",
+    "ja": "魂"
+   }
+  },
+  {
+   "h": "אֵין",
+   "t": "ein",
+   "g": {
+    "en": "nothing",
+    "fr": "ne pas",
+    "ru": "не",
+    "ja": "ない"
+   }
+  },
+  {
+   "h": "יְשׁוּעָתָה",
+   "t": "yeshuatah",
+   "g": {
+    "en": "salvation",
+    "fr": "salut",
+    "ru": "спасение"
+   }
+  },
+  {
+   "h": "לּוֹ",
+   "t": "lo",
+   "g": {
+    "en": "to him",
+    "fr": "à"
+   }
+  },
+  {
+   "h": "בֵאלֹהִים",
+   "t": "velohim",
+   "g": {
+    "en": "in God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "סֶלָה",
+   "t": "selah",
+   "g": {
+    "en": "pause"
+   }
+  },
+  {
+   "h": "וְאַתָּה",
+   "t": "ve-attah",
+   "g": {
+    "en": "and you",
+    "es": "tú",
+    "fr": "tu",
+    "de": "du",
+    "ru": "ты",
+    "ar": "أنت",
+    "zh": "你"
+   }
+  },
+  {
+   "h": "מָגֵן",
+   "t": "magen",
+   "g": {
+    "en": "shield",
+    "fr": "bouclier",
+    "ru": "щит",
+    "ja": "盾"
+   }
+  },
+  {
+   "h": "בַּעֲדִי",
+   "t": "ba-adi",
+   "g": {
+    "en": "in up to or over against me",
+    "fr": "derrière",
+    "ru": "за"
+   }
+  },
+  {
+   "h": "כְּבוֹדִי",
+   "t": "ke-vodi",
+   "g": {
+    "en": "my glory",
+    "es": "honra",
+    "fr": "honneur",
+    "ru": "уважение",
+    "id": "kehormatan",
+    "ja": "名誉"
+   }
+  },
+  {
+   "h": "וּמֵרִים",
+   "t": "u-merim",
+   "g": {
+    "en": "and to be high actively, to rise or raise",
+    "fr": "s’élever"
+   }
+  },
+  {
+   "h": "רֹאשִׁי",
+   "t": "roshi",
+   "g": {
+    "en": "my head",
+    "es": "cabeza",
+    "fr": "tête",
+    "ru": "голова",
+    "ar": "رأس",
+    "zh": "头",
+    "ja": "頭"
+   }
+  },
+  {
+   "h": "קוֹלִי",
+   "t": "koli",
+   "g": {
+    "en": "my voice or sound",
+    "es": "voz",
+    "fr": "voix",
+    "ru": "голос",
+    "zh": "声音",
+    "ja": "音"
+   }
+  },
+  {
+   "h": "אֶל־יְהוָה",
+   "t": "el-YHWH",
+   "g": {
+    "en": "to, toward the LORD",
+    "fr": "à l'Éternel",
+    "ru": "к Господь",
+    "ar": "إله الرب",
+    "ja": "～へ、～に向かって、～に向けて 主",
+    "ko": "신 여호와"
+   }
+  },
+  {
+   "h": "אֶקְרָא",
+   "t": "ekra",
+   "g": {
+    "en": "to call out to",
+    "fr": "appeler",
+    "ru": "звать",
+    "zh": "叫"
+   }
+  },
+  {
+   "h": "וַיַּעֲנֵנִי",
+   "t": "va-yaaneni",
+   "g": {
+    "en": "and to answer me",
+    "fr": "affliger",
+    "ru": "угнетать",
+    "zh": "回答"
+   }
+  },
+  {
+   "h": "מֵהַר",
+   "t": "mehar",
+   "g": {
+    "en": "from mountain of",
+    "es": "montaña",
+    "pt": "montanha",
+    "fr": "mont",
+    "ru": "гора",
+    "zh": "山",
+    "ja": "山"
+   }
+  },
+  {
+   "h": "קָדְשׁוֹ",
+   "t": "kadesho",
+   "g": {
+    "en": "his holiness"
+   }
+  },
+  {
+   "h": "אֲנִי",
+   "t": "ani",
+   "g": {
+    "en": "I",
+    "es": "yo",
+    "fr": "je",
+    "de": "1. Person Singular",
+    "ru": "я",
+    "ar": "أنا",
+    "zh": "我",
+    "ja": "一人称単数代名詞"
+   }
+  },
+  {
+   "h": "שָׁכַבְתִּי",
+   "t": "shakhavti",
+   "g": {
+    "en": "to lie down",
+    "fr": "se coucher",
+    "ru": "ложиться"
+   }
+  },
+  {
+   "h": "וָאִישָׁנָה",
+   "t": "va-ishanah",
+   "g": {
+    "en": "and to be slack or languid",
+    "es": "rebelarse",
+    "fr": "dormir",
+    "ru": "спать",
+    "zh": "睡著"
+   }
+  },
+  {
+   "h": "הֱקִיצוֹתִי",
+   "t": "he-kitzoti",
+   "g": {
+    "en": "to awake",
+    "fr": "épine"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
+   }
+  },
+  {
+   "h": "יִסְמְכֵנִי",
+   "t": "yismekheni",
+   "g": {
+    "en": "to prop me",
+    "es": "apoyar",
+    "fr": "soutenir"
+   }
+  },
+  {
+   "h": "לֹא־אִירָא",
+   "t": "lo-ira",
+   "g": {
+    "en": "not to fear",
+    "fr": "ne avoir peur",
+    "ru": "нет бояться"
+   }
+  },
+  {
+   "h": "מֵרִבְבוֹת",
+   "t": "merivvot",
+   "g": {
+    "en": "from abundance of",
+    "fr": "dix mille",
+    "ru": "десять тысяч"
+   }
+  },
+  {
+   "h": "עָם",
+   "t": "am",
+   "g": {
+    "en": "people",
+    "es": "pueblo",
+    "pt": "povo",
+    "fr": "peuple",
+    "ru": "народ",
+    "zh": "人民",
+    "ja": "国々"
+   }
+  },
+  {
+   "h": "אֲשֶׁר",
+   "t": "asher",
+   "g": {
+    "en": "who",
+    "es": "que",
+    "fr": "qui",
+    "ru": "который",
+    "ja": "関係代名詞"
+   }
+  },
+  {
+   "h": "סָבִיב",
+   "t": "saviv",
+   "g": {
+    "en": "around"
+   }
+  },
+  {
+   "h": "שָׁתוּ",
+   "t": "shatu",
+   "g": {
+    "en": "to place",
+    "fr": "mettre"
+   }
+  },
+  {
+   "h": "קוּמָה",
+   "t": "kumah",
+   "g": {
+    "en": "to rise",
+    "fr": "se lever",
+    "ru": "вставать"
+   }
+  },
+  {
+   "h": "הוֹשִׁיעֵנִי",
+   "t": "hoshieni",
+   "g": {
+    "en": "to save, deliver me"
+   }
+  },
+  {
+   "h": "אֱלֹהַי",
+   "t": "elohai",
+   "g": {
+    "en": "my God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "כִּי־הִכִּיתָ",
+   "t": "ki-hi-kita",
+   "g": {
+    "en": "for, because to strike",
+    "fr": "car tuer"
+   }
+  },
+  {
+   "h": "אֶת־כָּל־אֹיְבַי",
+   "t": "et-kal-oyvai",
+   "g": {
+    "en": "object marker all of enemy me"
+   }
+  },
+  {
+   "h": "לֶחִי",
+   "t": "le-chi",
+   "g": {
+    "en": "cheek",
+    "es": "mejilla",
+    "pt": "bochecha",
+    "ru": "щека",
+    "zh": "脸颊",
+    "ja": "頬",
+    "ko": "뺨"
+   }
+  },
+  {
+   "h": "שִׁנֵּי",
+   "t": "shinnei",
+   "g": {
+    "en": "tooth of",
+    "es": "diente",
+    "fr": "dent",
+    "ru": "зуб",
+    "ar": "سن",
+    "zh": "牙齿",
+    "ja": "歯"
+   }
+  },
+  {
+   "h": "רְשָׁעִים",
+   "t": "resha'im",
+   "g": {
+    "en": "the wicked",
+    "es": "los malvados",
+    "fr": "méchant",
+    "ru": "злодей",
+    "ja": "悪人"
+   }
+  },
+  {
+   "h": "שִׁבַּרְתָּ",
+   "t": "shibbarta",
+   "g": {
+    "en": "to burst",
+    "fr": "briser",
+    "ru": "ломать"
+   }
+  },
+  {
+   "h": "לַיהוָה",
+   "t": "la-ihvah",
+   "g": {
+    "en": "to the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "הַיְשׁוּעָה",
+   "t": "ha-yshuah",
+   "g": {
+    "en": "the salvation",
+    "fr": "salut",
+    "ru": "спасение"
+   }
+  },
+  {
+   "h": "עַל־עַמְּךָ",
+   "t": "al-ammekha",
+   "g": {
+    "en": "above, over your people",
+    "es": "sobre pueblo",
+    "fr": "sur peuple",
+    "ru": "на народ",
+    "ja": "上 国々"
+   }
+  },
+  {
+   "h": "בִרְכָתֶךָ",
+   "t": "vi-rkhatekha",
+   "g": {
+    "en": "your benediction",
+    "pt": "piscina",
+    "fr": "bénédiction",
+    "ru": "благословение",
+    "ja": "夜明け"
+   }
+  },
+  {
+   "h": "סֶּלָה",
+   "t": "selah",
+   "g": {
+    "en": "pause"
+   }
+  }
+ ],
+ "text": "מִזְמוֹר לְדָוִד בְּבָרְחוֹ מִפְּנֵי אַבְשָׁלוֹם בְּנוֹ\nיְהוָה מָה־רַבּוּ צָרָי רַבִּים קָמִים עָלָי\nרַבִּים אֹמְרִים לְנַפְשִׁי אֵין יְשׁוּעָתָה לּוֹ בֵאלֹהִים סֶלָה\nוְאַתָּה יְהוָה מָגֵן בַּעֲדִי כְּבוֹדִי וּמֵרִים רֹאשִׁי\nקוֹלִי אֶל־יְהוָה אֶקְרָא וַיַּעֲנֵנִי מֵהַר קָדְשׁוֹ סֶלָה\nאֲנִי שָׁכַבְתִּי וָאִישָׁנָה הֱקִיצוֹתִי כִּי יְהוָה יִסְמְכֵנִי\nלֹא־אִירָא מֵרִבְבוֹת עָם אֲשֶׁר סָבִיב שָׁתוּ עָלָי\nקוּמָה יְהוָה הוֹשִׁיעֵנִי אֱלֹהַי כִּי־הִכִּיתָ אֶת־כָּל־אֹיְבַי לֶחִי שִׁנֵּי רְשָׁעִים שִׁבַּרְתָּ\nלַיהוָה הַיְשׁוּעָה עַל־עַמְּךָ בִרְכָתֶךָ סֶּלָה"
+}

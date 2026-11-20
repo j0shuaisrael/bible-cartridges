@@ -1,0 +1,562 @@
+{
+ "chapter": 129,
+ "title": "Psalm 129",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  [
+   2,
+   3,
+   7,
+   8,
+   9,
+   10
+  ],
+  [
+   11,
+   12,
+   13,
+   14,
+   15,
+   16
+  ],
+  [
+   17,
+   18,
+   19,
+   20,
+   21
+  ],
+  [
+   22,
+   23,
+   24,
+   25,
+   26,
+   27
+  ],
+  [
+   28,
+   29,
+   30,
+   31,
+   32,
+   33
+  ],
+  [
+   34,
+   35,
+   36,
+   37,
+   38,
+   39
+  ],
+  [
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   17
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "הַמַּעֲלוֹת",
+   "t": "hammaalot",
+   "g": {
+    "en": "the elevation",
+    "es": "escalera",
+    "ru": "подъём"
+   }
+  },
+  {
+   "h": "רַבַּת",
+   "t": "rabbat",
+   "g": {
+    "en": "abundant of",
+    "fr": "grand",
+    "ru": "многочисленный",
+    "zh": "许多"
+   }
+  },
+  {
+   "h": "צְרָרוּנִי",
+   "t": "tzeraruni",
+   "g": {
+    "en": "to cramp me",
+    "fr": "être angoissé"
+   }
+  },
+  {
+   "h": "מִנְּעוּרַי",
+   "t": "minneurai",
+   "g": {
+    "en": "from my youth, the state or the persons"
+   }
+  },
+  {
+   "h": "יֹאמַר־נָא",
+   "t": "yomar-na",
+   "g": {
+    "en": "to say now, please"
+   }
+  },
+  {
+   "h": "יִשְׂרָאֵל",
+   "t": "yisrael",
+   "g": {
+    "en": "Israel",
+    "es": "Israel",
+    "pt": "Israel",
+    "fr": "Israël",
+    "de": "Staat",
+    "ru": "Израиль",
+    "zh": "以色列",
+    "hi": "इज़राइल",
+    "ja": "イスラエル",
+    "ko": "이스라엘"
+   }
+  },
+  {
+   "h": "מִנְּעוּרָי",
+   "t": "minneurai",
+   "g": {
+    "en": "from my youth, the state or the persons"
+   }
+  },
+  {
+   "h": "גַּם",
+   "t": "gam",
+   "g": {
+    "en": "also, even",
+    "es": "también",
+    "fr": "aussi",
+    "ru": "также",
+    "ja": "も"
+   }
+  },
+  {
+   "h": "לֹא־יָכְלוּ",
+   "t": "lo-yakhelu",
+   "g": {
+    "en": "not to be able, literally or morally",
+    "fr": "ne pouvoir"
+   }
+  },
+  {
+   "h": "לִי",
+   "t": "li",
+   "g": {
+    "en": "to me",
+    "fr": "à"
+   }
+  },
+  {
+   "h": "עַל־גַּבִּי",
+   "t": "al-gabbi",
+   "g": {
+    "en": "above, over my back",
+    "es": "sobre espalda",
+    "fr": "sur dos",
+    "ru": "на спина",
+    "ja": "上 背"
+   }
+  },
+  {
+   "h": "חָרְשׁוּ",
+   "t": "chareshu",
+   "g": {
+    "en": "to scratch",
+    "fr": "travailler",
+    "ru": "пахать"
+   }
+  },
+  {
+   "h": "חֹרְשִׁים",
+   "t": "choreshim",
+   "g": {
+    "en": "to scratch",
+    "fr": "travailler",
+    "ru": "пахать"
+   }
+  },
+  {
+   "h": "הֶאֱרִיכוּ",
+   "t": "heerikhu",
+   "g": {
+    "en": "to be long",
+    "fr": "être long",
+    "ru": "длиться"
+   }
+  },
+  {
+   "h": "למענותם",
+   "t": "lmnwtm",
+   "g": {
+    "en": "to their furrow",
+    "ru": "ответ"
+   }
+  },
+  {
+   "h": "לְמַעֲנִיתָם",
+   "t": "le-maanitam",
+   "g": {
+    "en": "to their furrow",
+    "ru": "ответ"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "צַדִּיק",
+   "t": "tzaddik",
+   "g": {
+    "en": "just",
+    "fr": "juste",
+    "ru": "праведник",
+    "ja": "正しい"
+   }
+  },
+  {
+   "h": "קִצֵּץ",
+   "t": "kittzetz",
+   "g": {
+    "en": "to chop off",
+    "es": "cortar",
+    "ru": "рубить",
+    "zh": "切碎"
+   }
+  },
+  {
+   "h": "עֲבוֹת",
+   "t": "avot",
+   "g": {
+    "en": "something intwined of"
+   }
+  },
+  {
+   "h": "רְשָׁעִים",
+   "t": "resha'im",
+   "g": {
+    "en": "the wicked",
+    "es": "los malvados",
+    "fr": "méchant",
+    "ru": "злодей",
+    "ja": "悪人"
+   }
+  },
+  {
+   "h": "יֵבֹשׁוּ",
+   "t": "yevoshu",
+   "g": {
+    "en": "to be ashamed",
+    "fr": "honteux",
+    "ru": "стыдиться"
+   }
+  },
+  {
+   "h": "וְיִסֹּגוּ",
+   "t": "ve-yissogu",
+   "g": {
+    "en": "and to flinch"
+   }
+  },
+  {
+   "h": "אָחוֹר",
+   "t": "achor",
+   "g": {
+    "en": "hinder part",
+    "fr": "en arrière"
+   }
+  },
+  {
+   "h": "כֹּל",
+   "t": "kol",
+   "g": {
+    "en": "all",
+    "es": "todo",
+    "fr": "tous",
+    "ru": "весь",
+    "ja": "全体"
+   }
+  },
+  {
+   "h": "שֹׂנְאֵי",
+   "t": "soneei",
+   "g": {
+    "en": "to hate of",
+    "fr": "haïr",
+    "ru": "ненавидеть",
+    "zh": "憎恨"
+   }
+  },
+  {
+   "h": "צִיּוֹן",
+   "t": "tzion",
+   "g": {
+    "en": "Zion",
+    "es": "Sion",
+    "ru": "Сион",
+    "ja": "シオン"
+   }
+  },
+  {
+   "h": "יִהְיוּ",
+   "t": "yihyu",
+   "g": {
+    "en": "to be",
+    "es": "ser",
+    "fr": "être",
+    "ru": "быть",
+    "zh": "存在",
+    "ja": "である"
+   }
+  },
+  {
+   "h": "כַּחֲצִיר",
+   "t": "kachatzir",
+   "g": {
+    "en": "like grass of",
+    "es": "heno",
+    "ru": "сено"
+   }
+  },
+  {
+   "h": "גַּגּוֹת",
+   "t": "gaggot",
+   "g": {
+    "en": "roof",
+    "es": "tejado",
+    "pt": "telhado",
+    "ru": "крыша",
+    "ja": "屋根"
+   }
+  },
+  {
+   "h": "שֶׁקַּדְמַת",
+   "t": "shekkadmat",
+   "g": {
+    "en": "that priority of",
+    "fr": "Kedma",
+    "ru": "Кедма"
+   }
+  },
+  {
+   "h": "שָׁלַף",
+   "t": "shalaf",
+   "g": {
+    "en": "to pull out, up or off",
+    "ru": "вытаскивать"
+   }
+  },
+  {
+   "h": "יָבֵשׁ",
+   "t": "yavesh",
+   "g": {
+    "en": "to be ashamed, confused or disappointed",
+    "es": "secarse",
+    "fr": "retourner",
+    "ru": "сохнуть"
+   }
+  },
+  {
+   "h": "שֶׁלֹּא",
+   "t": "shello",
+   "g": {
+    "en": "that not",
+    "es": "no",
+    "fr": "ne",
+    "ru": "нет",
+    "id": "tidak",
+    "ja": "いいえ"
+   }
+  },
+  {
+   "h": "מִלֵּא",
+   "t": "mille",
+   "g": {
+    "en": "to fill, be full",
+    "fr": "remplir",
+    "ru": "наполнять",
+    "ja": "満たす",
+    "ko": "채우다"
+   }
+  },
+  {
+   "h": "כַפּוֹ",
+   "t": "khappo",
+   "g": {
+    "en": "his hollow hand or palm",
+    "es": "cuchara",
+    "fr": "plan",
+    "ru": "ложка",
+    "zh": "掌",
+    "id": "sendok"
+   }
+  },
+  {
+   "h": "קוֹצֵר",
+   "t": "kotzer",
+   "g": {
+    "en": "to dock off",
+    "ru": "косить",
+    "zh": "短"
+   }
+  },
+  {
+   "h": "וְחִצְנוֹ",
+   "t": "ve-chitzno",
+   "g": {
+    "en": "and his bosom",
+    "ru": "лоно"
+   }
+  },
+  {
+   "h": "מְעַמֵּר",
+   "t": "meammer",
+   "g": {
+    "en": "to gather grain",
+    "ru": "нагромождать"
+   }
+  },
+  {
+   "h": "וְלֹא",
+   "t": "ve-lo",
+   "g": {
+    "en": "and not",
+    "es": "no",
+    "fr": "ne",
+    "ru": "нет",
+    "id": "tidak",
+    "ja": "いいえ"
+   }
+  },
+  {
+   "h": "אָמְרוּ",
+   "t": "ameru",
+   "g": {
+    "en": "to say",
+    "es": "decir",
+    "fr": "dire",
+    "ru": "говорить",
+    "ja": "言う、話す"
+   }
+  },
+  {
+   "h": "הָעֹבְרִים",
+   "t": "haoverim",
+   "g": {
+    "en": "the to cross over",
+    "es": "pasar",
+    "fr": "passer",
+    "ru": "проходить",
+    "ja": "過ぎる"
+   }
+  },
+  {
+   "h": "בִּרְכַּת־יְהוָה",
+   "t": "bi-rkat-YHWH",
+   "g": {
+    "en": "benediction of the LORD",
+    "pt": "piscina Senhor",
+    "fr": "bénédiction l'Éternel",
+    "ru": "благословение Господь",
+    "ja": "夜明け 主"
+   }
+  },
+  {
+   "h": "אֲלֵיכֶם",
+   "t": "aleikhem",
+   "g": {
+    "en": "to, toward you",
+    "fr": "à",
+    "ru": "к",
+    "ar": "إله",
+    "ja": "～へ、～に向かって、～に向けて",
+    "ko": "신"
+   }
+  },
+  {
+   "h": "בֵּרַכְנוּ",
+   "t": "berakhnu",
+   "g": {
+    "en": "to bless",
+    "fr": "bénir",
+    "ru": "благословлять"
+   }
+  },
+  {
+   "h": "אֶתְכֶם",
+   "t": "etkhem",
+   "g": {
+    "en": "your object marker"
+   }
+  },
+  {
+   "h": "בְּשֵׁם",
+   "t": "be-shem",
+   "g": {
+    "en": "in name of",
+    "es": "nombre",
+    "fr": "nom",
+    "ru": "имя",
+    "zh": "名字",
+    "ja": "名前"
+   }
+  }
+ ],
+ "text": "שִׁיר הַמַּעֲלוֹת רַבַּת צְרָרוּנִי מִנְּעוּרַי יֹאמַר־נָא יִשְׂרָאֵל\nרַבַּת צְרָרוּנִי מִנְּעוּרָי גַּם לֹא־יָכְלוּ לִי\nעַל־גַּבִּי חָרְשׁוּ חֹרְשִׁים הֶאֱרִיכוּ למענותם לְמַעֲנִיתָם\nיְהוָה צַדִּיק קִצֵּץ עֲבוֹת רְשָׁעִים\nיֵבֹשׁוּ וְיִסֹּגוּ אָחוֹר כֹּל שֹׂנְאֵי צִיּוֹן\nיִהְיוּ כַּחֲצִיר גַּגּוֹת שֶׁקַּדְמַת שָׁלַף יָבֵשׁ\nשֶׁלֹּא מִלֵּא כַפּוֹ קוֹצֵר וְחִצְנוֹ מְעַמֵּר\nוְלֹא אָמְרוּ הָעֹבְרִים בִּרְכַּת־יְהוָה אֲלֵיכֶם בֵּרַכְנוּ אֶתְכֶם בְּשֵׁם יְהוָה"
+}

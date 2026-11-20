@@ -1,0 +1,406 @@
+{
+ "chapter": 93,
+ "title": "Psalm 93",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   3,
+   0,
+   4,
+   5,
+   6,
+   7,
+   8
+  ],
+  [
+   9,
+   10,
+   11,
+   12,
+   13
+  ],
+  [
+   14,
+   15,
+   0,
+   14,
+   15,
+   16,
+   17,
+   15,
+   18
+  ],
+  [
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   0
+  ],
+  [
+   26,
+   27,
+   28,
+   29,
+   30,
+   0,
+   31,
+   32
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "מָלָךְ",
+   "t": "malakhe",
+   "g": {
+    "en": "to reign",
+    "fr": "régner",
+    "ru": "царствовать",
+    "zh": "统治",
+    "ja": "司る"
+   }
+  },
+  {
+   "h": "גֵּאוּת",
+   "t": "geut",
+   "g": {
+    "en": "arrogance or majesty",
+    "zh": "威严"
+   }
+  },
+  {
+   "h": "לָבֵשׁ",
+   "t": "lavesh",
+   "g": {
+    "en": "wrap around",
+    "es": "vestirse",
+    "fr": "revêtir",
+    "ru": "надевать",
+    "zh": "穿上"
+   }
+  },
+  {
+   "h": "עֹז",
+   "t": "oz",
+   "g": {
+    "en": "strength",
+    "ja": "力"
+   }
+  },
+  {
+   "h": "הִתְאַזָּר",
+   "t": "hi-tazzar",
+   "g": {
+    "en": "to belt"
+   }
+  },
+  {
+   "h": "אַף־תִּכּוֹן",
+   "t": "af-tikkon",
+   "g": {
+    "en": "also to establish",
+    "fr": "aussi être prêt"
+   }
+  },
+  {
+   "h": "תֵּבֵל",
+   "t": "tevel",
+   "g": {
+    "en": "earth",
+    "ru": "вселенная",
+    "zh": "世界",
+    "ja": "世界"
+   }
+  },
+  {
+   "h": "בַּל־תִּמּוֹט",
+   "t": "bal-timmot",
+   "g": {
+    "en": "not to waver"
+   }
+  },
+  {
+   "h": "נָכוֹן",
+   "t": "nakhon",
+   "g": {
+    "en": "to establish",
+    "fr": "être prêt"
+   }
+  },
+  {
+   "h": "כִּסְאֲךָ",
+   "t": "kisakha",
+   "g": {
+    "en": "your covered",
+    "es": "silla",
+    "fr": "trône",
+    "de": "Stuhl"
+   }
+  },
+  {
+   "h": "מֵאָז",
+   "t": "meaz",
+   "g": {
+    "en": "from at that time or place",
+    "fr": "alors",
+    "ru": "тогда",
+    "ja": "このように"
+   }
+  },
+  {
+   "h": "מֵעוֹלָם",
+   "t": "meolam",
+   "g": {
+    "en": "from forever",
+    "es": "mundo",
+    "fr": "monde",
+    "ru": "мир",
+    "zh": "世界",
+    "id": "dunia",
+    "ja": "世界"
+   }
+  },
+  {
+   "h": "אָתָּה",
+   "t": "attah",
+   "g": {
+    "en": "you",
+    "es": "tú",
+    "fr": "tu",
+    "de": "du",
+    "ru": "ты",
+    "ar": "أنت",
+    "zh": "你"
+   }
+  },
+  {
+   "h": "נָשְׂאוּ",
+   "t": "naseu",
+   "g": {
+    "en": "to lift",
+    "fr": "lever",
+    "ru": "нести"
+   }
+  },
+  {
+   "h": "נְהָרוֹת",
+   "t": "neharot",
+   "g": {
+    "en": "stream",
+    "es": "río",
+    "pt": "rio",
+    "fr": "rivière",
+    "ru": "река",
+    "zh": "河",
+    "ja": "川"
+   }
+  },
+  {
+   "h": "קוֹלָם",
+   "t": "kolam",
+   "g": {
+    "en": "their voice or sound",
+    "es": "voz",
+    "fr": "voix",
+    "ru": "голос",
+    "zh": "声音",
+    "ja": "音"
+   }
+  },
+  {
+   "h": "יִשְׂאוּ",
+   "t": "yisu",
+   "g": {
+    "en": "to lift",
+    "fr": "lever",
+    "ru": "нести"
+   }
+  },
+  {
+   "h": "דָּכְיָם",
+   "t": "dakheyam",
+   "g": {
+    "en": "their dashing of surf"
+   }
+  },
+  {
+   "h": "מִקֹּלוֹת",
+   "t": "mikkolot",
+   "g": {
+    "en": "from voice or sound of",
+    "es": "voz",
+    "fr": "voix",
+    "ru": "голос",
+    "zh": "声音",
+    "ja": "音"
+   }
+  },
+  {
+   "h": "מַיִם",
+   "t": "mayim",
+   "g": {
+    "en": "water",
+    "es": "agua",
+    "pt": "água",
+    "fr": "eaux",
+    "ru": "вода",
+    "ar": "ماء",
+    "zh": "水",
+    "id": "air",
+    "ja": "水",
+    "ko": "물"
+   }
+  },
+  {
+   "h": "רַבִּים",
+   "t": "rabbim",
+   "g": {
+    "en": "abundant",
+    "fr": "grand",
+    "ru": "многочисленный",
+    "zh": "许多"
+   }
+  },
+  {
+   "h": "אַדִּירִים",
+   "t": "addirim",
+   "g": {
+    "en": "wide or large"
+   }
+  },
+  {
+   "h": "מִשְׁבְּרֵי־יָם",
+   "t": "mishberei-yam",
+   "g": {
+    "en": "breaker of sea or large body of water",
+    "ru": "кризис море",
+    "ja": "危機 海"
+   }
+  },
+  {
+   "h": "אַדִּיר",
+   "t": "addir",
+   "g": {
+    "en": "wide or large"
+   }
+  },
+  {
+   "h": "בַּמָּרוֹם",
+   "t": "ba-marom",
+   "g": {
+    "en": "in altitude",
+    "ru": "высота"
+   }
+  },
+  {
+   "h": "עֵדֹתֶיךָ",
+   "t": "edoteikha",
+   "g": {
+    "en": "your testimony",
+    "fr": "témoignage"
+   }
+  },
+  {
+   "h": "נֶאֶמְנוּ",
+   "t": "neemnu",
+   "g": {
+    "en": "to build up or support",
+    "fr": "croire"
+   }
+  },
+  {
+   "h": "מְאֹד",
+   "t": "meod",
+   "g": {
+    "en": "very",
+    "fr": "très",
+    "ru": "очень"
+   }
+  },
+  {
+   "h": "לְבֵיתְךָ",
+   "t": "le-veitkha",
+   "g": {
+    "en": "to your house",
+    "es": "casa",
+    "pt": "casa",
+    "fr": "maison",
+    "ru": "дом",
+    "zh": "房屋",
+    "id": "rumah",
+    "ja": "家",
+    "ko": "집"
+   }
+  },
+  {
+   "h": "נַאֲוָה־קֹדֶשׁ",
+   "t": "naavah-kodesh",
+   "g": {
+    "en": "to be at home holiness"
+   }
+  },
+  {
+   "h": "לְאֹרֶךְ",
+   "t": "le-orekh",
+   "g": {
+    "en": "to length of",
+    "fr": "longueur"
+   }
+  },
+  {
+   "h": "יָמִים",
+   "t": "yamim",
+   "g": {
+    "en": "day",
+    "es": "día",
+    "pt": "dia",
+    "fr": "jour",
+    "de": "Tag",
+    "ru": "день",
+    "zh": "白天",
+    "id": "hari",
+    "ja": "日"
+   }
+  }
+ ],
+ "text": "יְהוָה מָלָךְ גֵּאוּת לָבֵשׁ לָבֵשׁ יְהוָה עֹז הִתְאַזָּר אַף־תִּכּוֹן תֵּבֵל בַּל־תִּמּוֹט\nנָכוֹן כִּסְאֲךָ מֵאָז מֵעוֹלָם אָתָּה\nנָשְׂאוּ נְהָרוֹת יְהוָה נָשְׂאוּ נְהָרוֹת קוֹלָם יִשְׂאוּ נְהָרוֹת דָּכְיָם\nמִקֹּלוֹת מַיִם רַבִּים אַדִּירִים מִשְׁבְּרֵי־יָם אַדִּיר בַּמָּרוֹם יְהוָה\nעֵדֹתֶיךָ נֶאֶמְנוּ מְאֹד לְבֵיתְךָ נַאֲוָה־קֹדֶשׁ יְהוָה לְאֹרֶךְ יָמִים"
+}

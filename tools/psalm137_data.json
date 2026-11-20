@@ -1,0 +1,689 @@
+{
+ "chapter": 137,
+ "title": "Psalm 137",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  [
+   8,
+   9,
+   10,
+   11
+  ],
+  [
+   12,
+   3,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21
+  ],
+  [
+   22,
+   23,
+   24,
+   0,
+   25,
+   26
+  ],
+  [
+   27,
+   28,
+   29,
+   30
+  ],
+  [
+   31,
+   32,
+   33,
+   34,
+   33,
+   35,
+   36,
+   0,
+   37,
+   38
+  ],
+  [
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   28,
+   45,
+   46,
+   46,
+   47,
+   48,
+   49
+  ],
+  [
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   19
+  ],
+  [
+   52,
+   56,
+   57,
+   58,
+   59
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "עַל",
+   "t": "al",
+   "g": {
+    "en": "above, over",
+    "es": "sobre",
+    "fr": "sur",
+    "ru": "на",
+    "ja": "上"
+   }
+  },
+  {
+   "h": "נַהֲרוֹת",
+   "t": "naharot",
+   "g": {
+    "en": "stream of",
+    "es": "río",
+    "pt": "rio",
+    "fr": "rivière",
+    "ru": "река",
+    "zh": "河",
+    "ja": "川"
+   }
+  },
+  {
+   "h": "בָּבֶל",
+   "t": "bavel",
+   "g": {
+    "en": "Babel",
+    "ru": "Вавилон",
+    "zh": "巴比伦",
+    "ja": "バビロン"
+   }
+  },
+  {
+   "h": "שָׁם",
+   "t": "sham",
+   "g": {
+    "en": "there then",
+    "es": "allá",
+    "fr": "là",
+    "zh": "那里"
+   }
+  },
+  {
+   "h": "יָשַׁבְנוּ",
+   "t": "yashavnu",
+   "g": {
+    "en": "to sit, dwell",
+    "fr": "habiter",
+    "ru": "сидеть",
+    "ja": "座る"
+   }
+  },
+  {
+   "h": "גַּם־בָּכִינוּ",
+   "t": "gam-bakhinu",
+   "g": {
+    "en": "also, even to weep",
+    "fr": "aussi pleurer",
+    "ru": "также плакать"
+   }
+  },
+  {
+   "h": "בְּזָכְרֵנוּ",
+   "t": "be-zakherenu",
+   "g": {
+    "en": "in to remember us",
+    "fr": "souvenir",
+    "ru": "помнить",
+    "ar": "تذكر",
+    "ja": "覚えている"
+   }
+  },
+  {
+   "h": "אֶת־צִיּוֹן",
+   "t": "et-tzion",
+   "g": {
+    "en": "object marker Zion"
+   }
+  },
+  {
+   "h": "עַל־עֲרָבִים",
+   "t": "al-aravim",
+   "g": {
+    "en": "above, over willow",
+    "es": "sobre atardecer",
+    "fr": "sur soir",
+    "ru": "на вечер",
+    "ja": "上 ゆうがた"
+   }
+  },
+  {
+   "h": "בְּתוֹכָהּ",
+   "t": "be-tokhah",
+   "g": {
+    "en": "in her bisection",
+    "fr": "milieu",
+    "ru": "середина",
+    "zh": "里面",
+    "ja": "真ん中"
+   }
+  },
+  {
+   "h": "תָּלִינוּ",
+   "t": "talinu",
+   "g": {
+    "en": "to suspend",
+    "fr": "pendre"
+   }
+  },
+  {
+   "h": "כִּנֹּרוֹתֵינוּ",
+   "t": "kinnoroteinu",
+   "g": {
+    "en": "our harp",
+    "es": "violín",
+    "fr": "harpe"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
+   }
+  },
+  {
+   "h": "שְׁאֵלוּנוּ",
+   "t": "sheelunu",
+   "g": {
+    "en": "to inquire us",
+    "fr": "demander",
+    "ru": "спрашивать",
+    "zh": "询问",
+    "ja": "尋ねる"
+   }
+  },
+  {
+   "h": "שׁוֹבֵינוּ",
+   "t": "shoveinu",
+   "g": {
+    "en": "to transport into captivity us",
+    "fr": "être captif",
+    "zh": "俘虏"
+   }
+  },
+  {
+   "h": "דִּבְרֵי־שִׁיר",
+   "t": "divrei-shir",
+   "g": {
+    "en": "word of song",
+    "es": "palabra canción",
+    "fr": "parole chant",
+    "ru": "слово песня",
+    "zh": "词语 歌"
+   }
+  },
+  {
+   "h": "וְתוֹלָלֵינוּ",
+   "t": "ve-tolaleinu",
+   "g": {
+    "en": "and our causing to howl"
+   }
+  },
+  {
+   "h": "שִׂמְחָה",
+   "t": "simchah",
+   "g": {
+    "en": "blithesomeness or glee,",
+    "fr": "joie",
+    "ru": "радость"
+   }
+  },
+  {
+   "h": "שִׁירוּ",
+   "t": "shiru",
+   "g": {
+    "en": "to sing",
+    "es": "reservar"
+   }
+  },
+  {
+   "h": "לָנוּ",
+   "t": "lanu",
+   "g": {
+    "en": "to us",
+    "fr": "à"
+   }
+  },
+  {
+   "h": "מִשִּׁיר",
+   "t": "misshir",
+   "g": {
+    "en": "from song of",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "צִיּוֹן",
+   "t": "tzion",
+   "g": {
+    "en": "Zion",
+    "es": "Sion",
+    "ru": "Сион",
+    "ja": "シオン"
+   }
+  },
+  {
+   "h": "אֵיךְ",
+   "t": "eikh",
+   "g": {
+    "en": "how? or how!",
+    "es": "cómo",
+    "fr": "comment",
+    "ru": "как",
+    "zh": "怎样"
+   }
+  },
+  {
+   "h": "נָשִׁיר",
+   "t": "nashir",
+   "g": {
+    "en": "to sing",
+    "es": "reservar"
+   }
+  },
+  {
+   "h": "אֶת־שִׁיר־יְהוָה",
+   "t": "et-shir-YHWH",
+   "g": {
+    "en": "object marker song of the LORD"
+   }
+  },
+  {
+   "h": "אַדְמַת",
+   "t": "admat",
+   "g": {
+    "en": "soil of",
+    "fr": "terre",
+    "ru": "земля",
+    "ar": "تراب - أرض",
+    "zh": "土地",
+    "ja": "土地"
+   }
+  },
+  {
+   "h": "נֵכָר",
+   "t": "nekhar",
+   "g": {
+    "en": "foreign, or a foreigner",
+    "fr": "étranger",
+    "ru": "чужбина"
+   }
+  },
+  {
+   "h": "אִם־אֶשְׁכָּחֵךְ",
+   "t": "im-eshkachekhe",
+   "g": {
+    "en": "if to forget you"
+   }
+  },
+  {
+   "h": "יְרוּשָׁלִָם",
+   "t": "yerushalam",
+   "g": {
+    "en": "Jerushalaim or Jerushalem"
+   }
+  },
+  {
+   "h": "תִּשְׁכַּח",
+   "t": "tishkach",
+   "g": {
+    "en": "to forget",
+    "es": "olvidar",
+    "fr": "oublier",
+    "ru": "забывать"
+   }
+  },
+  {
+   "h": "יְמִינִי",
+   "t": "yemini",
+   "g": {
+    "en": "my right hand",
+    "es": "derecha",
+    "fr": "droite",
+    "ru": "правый",
+    "zh": "右手",
+    "ko": "오른쪽"
+   }
+  },
+  {
+   "h": "תִּדְבַּק־לְשׁוֹנִי",
+   "t": "tidbak-le-shoni",
+   "g": {
+    "en": "to impinge our tongue, used literally",
+    "fr": "s’unir langage"
+   }
+  },
+  {
+   "h": "לְחִכִּי",
+   "t": "le-chikki",
+   "g": {
+    "en": "to my palate or inside of the mouth"
+   }
+  },
+  {
+   "h": "אִם־לֹא",
+   "t": "im-lo",
+   "g": {
+    "en": "if not"
+   }
+  },
+  {
+   "h": "אֶזְכְּרֵכִי",
+   "t": "ezkerekhi",
+   "g": {
+    "en": "to remember you",
+    "fr": "souvenir",
+    "ru": "помнить",
+    "ar": "تذكر",
+    "ja": "覚えている"
+   }
+  },
+  {
+   "h": "אַעֲלֶה",
+   "t": "aaleh",
+   "g": {
+    "en": "to go up",
+    "es": "elevar",
+    "fr": "monter",
+    "ru": "восходить",
+    "ja": "上昇"
+   }
+  },
+  {
+   "h": "אֶת־יְרוּשָׁלִַם",
+   "t": "et-yerushalam",
+   "g": {
+    "en": "object marker Jerushalaim or Jerushalem"
+   }
+  },
+  {
+   "h": "רֹאשׁ",
+   "t": "rosh",
+   "g": {
+    "en": "head",
+    "es": "cabeza",
+    "fr": "tête",
+    "ru": "голова",
+    "ar": "رأس",
+    "zh": "头",
+    "ja": "頭"
+   }
+  },
+  {
+   "h": "שִׂמְחָתִי",
+   "t": "simchati",
+   "g": {
+    "en": "my blithesomeness or glee,",
+    "fr": "joie",
+    "ru": "радость"
+   }
+  },
+  {
+   "h": "זְכֹר",
+   "t": "zekhor",
+   "g": {
+    "en": "to remember",
+    "fr": "souvenir",
+    "ru": "помнить",
+    "ar": "تذكر",
+    "ja": "覚えている"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "לִבְנֵי",
+   "t": "li-ve-nei",
+   "g": {
+    "en": "to son of",
+    "es": "hijo",
+    "fr": "fils",
+    "ru": "сын",
+    "zh": "儿子",
+    "ja": "息子"
+   }
+  },
+  {
+   "h": "אֱדוֹם",
+   "t": "edom",
+   "g": {
+    "en": "Edom",
+    "es": "ser humano",
+    "pt": "Adão",
+    "fr": "homme",
+    "ru": "человек",
+    "ar": "آدم",
+    "zh": "人类",
+    "ja": "アダム",
+    "ko": "사람"
+   }
+  },
+  {
+   "h": "אֵת",
+   "t": "et",
+   "g": {
+    "en": "object marker"
+   }
+  },
+  {
+   "h": "יוֹם",
+   "t": "yom",
+   "g": {
+    "en": "day",
+    "es": "día",
+    "pt": "dia",
+    "fr": "jour",
+    "de": "Tag",
+    "ru": "день",
+    "zh": "白天",
+    "id": "hari",
+    "ja": "日"
+   }
+  },
+  {
+   "h": "הָאֹמְרִים",
+   "t": "haomerim",
+   "g": {
+    "en": "the to say",
+    "es": "decir",
+    "fr": "dire",
+    "ru": "говорить",
+    "ja": "言う、話す"
+   }
+  },
+  {
+   "h": "עָרוּ",
+   "t": "aru",
+   "g": {
+    "en": "to be bare",
+    "fr": "vider"
+   }
+  },
+  {
+   "h": "עַד",
+   "t": "ad",
+   "g": {
+    "en": "until",
+    "fr": "jusqu'à",
+    "ru": "до",
+    "ja": "まで"
+   }
+  },
+  {
+   "h": "הַיְסוֹד",
+   "t": "ha-ysod",
+   "g": {
+    "en": "the foundation"
+   }
+  },
+  {
+   "h": "בָּהּ",
+   "t": "bah",
+   "g": {
+    "en": "in her",
+    "es": "en",
+    "fr": "dans"
+   }
+  },
+  {
+   "h": "בַּת־בָּבֶל",
+   "t": "bat-bavel",
+   "g": {
+    "en": "daughter of Babel",
+    "ru": "дочь Вавилон",
+    "zh": "女儿 巴比伦"
+   }
+  },
+  {
+   "h": "הַשְּׁדוּדָה",
+   "t": "ha-shedudah",
+   "g": {
+    "en": "the to be burly",
+    "ru": "опустошать"
+   }
+  },
+  {
+   "h": "אַשְׁרֵי",
+   "t": "ashrei",
+   "g": {
+    "en": "happy is",
+    "es": "dichoso es",
+    "fr": "bonheur"
+   }
+  },
+  {
+   "h": "שֶׁיְשַׁלֶּם־לָךְ",
+   "t": "sheyshallem-lakhe",
+   "g": {
+    "en": "that to be safe to you",
+    "fr": "payer à"
+   }
+  },
+  {
+   "h": "אֶת־גְּמוּלֵךְ",
+   "t": "et-gemulekhe",
+   "g": {
+    "en": "object marker your treatment"
+   }
+  },
+  {
+   "h": "שֶׁגָּמַלְתְּ",
+   "t": "sheggamalte",
+   "g": {
+    "en": "that to treat a person",
+    "fr": "sevrer",
+    "ru": "воздавать",
+    "ar": "جمل",
+    "zh": "断奶",
+    "ja": "離乳"
+   }
+  },
+  {
+   "h": "שֶׁיֹּאחֵז",
+   "t": "sheyyochez",
+   "g": {
+    "en": "that to seize",
+    "fr": "attraper",
+    "ru": "держать"
+   }
+  },
+  {
+   "h": "וְנִפֵּץ",
+   "t": "ve-nippetz",
+   "g": {
+    "en": "and to dash to pieces, or scatter",
+    "fr": "peupler"
+   }
+  },
+  {
+   "h": "אֶת־עֹלָלַיִךְ",
+   "t": "et-olalayikh",
+   "g": {
+    "en": "object marker your suckling"
+   }
+  },
+  {
+   "h": "אֶל־הַסָּלַע",
+   "t": "el-hassala",
+   "g": {
+    "en": "to, toward the craggy rock",
+    "ru": "к скала",
+    "ja": "～へ、～に向かって、～に向けて 岩石"
+   }
+  }
+ ],
+ "text": "עַל נַהֲרוֹת בָּבֶל שָׁם יָשַׁבְנוּ גַּם־בָּכִינוּ בְּזָכְרֵנוּ אֶת־צִיּוֹן\nעַל־עֲרָבִים בְּתוֹכָהּ תָּלִינוּ כִּנֹּרוֹתֵינוּ\nכִּי שָׁם שְׁאֵלוּנוּ שׁוֹבֵינוּ דִּבְרֵי־שִׁיר וְתוֹלָלֵינוּ שִׂמְחָה שִׁירוּ לָנוּ מִשִּׁיר צִיּוֹן\nאֵיךְ נָשִׁיר אֶת־שִׁיר־יְהוָה עַל אַדְמַת נֵכָר\nאִם־אֶשְׁכָּחֵךְ יְרוּשָׁלִָם תִּשְׁכַּח יְמִינִי\nתִּדְבַּק־לְשׁוֹנִי לְחִכִּי אִם־לֹא אֶזְכְּרֵכִי אִם־לֹא אַעֲלֶה אֶת־יְרוּשָׁלִַם עַל רֹאשׁ שִׂמְחָתִי\nזְכֹר יְהוָה לִבְנֵי אֱדוֹם אֵת יוֹם יְרוּשָׁלִָם הָאֹמְרִים עָרוּ עָרוּ עַד הַיְסוֹד בָּהּ\nבַּת־בָּבֶל הַשְּׁדוּדָה אַשְׁרֵי שֶׁיְשַׁלֶּם־לָךְ אֶת־גְּמוּלֵךְ שֶׁגָּמַלְתְּ לָנוּ\nאַשְׁרֵי שֶׁיֹּאחֵז וְנִפֵּץ אֶת־עֹלָלַיִךְ אֶל־הַסָּלַע"
+}

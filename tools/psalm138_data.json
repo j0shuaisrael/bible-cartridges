@@ -1,0 +1,657 @@
+{
+ "chapter": 138,
+ "title": "Psalm 138",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  [
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  [
+   16,
+   17,
+   18,
+   19,
+   20,
+   21
+  ],
+  [
+   22,
+   23,
+   24,
+   25,
+   26,
+   27
+  ],
+  [
+   28,
+   29,
+   23,
+   30,
+   31,
+   23
+  ],
+  [
+   32,
+   23,
+   33,
+   34,
+   35,
+   36,
+   37
+  ],
+  [
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48
+  ],
+  [
+   23,
+   49,
+   50,
+   23,
+   51,
+   52,
+   53,
+   54,
+   55
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "לְדָוִד",
+   "t": "le-david",
+   "g": {
+    "en": "to David",
+    "es": "David",
+    "pt": "Davi",
+    "fr": "David",
+    "ru": "Давид",
+    "ja": "ダビデ"
+   }
+  },
+  {
+   "h": "אוֹדְךָ",
+   "t": "odekha",
+   "g": {
+    "en": "to praise you",
+    "fr": "reconnaissant"
+   }
+  },
+  {
+   "h": "בְכָל־לִבִּי",
+   "t": "ve-khal-li-bi",
+   "g": {
+    "en": "in all of my heart",
+    "es": "todo corazón",
+    "fr": "tous cœur",
+    "ru": "весь сердце",
+    "ja": "全体 心臓"
+   }
+  },
+  {
+   "h": "נֶגֶד",
+   "t": "neged",
+   "g": {
+    "en": "before",
+    "es": "contra",
+    "fr": "semblable",
+    "ru": "против",
+    "zh": "对面",
+    "ja": "～の反対方向の/に、逆方向の/に、～にさからって"
+   }
+  },
+  {
+   "h": "אֱלֹהִים",
+   "t": "elohim",
+   "g": {
+    "en": "God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "אֲזַמְּרֶךָּ",
+   "t": "azammerekkha",
+   "g": {
+    "en": "to sing praise you"
+   }
+  },
+  {
+   "h": "אֶשְׁתַּחֲוֶה",
+   "t": "eshtachaveh",
+   "g": {
+    "en": "to depress",
+    "ru": "нагибаться"
+   }
+  },
+  {
+   "h": "אֶל־הֵיכַל",
+   "t": "el-heikhal",
+   "g": {
+    "en": "to, toward temple, palace of",
+    "ru": "к храм"
+   }
+  },
+  {
+   "h": "קָדְשְׁךָ",
+   "t": "kadeshekha",
+   "g": {
+    "en": "your holiness"
+   }
+  },
+  {
+   "h": "וְאוֹדֶה",
+   "t": "ve-odeh",
+   "g": {
+    "en": "and to praise",
+    "fr": "reconnaissant"
+   }
+  },
+  {
+   "h": "אֶת־שְׁמֶךָ",
+   "t": "et-shemekha",
+   "g": {
+    "en": "object marker your name"
+   }
+  },
+  {
+   "h": "עַל־חַסְדְּךָ",
+   "t": "al-chasdekha",
+   "g": {
+    "en": "above, over your kindness",
+    "fr": "sur bonté",
+    "ru": "на милость"
+   }
+  },
+  {
+   "h": "וְעַל־אֲמִתֶּךָ",
+   "t": "ve-al-amittekha",
+   "g": {
+    "en": "and above, over your truth",
+    "es": "sobre verdad",
+    "fr": "sur vérité",
+    "ru": "на правда",
+    "ja": "上 西"
+   }
+  },
+  {
+   "h": "כִּי־הִגְדַּלְתָּ",
+   "t": "ki-hi-gdalta",
+   "g": {
+    "en": "for, because to be large",
+    "es": "porque crecer",
+    "fr": "car grandir"
+   }
+  },
+  {
+   "h": "עַל־כָּל־שִׁמְךָ",
+   "t": "al-kal-shimkha",
+   "g": {
+    "en": "above, over all of your name",
+    "es": "sobre todo nombre",
+    "fr": "sur tous nom",
+    "ru": "на весь имя",
+    "ja": "上 全体 名前"
+   }
+  },
+  {
+   "h": "אִמְרָתֶךָ",
+   "t": "imratekha",
+   "g": {
+    "en": "your word",
+    "fr": "parole",
+    "ru": "изречение"
+   }
+  },
+  {
+   "h": "בְּיוֹם",
+   "t": "be-yom",
+   "g": {
+    "en": "in day of",
+    "es": "día",
+    "pt": "dia",
+    "fr": "jour",
+    "de": "Tag",
+    "ru": "день",
+    "zh": "白天",
+    "id": "hari",
+    "ja": "日"
+   }
+  },
+  {
+   "h": "קָרָאתִי",
+   "t": "karati",
+   "g": {
+    "en": "to call out to",
+    "fr": "appeler",
+    "ru": "звать",
+    "zh": "叫"
+   }
+  },
+  {
+   "h": "וַתַּעֲנֵנִי",
+   "t": "va-taaneni",
+   "g": {
+    "en": "and to answer me",
+    "fr": "affliger",
+    "ru": "угнетать",
+    "zh": "回答"
+   }
+  },
+  {
+   "h": "תַּרְהִבֵנִי",
+   "t": "tarhiveni",
+   "g": {
+    "en": "to urge severely me"
+   }
+  },
+  {
+   "h": "בְנַפְשִׁי",
+   "t": "ve-nafshi",
+   "g": {
+    "en": "in my soul",
+    "fr": "âme",
+    "ru": "душа",
+    "ar": "نفس",
+    "zh": "灵魂",
+    "id": "jiwa",
+    "ja": "魂"
+   }
+  },
+  {
+   "h": "עֹז",
+   "t": "oz",
+   "g": {
+    "en": "strength",
+    "ja": "力"
+   }
+  },
+  {
+   "h": "יוֹדוּךָ",
+   "t": "yodukha",
+   "g": {
+    "en": "to praise you",
+    "fr": "reconnaissant"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "כָּל־מַלְכֵי־אָרֶץ",
+   "t": "kal-malkhei-aretz",
+   "g": {
+    "en": "all of king of earth",
+    "es": "todo rey tierra",
+    "fr": "tous roi terre",
+    "ru": "весь царь страна",
+    "ja": "全体 王 大地"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
+   }
+  },
+  {
+   "h": "שָׁמְעוּ",
+   "t": "shameu",
+   "g": {
+    "en": "to hear intelligently",
+    "fr": "entendre",
+    "ru": "слышать",
+    "ja": "聞く"
+   }
+  },
+  {
+   "h": "אִמְרֵי־פִיךָ",
+   "t": "imrei-fikha",
+   "g": {
+    "en": "something said of your mouth",
+    "es": "cordero boca",
+    "fr": "faon bouche",
+    "ru": "Эмар рот",
+    "ja": "発声 口"
+   }
+  },
+  {
+   "h": "וְיָשִׁירוּ",
+   "t": "ve-yashiru",
+   "g": {
+    "en": "and to sing",
+    "es": "reservar"
+   }
+  },
+  {
+   "h": "בְּדַרְכֵי",
+   "t": "be-darkhei",
+   "g": {
+    "en": "in way of",
+    "es": "camino",
+    "fr": "chemin",
+    "ru": "дорога",
+    "ja": "道"
+   }
+  },
+  {
+   "h": "כִּי־גָדוֹל",
+   "t": "ki-gadol",
+   "g": {
+    "en": "for, because great",
+    "es": "porque grande",
+    "fr": "car grand",
+    "ja": "何故 大きな"
+   }
+  },
+  {
+   "h": "כְּבוֹד",
+   "t": "ke-vod",
+   "g": {
+    "en": "glory of",
+    "es": "honra",
+    "fr": "honneur",
+    "ru": "уважение",
+    "id": "kehormatan",
+    "ja": "名誉"
+   }
+  },
+  {
+   "h": "כִּי־רָם",
+   "t": "ki-ram",
+   "g": {
+    "en": "for, because to be high actively, to rise or raise",
+    "fr": "car s’élever"
+   }
+  },
+  {
+   "h": "וְשָׁפָל",
+   "t": "ve-shafal",
+   "g": {
+    "en": "and depressed"
+   }
+  },
+  {
+   "h": "יִרְאֶה",
+   "t": "yireh",
+   "g": {
+    "en": "to see",
+    "fr": "voir",
+    "ru": "видеть",
+    "zh": "看见"
+   }
+  },
+  {
+   "h": "וְגָבֹהַּ",
+   "t": "ve-gavoahh",
+   "g": {
+    "en": "and elevated, powerful",
+    "fr": "haut"
+   }
+  },
+  {
+   "h": "מִמֶּרְחָק",
+   "t": "mimmerchak",
+   "g": {
+    "en": "from remoteness",
+    "ru": "расстояние",
+    "ko": "거리"
+   }
+  },
+  {
+   "h": "יְיֵדָע",
+   "t": "yeyeda",
+   "g": {
+    "en": "to know",
+    "fr": "savoir",
+    "ru": "знать",
+    "ja": "知る"
+   }
+  },
+  {
+   "h": "אִם־אֵלֵךְ",
+   "t": "im-elekhe",
+   "g": {
+    "en": "if to walk"
+   }
+  },
+  {
+   "h": "בְּקֶרֶב",
+   "t": "be-kerev",
+   "g": {
+    "en": "in midst of",
+    "fr": "fond",
+    "ru": "бой",
+    "zh": "战斗",
+    "ja": "内臓"
+   }
+  },
+  {
+   "h": "צָרָה",
+   "t": "tzarah",
+   "g": {
+    "en": "trouble",
+    "es": "angustia",
+    "fr": "oppression",
+    "ru": "беда",
+    "zh": "不幸",
+    "id": "kemalangan"
+   }
+  },
+  {
+   "h": "תְּחַיֵּנִי",
+   "t": "techayyeni",
+   "g": {
+    "en": "to live, whether me",
+    "fr": "vivre"
+   }
+  },
+  {
+   "h": "עַל",
+   "t": "al",
+   "g": {
+    "en": "above, over",
+    "es": "sobre",
+    "fr": "sur",
+    "ru": "на",
+    "ja": "上"
+   }
+  },
+  {
+   "h": "אַף",
+   "t": "af",
+   "g": {
+    "en": "also",
+    "es": "todavía",
+    "fr": "aussi",
+    "zh": "也"
+   }
+  },
+  {
+   "h": "אֹיְבַי",
+   "t": "oyvai",
+   "g": {
+    "en": "enemy me",
+    "fr": "ennemi"
+   }
+  },
+  {
+   "h": "תִּשְׁלַח",
+   "t": "tishlach",
+   "g": {
+    "en": "to send",
+    "es": "enviar",
+    "fr": "envoyer",
+    "ru": "посылать"
+   }
+  },
+  {
+   "h": "יָדֶךָ",
+   "t": "yadekha",
+   "g": {
+    "en": "your hand",
+    "es": "mano",
+    "pt": "mão",
+    "fr": "main",
+    "ru": "рука",
+    "zh": "手",
+    "id": "tangan",
+    "ja": "手"
+   }
+  },
+  {
+   "h": "וְתוֹשִׁיעֵנִי",
+   "t": "ve-toshieni",
+   "g": {
+    "en": "and to save, deliver me"
+   }
+  },
+  {
+   "h": "יְמִינֶךָ",
+   "t": "yeminekha",
+   "g": {
+    "en": "your right hand",
+    "es": "derecha",
+    "fr": "droite",
+    "ru": "правый",
+    "zh": "右手",
+    "ko": "오른쪽"
+   }
+  },
+  {
+   "h": "יִגְמֹר",
+   "t": "yigmor",
+   "g": {
+    "en": "to end",
+    "fr": "finir",
+    "ru": "оканчивать",
+    "zh": "结束"
+   }
+  },
+  {
+   "h": "בַּעֲדִי",
+   "t": "ba-adi",
+   "g": {
+    "en": "in up to or over against me",
+    "fr": "derrière",
+    "ru": "за"
+   }
+  },
+  {
+   "h": "חַסְדְּךָ",
+   "t": "chasdekha",
+   "g": {
+    "en": "your kindness",
+    "fr": "bonté",
+    "ru": "милость",
+    "ar": "نعمة"
+   }
+  },
+  {
+   "h": "לְעוֹלָם",
+   "t": "le-olam",
+   "g": {
+    "en": "to forever",
+    "es": "mundo",
+    "fr": "monde",
+    "ru": "мир",
+    "zh": "世界",
+    "id": "dunia",
+    "ja": "世界"
+   }
+  },
+  {
+   "h": "מַעֲשֵׂי",
+   "t": "maasei",
+   "g": {
+    "en": "action of",
+    "fr": "œuvre",
+    "ru": "дело",
+    "ja": "行動"
+   }
+  },
+  {
+   "h": "יָדֶיךָ",
+   "t": "yadeikha",
+   "g": {
+    "en": "your hand",
+    "es": "mano",
+    "pt": "mão",
+    "fr": "main",
+    "ru": "рука",
+    "zh": "手",
+    "id": "tangan",
+    "ja": "手"
+   }
+  },
+  {
+   "h": "אַל־תֶּרֶף",
+   "t": "al-teref",
+   "g": {
+    "en": "not to slacken"
+   }
+  }
+ ],
+ "text": "לְדָוִד אוֹדְךָ בְכָל־לִבִּי נֶגֶד אֱלֹהִים אֲזַמְּרֶךָּ\nאֶשְׁתַּחֲוֶה אֶל־הֵיכַל קָדְשְׁךָ וְאוֹדֶה אֶת־שְׁמֶךָ עַל־חַסְדְּךָ וְעַל־אֲמִתֶּךָ כִּי־הִגְדַּלְתָּ עַל־כָּל־שִׁמְךָ אִמְרָתֶךָ\nבְּיוֹם קָרָאתִי וַתַּעֲנֵנִי תַּרְהִבֵנִי בְנַפְשִׁי עֹז\nיוֹדוּךָ יְהוָה כָּל־מַלְכֵי־אָרֶץ כִּי שָׁמְעוּ אִמְרֵי־פִיךָ\nוְיָשִׁירוּ בְּדַרְכֵי יְהוָה כִּי־גָדוֹל כְּבוֹד יְהוָה\nכִּי־רָם יְהוָה וְשָׁפָל יִרְאֶה וְגָבֹהַּ מִמֶּרְחָק יְיֵדָע\nאִם־אֵלֵךְ בְּקֶרֶב צָרָה תְּחַיֵּנִי עַל אַף אֹיְבַי תִּשְׁלַח יָדֶךָ וְתוֹשִׁיעֵנִי יְמִינֶךָ\nיְהוָה יִגְמֹר בַּעֲדִי יְהוָה חַסְדְּךָ לְעוֹלָם מַעֲשֵׂי יָדֶיךָ אַל־תֶּרֶף"
+}

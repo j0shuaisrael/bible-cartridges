@@ -1,0 +1,589 @@
+{
+ "chapter": 23,
+ "title": "Psalm 23",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  [
+   6,
+   7,
+   8,
+   9,
+   10,
+   11
+  ],
+  [
+   12,
+   13,
+   14,
+   15,
+   16,
+   17
+  ],
+  [
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29
+  ],
+  [
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39
+  ],
+  [
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "מִזְמוֹר",
+   "t": "mizmor",
+   "g": {
+    "en": "psalm",
+    "ru": "псалом"
+   }
+  },
+  {
+   "h": "לְדָוִד",
+   "t": "le-david",
+   "g": {
+    "en": "to David",
+    "es": "David",
+    "pt": "Davi",
+    "fr": "David",
+    "ru": "Давид",
+    "ja": "ダビデ"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "רֹעִי",
+   "t": "roi",
+   "g": {
+    "en": "to tend a flock me",
+    "fr": "garder les moutons",
+    "ru": "пасти",
+    "ja": "群がる、群れる、群れを成す"
+   }
+  },
+  {
+   "h": "לֹא",
+   "t": "lo",
+   "g": {
+    "en": "not",
+    "es": "no",
+    "fr": "ne… pas",
+    "ru": "нет",
+    "ar": "لا",
+    "id": "tidak",
+    "ja": "ではない"
+   }
+  },
+  {
+   "h": "אֶחְסָר",
+   "t": "echsar",
+   "g": {
+    "en": "to lack",
+    "fr": "diminuer",
+    "ru": "недоставать"
+   }
+  },
+  {
+   "h": "בִּנְאוֹת",
+   "t": "bi-not",
+   "g": {
+    "en": "in home of"
+   }
+  },
+  {
+   "h": "דֶּשֶׁא",
+   "t": "deshe",
+   "g": {
+    "en": "sprout",
+    "es": "pasto",
+    "fr": "végétation",
+    "ru": "трава",
+    "ja": "草"
+   }
+  },
+  {
+   "h": "יַרְבִּיצֵנִי",
+   "t": "yarbitzeni",
+   "g": {
+    "en": "to crouch me",
+    "fr": "se coucher"
+   }
+  },
+  {
+   "h": "עַל־מֵי",
+   "t": "al-mei",
+   "g": {
+    "en": "above, over water of",
+    "es": "sobre agua",
+    "fr": "sur eaux",
+    "ru": "на вода",
+    "ja": "上 水"
+   }
+  },
+  {
+   "h": "מְנֻחוֹת",
+   "t": "menuchot",
+   "g": {
+    "en": "repose or peacefully",
+    "fr": "repos",
+    "ru": "отдых"
+   }
+  },
+  {
+   "h": "יְנַהֲלֵנִי",
+   "t": "yenahaleni",
+   "g": {
+    "en": "to run with asparkle me",
+    "fr": "cheminer"
+   }
+  },
+  {
+   "h": "נַפְשִׁי",
+   "t": "nafshi",
+   "g": {
+    "en": "my soul",
+    "fr": "âme",
+    "ru": "душа",
+    "ar": "نفس",
+    "zh": "灵魂",
+    "id": "jiwa",
+    "ja": "魂"
+   }
+  },
+  {
+   "h": "יְשׁוֹבֵב",
+   "t": "yeshovev",
+   "g": {
+    "en": "to turn back",
+    "fr": "retourner"
+   }
+  },
+  {
+   "h": "יַנְחֵנִי",
+   "t": "yancheni",
+   "g": {
+    "en": "to guide me",
+    "fr": "mener"
+   }
+  },
+  {
+   "h": "בְמַעְגְּלֵי־צֶדֶק",
+   "t": "ve-magelei-tzedek",
+   "g": {
+    "en": "in track of righteousness",
+    "ru": "круг справедливость"
+   }
+  },
+  {
+   "h": "לְמַעַן",
+   "t": "le-maan",
+   "g": {
+    "en": "for the sake of"
+   }
+  },
+  {
+   "h": "שְׁמוֹ",
+   "t": "shemo",
+   "g": {
+    "en": "his name",
+    "es": "nombre",
+    "fr": "nom",
+    "ru": "имя",
+    "zh": "名字",
+    "ja": "名前"
+   }
+  },
+  {
+   "h": "גַּם",
+   "t": "gam",
+   "g": {
+    "en": "also, even",
+    "es": "también",
+    "fr": "aussi",
+    "ru": "также",
+    "ja": "も"
+   }
+  },
+  {
+   "h": "כִּי־אֵלֵךְ",
+   "t": "ki-elekhe",
+   "g": {
+    "en": "for, because to walk"
+   }
+  },
+  {
+   "h": "בְּגֵיא",
+   "t": "be-gei",
+   "g": {
+    "en": "in gorge of",
+    "ru": "ущелье"
+   }
+  },
+  {
+   "h": "צַלְמָוֶת",
+   "t": "tzalmavet",
+   "g": {
+    "en": "shade of death",
+    "es": "sombra"
+   }
+  },
+  {
+   "h": "לֹא־אִירָא",
+   "t": "lo-ira",
+   "g": {
+    "en": "not to fear",
+    "fr": "ne avoir peur",
+    "ru": "нет бояться"
+   }
+  },
+  {
+   "h": "רָע",
+   "t": "ra",
+   "g": {
+    "en": "evil",
+    "es": "malo",
+    "fr": "mal",
+    "ru": "зло",
+    "zh": "坏事",
+    "ja": "邪悪"
+   }
+  },
+  {
+   "h": "כִּי־אַתָּה",
+   "t": "ki-attah",
+   "g": {
+    "en": "for, because you",
+    "es": "porque tú",
+    "fr": "car tu"
+   }
+  },
+  {
+   "h": "עִמָּדִי",
+   "t": "immadi",
+   "g": {
+    "en": "along with me",
+    "fr": "avec"
+   }
+  },
+  {
+   "h": "שִׁבְטְךָ",
+   "t": "shivtekha",
+   "g": {
+    "en": "your scion",
+    "fr": "sceptre",
+    "ru": "племя",
+    "zh": "部落"
+   }
+  },
+  {
+   "h": "וּמִשְׁעַנְתֶּךָ",
+   "t": "u-mishantekha",
+   "g": {
+    "en": "and your support"
+   }
+  },
+  {
+   "h": "הֵמָּה",
+   "t": "hemmah",
+   "g": {
+    "en": "they",
+    "es": "ellos",
+    "fr": "eux",
+    "de": "sie",
+    "ru": "они",
+    "zh": "他们",
+    "id": "mereka"
+   }
+  },
+  {
+   "h": "יְנַחֲמֻנִי",
+   "t": "yenachamuni",
+   "g": {
+    "en": "to sigh me",
+    "fr": "réconforter",
+    "ru": "утешать"
+   }
+  },
+  {
+   "h": "תַּעֲרֹךְ",
+   "t": "taarokhe",
+   "g": {
+    "en": "to set in a row",
+    "es": "poner",
+    "fr": "se joindre",
+    "ja": "組織"
+   }
+  },
+  {
+   "h": "לְפָנַי",
+   "t": "le-fanai",
+   "g": {
+    "en": "to my face",
+    "es": "cara",
+    "fr": "visage",
+    "ru": "лицо",
+    "zh": "脸",
+    "ja": "顔",
+    "ko": "얼굴"
+   }
+  },
+  {
+   "h": "שֻׁלְחָן",
+   "t": "shulchan",
+   "g": {
+    "en": "table",
+    "es": "mesa"
+   }
+  },
+  {
+   "h": "נֶגֶד",
+   "t": "neged",
+   "g": {
+    "en": "before",
+    "es": "contra",
+    "fr": "semblable",
+    "ru": "против",
+    "zh": "对面",
+    "ja": "～の反対方向の/に、逆方向の/に、～にさからって"
+   }
+  },
+  {
+   "h": "צֹרְרָי",
+   "t": "tzorerai",
+   "g": {
+    "en": "to cramp me",
+    "fr": "être angoissé"
+   }
+  },
+  {
+   "h": "דִּשַּׁנְתָּ",
+   "t": "disshanta",
+   "g": {
+    "en": "to be fat"
+   }
+  },
+  {
+   "h": "בַשֶּׁמֶן",
+   "t": "va-shemen",
+   "g": {
+    "en": "in grease",
+    "es": "aceite",
+    "pt": "óleo",
+    "fr": "gras",
+    "ru": "растительное масло",
+    "zh": "油"
+   }
+  },
+  {
+   "h": "רֹאשִׁי",
+   "t": "roshi",
+   "g": {
+    "en": "my head",
+    "es": "cabeza",
+    "fr": "tête",
+    "ru": "голова",
+    "ar": "رأس",
+    "zh": "头",
+    "ja": "頭"
+   }
+  },
+  {
+   "h": "כּוֹסִי",
+   "t": "kosi",
+   "g": {
+    "en": "my cup",
+    "es": "vaso",
+    "fr": "coupe",
+    "ru": "стакан",
+    "ja": "コップ"
+   }
+  },
+  {
+   "h": "רְוָיָה",
+   "t": "revayah",
+   "g": {
+    "en": "satisfaction"
+   }
+  },
+  {
+   "h": "אַךְ",
+   "t": "akh",
+   "g": {
+    "en": "surely, only",
+    "fr": "rien que",
+    "ru": "но",
+    "ja": "しかし"
+   }
+  },
+  {
+   "h": "טוֹב",
+   "t": "tov",
+   "g": {
+    "en": "good in the widest sense",
+    "es": "bueno",
+    "fr": "bon",
+    "ru": "хороший",
+    "ar": "جيد",
+    "zh": "好",
+    "ko": "좋다"
+   }
+  },
+  {
+   "h": "וָחֶסֶד",
+   "t": "va-chesed",
+   "g": {
+    "en": "and kindness",
+    "fr": "bonté",
+    "ru": "милость",
+    "ar": "نعمة"
+   }
+  },
+  {
+   "h": "יִרְדְּפוּנִי",
+   "t": "yirdefuni",
+   "g": {
+    "en": "to run after me",
+    "fr": "poursuivre"
+   }
+  },
+  {
+   "h": "כָּל־יְמֵי",
+   "t": "kal-yemei",
+   "g": {
+    "en": "all of day of",
+    "es": "todo día",
+    "fr": "tous jour",
+    "ru": "весь день",
+    "ja": "全体 日"
+   }
+  },
+  {
+   "h": "חַיָּי",
+   "t": "chayyai",
+   "g": {
+    "en": "my life",
+    "fr": "vivant",
+    "ru": "живой",
+    "ar": "حي",
+    "zh": "活着"
+   }
+  },
+  {
+   "h": "וְשַׁבְתִּי",
+   "t": "ve-shavti",
+   "g": {
+    "en": "and to sit, dwell",
+    "fr": "habiter",
+    "ru": "сидеть",
+    "ja": "座る"
+   }
+  },
+  {
+   "h": "בְּבֵית־יְהוָה",
+   "t": "be-veit-YHWH",
+   "g": {
+    "en": "in house of the LORD",
+    "es": "casa el SEÑOR",
+    "pt": "casa Senhor",
+    "fr": "maison l'Éternel",
+    "ru": "дом Господь",
+    "zh": "房屋 耶和华",
+    "id": "rumah TUHAN",
+    "ja": "家 主",
+    "ko": "집 여호와"
+   }
+  },
+  {
+   "h": "לְאֹרֶךְ",
+   "t": "le-orekh",
+   "g": {
+    "en": "to length of",
+    "fr": "longueur"
+   }
+  },
+  {
+   "h": "יָמִים",
+   "t": "yamim",
+   "g": {
+    "en": "day",
+    "es": "día",
+    "pt": "dia",
+    "fr": "jour",
+    "de": "Tag",
+    "ru": "день",
+    "zh": "白天",
+    "id": "hari",
+    "ja": "日"
+   }
+  }
+ ],
+ "text": "מִזְמוֹר לְדָוִד יְהוָה רֹעִי לֹא אֶחְסָר\nבִּנְאוֹת דֶּשֶׁא יַרְבִּיצֵנִי עַל־מֵי מְנֻחוֹת יְנַהֲלֵנִי\nנַפְשִׁי יְשׁוֹבֵב יַנְחֵנִי בְמַעְגְּלֵי־צֶדֶק לְמַעַן שְׁמוֹ\nגַּם כִּי־אֵלֵךְ בְּגֵיא צַלְמָוֶת לֹא־אִירָא רָע כִּי־אַתָּה עִמָּדִי שִׁבְטְךָ וּמִשְׁעַנְתֶּךָ הֵמָּה יְנַחֲמֻנִי\nתַּעֲרֹךְ לְפָנַי שֻׁלְחָן נֶגֶד צֹרְרָי דִּשַּׁנְתָּ בַשֶּׁמֶן רֹאשִׁי כּוֹסִי רְוָיָה\nאַךְ טוֹב וָחֶסֶד יִרְדְּפוּנִי כָּל־יְמֵי חַיָּי וְשַׁבְתִּי בְּבֵית־יְהוָה לְאֹרֶךְ יָמִים"
+}

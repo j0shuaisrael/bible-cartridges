@@ -1,0 +1,715 @@
+{
+ "chapter": 8,
+ "title": "Psalm 8",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3
+  ],
+  [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  [
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21
+  ],
+  [
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   9,
+   28
+  ],
+  [
+   29,
+   30,
+   31,
+   32,
+   33
+  ],
+  [
+   34,
+   35,
+   36,
+   37,
+   38,
+   39
+  ],
+  [
+   40,
+   41,
+   42,
+   43,
+   44,
+   45
+  ],
+  [
+   46,
+   47,
+   48,
+   49,
+   50,
+   51
+  ],
+  [
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58
+  ],
+  [
+   4,
+   5,
+   6,
+   7,
+   8
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "לַמְנַצֵּחַ",
+   "t": "la-mnattzeach",
+   "g": {
+    "en": "to to oversee"
+   }
+  },
+  {
+   "h": "עַל־הַגִּתִּית",
+   "t": "al-ha-gittit",
+   "g": {
+    "en": "above, over the Gittite harp",
+    "ru": "на гитит"
+   }
+  },
+  {
+   "h": "מִזְמוֹר",
+   "t": "mizmor",
+   "g": {
+    "en": "psalm",
+    "ru": "псалом"
+   }
+  },
+  {
+   "h": "לְדָוִד",
+   "t": "le-david",
+   "g": {
+    "en": "to David",
+    "es": "David",
+    "pt": "Davi",
+    "fr": "David",
+    "ru": "Давид",
+    "ja": "ダビデ"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "אֲדֹנֵינוּ",
+   "t": "adoneinu",
+   "g": {
+    "en": "our sovereign",
+    "fr": "maître",
+    "ru": "господин",
+    "ar": "سيد",
+    "zh": "主人",
+    "ja": "主"
+   }
+  },
+  {
+   "h": "מָה־אַדִּיר",
+   "t": "mah-addir",
+   "g": {
+    "en": "what wide or large"
+   }
+  },
+  {
+   "h": "שִׁמְךָ",
+   "t": "shimkha",
+   "g": {
+    "en": "your name",
+    "es": "nombre",
+    "fr": "nom",
+    "ru": "имя",
+    "zh": "名字",
+    "ja": "名前"
+   }
+  },
+  {
+   "h": "בְּכָל־הָאָרֶץ",
+   "t": "be-khal-haaretz",
+   "g": {
+    "en": "in all of the earth",
+    "es": "todo tierra",
+    "fr": "tous terre",
+    "ru": "весь страна",
+    "ja": "全体 大地"
+   }
+  },
+  {
+   "h": "אֲשֶׁר",
+   "t": "asher",
+   "g": {
+    "en": "who",
+    "es": "que",
+    "fr": "qui",
+    "ru": "который",
+    "ja": "関係代名詞"
+   }
+  },
+  {
+   "h": "תְּנָה",
+   "t": "tenah",
+   "g": {
+    "en": "to give",
+    "es": "dar",
+    "fr": "donner",
+    "ru": "дать",
+    "ja": "与える"
+   }
+  },
+  {
+   "h": "הוֹדְךָ",
+   "t": "hodekha",
+   "g": {
+    "en": "your grandeur",
+    "ja": "威厳"
+   }
+  },
+  {
+   "h": "עַל־הַשָּׁמָיִם",
+   "t": "al-hasshamayim",
+   "g": {
+    "en": "above, over the sky",
+    "es": "sobre cielo",
+    "fr": "sur ciel",
+    "ru": "на небо",
+    "ja": "上 天"
+   }
+  },
+  {
+   "h": "מִפִּי",
+   "t": "mippi",
+   "g": {
+    "en": "from mouth of",
+    "es": "boca",
+    "pt": "boca",
+    "fr": "bouche",
+    "ru": "рот",
+    "zh": "嘴",
+    "ja": "口"
+   }
+  },
+  {
+   "h": "עוֹלְלִים",
+   "t": "olelim",
+   "g": {
+    "en": "suckling"
+   }
+  },
+  {
+   "h": "וְיֹנְקִים",
+   "t": "ve-yonekim",
+   "g": {
+    "en": "and to suck",
+    "fr": "allaiter",
+    "ru": "сосать"
+   }
+  },
+  {
+   "h": "יִסַּדְתָּ־עֹז",
+   "t": "yissadta-oz",
+   "g": {
+    "en": "to set strength"
+   }
+  },
+  {
+   "h": "לְמַעַן",
+   "t": "le-maan",
+   "g": {
+    "en": "for the sake of"
+   }
+  },
+  {
+   "h": "צוֹרְרֶיךָ",
+   "t": "tzorereikha",
+   "g": {
+    "en": "to cramp you",
+    "fr": "être angoissé"
+   }
+  },
+  {
+   "h": "לְהַשְׁבִּית",
+   "t": "le-ha-shbit",
+   "g": {
+    "en": "to to repose of",
+    "de": "aufhören",
+    "ru": "бастовать",
+    "zh": "休息",
+    "ja": "休む"
+   }
+  },
+  {
+   "h": "אוֹיֵב",
+   "t": "oyev",
+   "g": {
+    "en": "enemy",
+    "fr": "ennemi"
+   }
+  },
+  {
+   "h": "וּמִתְנַקֵּם",
+   "t": "u-mitnakkem",
+   "g": {
+    "en": "and to grudge",
+    "fr": "être vengé",
+    "ru": "мстить"
+   }
+  },
+  {
+   "h": "כִּי־אֶרְאֶה",
+   "t": "ki-ereh",
+   "g": {
+    "en": "for, because to see",
+    "fr": "car voir"
+   }
+  },
+  {
+   "h": "שָׁמֶיךָ",
+   "t": "shameikha",
+   "g": {
+    "en": "your sky",
+    "es": "cielo",
+    "pt": "céu",
+    "fr": "ciel",
+    "ru": "небо",
+    "zh": "天空",
+    "ja": "天"
+   }
+  },
+  {
+   "h": "מַעֲשֵׂה",
+   "t": "maaseh",
+   "g": {
+    "en": "action of",
+    "fr": "œuvre",
+    "ru": "дело",
+    "ja": "行動"
+   }
+  },
+  {
+   "h": "אֶצְבְּעֹתֶיךָ",
+   "t": "etzbeoteikha",
+   "g": {
+    "en": "your something to sieze with",
+    "es": "dedo",
+    "pt": "dedo",
+    "fr": "doigt",
+    "ru": "палец"
+   }
+  },
+  {
+   "h": "יָרֵחַ",
+   "t": "yareach",
+   "g": {
+    "en": "moon",
+    "es": "Luna",
+    "pt": "lua",
+    "fr": "Jérach",
+    "ru": "Луна",
+    "ar": "قمر",
+    "ja": "つき"
+   }
+  },
+  {
+   "h": "וְכוֹכָבִים",
+   "t": "ve-khokhavim",
+   "g": {
+    "en": "and star",
+    "es": "estrella",
+    "fr": "étoile",
+    "de": "Astronomie",
+    "ru": "звезда",
+    "zh": "星",
+    "ja": "恒星"
+   }
+  },
+  {
+   "h": "כּוֹנָנְתָּה",
+   "t": "konanettah",
+   "g": {
+    "en": "to establish",
+    "fr": "être prêt"
+   }
+  },
+  {
+   "h": "מָה־אֱנוֹשׁ",
+   "t": "mah-enosh",
+   "g": {
+    "en": "what man in general",
+    "ru": "что человек",
+    "ja": "何 人間"
+   }
+  },
+  {
+   "h": "כִּי־תִזְכְּרֶנּוּ",
+   "t": "ki-tizkerennu",
+   "g": {
+    "en": "for, because to remember him",
+    "fr": "car souvenir",
+    "ja": "何故 覚えている"
+   }
+  },
+  {
+   "h": "וּבֶן־אָדָם",
+   "t": "u-ven-adam",
+   "g": {
+    "en": "and son of man",
+    "es": "hijo ser humano",
+    "fr": "fils homme",
+    "ru": "сын человек",
+    "zh": "儿子 人",
+    "ja": "息子 アダム"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
+   }
+  },
+  {
+   "h": "תִפְקְדֶנּוּ",
+   "t": "tifkedennu",
+   "g": {
+    "en": "to visit him",
+    "fr": "visiter",
+    "ru": "считать",
+    "ja": "数える"
+   }
+  },
+  {
+   "h": "וַתְּחַסְּרֵהוּ",
+   "t": "va-techasserehu",
+   "g": {
+    "en": "and to lack him",
+    "fr": "diminuer",
+    "ru": "недоставать"
+   }
+  },
+  {
+   "h": "מְּעַט",
+   "t": "meat",
+   "g": {
+    "en": "little or few",
+    "ru": "мало"
+   }
+  },
+  {
+   "h": "מֵאֱלֹהִים",
+   "t": "meelohim",
+   "g": {
+    "en": "from God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "וְכָבוֹד",
+   "t": "ve-khavod",
+   "g": {
+    "en": "and glory",
+    "es": "honra",
+    "fr": "honneur",
+    "ru": "уважение",
+    "id": "kehormatan",
+    "ja": "名誉"
+   }
+  },
+  {
+   "h": "וְהָדָר",
+   "t": "ve-hadar",
+   "g": {
+    "en": "and magnificence",
+    "ja": "栄光"
+   }
+  },
+  {
+   "h": "תְּעַטְּרֵהוּ",
+   "t": "teatterehu",
+   "g": {
+    "en": "to encircle him",
+    "ru": "венчать"
+   }
+  },
+  {
+   "h": "תַּמְשִׁילֵהוּ",
+   "t": "tamshilehu",
+   "g": {
+    "en": "to rule him",
+    "es": "gobernar",
+    "fr": "gouverner",
+    "ru": "управлять"
+   }
+  },
+  {
+   "h": "בְּמַעֲשֵׂי",
+   "t": "be-maasei",
+   "g": {
+    "en": "in action of",
+    "fr": "œuvre",
+    "ru": "дело",
+    "ja": "行動"
+   }
+  },
+  {
+   "h": "יָדֶיךָ",
+   "t": "yadeikha",
+   "g": {
+    "en": "your hand",
+    "es": "mano",
+    "pt": "mão",
+    "fr": "main",
+    "ru": "рука",
+    "zh": "手",
+    "id": "tangan",
+    "ja": "手"
+   }
+  },
+  {
+   "h": "כֹּל",
+   "t": "kol",
+   "g": {
+    "en": "all",
+    "es": "todo",
+    "fr": "tous",
+    "ru": "весь",
+    "ja": "全体"
+   }
+  },
+  {
+   "h": "שַׁתָּה",
+   "t": "shattah",
+   "g": {
+    "en": "to place",
+    "fr": "mettre"
+   }
+  },
+  {
+   "h": "תַחַת־רַגְלָיו",
+   "t": "tachat-raglaiw",
+   "g": {
+    "en": "under his foot",
+    "fr": "sous pied"
+   }
+  },
+  {
+   "h": "צֹנֶה",
+   "t": "tzoneh",
+   "g": {
+    "en": "flock"
+   }
+  },
+  {
+   "h": "וַאֲלָפִים",
+   "t": "va-alafim",
+   "g": {
+    "en": "and family",
+    "ru": "алеф",
+    "ja": "千"
+   }
+  },
+  {
+   "h": "כֻּלָּם",
+   "t": "kullam",
+   "g": {
+    "en": "their all",
+    "es": "todo",
+    "fr": "tous",
+    "ru": "весь",
+    "ja": "全体"
+   }
+  },
+  {
+   "h": "וְגַם",
+   "t": "ve-gam",
+   "g": {
+    "en": "and also, even",
+    "es": "también",
+    "fr": "aussi",
+    "ru": "также",
+    "ja": "も"
+   }
+  },
+  {
+   "h": "בַּהֲמוֹת",
+   "t": "ba-hamot",
+   "g": {
+    "en": "dumb beast of",
+    "fr": "le vivant",
+    "ru": "скот",
+    "zh": "动物",
+    "ja": "獣"
+   }
+  },
+  {
+   "h": "שָׂדָי",
+   "t": "sadai",
+   "g": {
+    "en": "field",
+    "fr": "champ",
+    "ru": "поле",
+    "zh": "田野",
+    "ja": "野原"
+   }
+  },
+  {
+   "h": "צִפּוֹר",
+   "t": "tzippor",
+   "g": {
+    "en": "little bird of",
+    "es": "ave",
+    "fr": "oiseau",
+    "ru": "птица",
+    "ja": "鳥"
+   }
+  },
+  {
+   "h": "שָׁמַיִם",
+   "t": "shamayim",
+   "g": {
+    "en": "sky",
+    "es": "cielo",
+    "pt": "céu",
+    "fr": "ciel",
+    "ru": "небо",
+    "zh": "天空",
+    "ja": "天"
+   }
+  },
+  {
+   "h": "וּדְגֵי",
+   "t": "u-degei",
+   "g": {
+    "en": "and fish of",
+    "es": "pez",
+    "pt": "peixe",
+    "fr": "poisson",
+    "ru": "рыба",
+    "ar": "سمك",
+    "zh": "鱼",
+    "ja": "魚"
+   }
+  },
+  {
+   "h": "הַיָּם",
+   "t": "hayyam",
+   "g": {
+    "en": "the sea or large body of water",
+    "es": "mar",
+    "pt": "mar",
+    "fr": "mer",
+    "ru": "море",
+    "ar": "يم",
+    "zh": "海",
+    "ja": "海",
+    "ko": "바다"
+   }
+  },
+  {
+   "h": "עֹבֵר",
+   "t": "over",
+   "g": {
+    "en": "to cross over",
+    "es": "pasar",
+    "fr": "passer",
+    "ru": "проходить",
+    "ja": "過ぎる"
+   }
+  },
+  {
+   "h": "אָרְחוֹת",
+   "t": "arechot",
+   "g": {
+    "en": "well-trodden road of",
+    "fr": "manière"
+   }
+  },
+  {
+   "h": "יַמִּים",
+   "t": "yammim",
+   "g": {
+    "en": "sea or large body of water",
+    "es": "mar",
+    "pt": "mar",
+    "fr": "mer",
+    "ru": "море",
+    "ar": "يم",
+    "zh": "海",
+    "ja": "海",
+    "ko": "바다"
+   }
+  }
+ ],
+ "text": "לַמְנַצֵּחַ עַל־הַגִּתִּית מִזְמוֹר לְדָוִד\nיְהוָה אֲדֹנֵינוּ מָה־אַדִּיר שִׁמְךָ בְּכָל־הָאָרֶץ אֲשֶׁר תְּנָה הוֹדְךָ עַל־הַשָּׁמָיִם\nמִפִּי עוֹלְלִים וְיֹנְקִים יִסַּדְתָּ־עֹז לְמַעַן צוֹרְרֶיךָ לְהַשְׁבִּית אוֹיֵב וּמִתְנַקֵּם\nכִּי־אֶרְאֶה שָׁמֶיךָ מַעֲשֵׂה אֶצְבְּעֹתֶיךָ יָרֵחַ וְכוֹכָבִים אֲשֶׁר כּוֹנָנְתָּה\nמָה־אֱנוֹשׁ כִּי־תִזְכְּרֶנּוּ וּבֶן־אָדָם כִּי תִפְקְדֶנּוּ\nוַתְּחַסְּרֵהוּ מְּעַט מֵאֱלֹהִים וְכָבוֹד וְהָדָר תְּעַטְּרֵהוּ\nתַּמְשִׁילֵהוּ בְּמַעֲשֵׂי יָדֶיךָ כֹּל שַׁתָּה תַחַת־רַגְלָיו\nצֹנֶה וַאֲלָפִים כֻּלָּם וְגַם בַּהֲמוֹת שָׂדָי\nצִפּוֹר שָׁמַיִם וּדְגֵי הַיָּם עֹבֵר אָרְחוֹת יַמִּים\nיְהוָה אֲדֹנֵינוּ מָה־אַדִּיר שִׁמְךָ בְּכָל־הָאָרֶץ"
+}

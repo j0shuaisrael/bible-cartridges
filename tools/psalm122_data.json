@@ -1,0 +1,671 @@
+{
+ "chapter": 122,
+ "title": "Psalm 122",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ],
+  [
+   9,
+   10,
+   11,
+   12,
+   13
+  ],
+  [
+   14,
+   15,
+   16,
+   17,
+   18
+  ],
+  [
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   7
+  ],
+  [
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34
+  ],
+  [
+   35,
+   36,
+   13,
+   37,
+   38
+  ],
+  [
+   39,
+   40,
+   41,
+   42
+  ],
+  [
+   43,
+   44,
+   45,
+   46,
+   47,
+   48
+  ],
+  [
+   43,
+   49,
+   50,
+   51,
+   52,
+   53
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "הַמַּעֲלוֹת",
+   "t": "hammaalot",
+   "g": {
+    "en": "the elevation",
+    "es": "escalera",
+    "ru": "подъём"
+   }
+  },
+  {
+   "h": "לְדָוִד",
+   "t": "le-david",
+   "g": {
+    "en": "to David",
+    "es": "David",
+    "pt": "Davi",
+    "fr": "David",
+    "ru": "Давид",
+    "ja": "ダビデ"
+   }
+  },
+  {
+   "h": "שָׂמַחְתִּי",
+   "t": "samachti",
+   "g": {
+    "en": "to rejoice",
+    "ru": "радоваться",
+    "ko": "행복하다"
+   }
+  },
+  {
+   "h": "בְּאֹמְרִים",
+   "t": "be-omerim",
+   "g": {
+    "en": "in to say",
+    "es": "decir",
+    "fr": "dire",
+    "ru": "говорить",
+    "ja": "言う、話す"
+   }
+  },
+  {
+   "h": "לִי",
+   "t": "li",
+   "g": {
+    "en": "to me",
+    "fr": "à"
+   }
+  },
+  {
+   "h": "בֵּית",
+   "t": "beit",
+   "g": {
+    "en": "house of",
+    "es": "casa",
+    "pt": "casa",
+    "fr": "maison",
+    "ru": "дом",
+    "zh": "房屋",
+    "id": "rumah",
+    "ja": "家",
+    "ko": "집"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "נֵלֵךְ",
+   "t": "nelekhe",
+   "g": {
+    "en": "to walk",
+    "ru": "идти"
+   }
+  },
+  {
+   "h": "עֹמְדוֹת",
+   "t": "omedot",
+   "g": {
+    "en": "to stand",
+    "es": "pararse",
+    "fr": "se tenir",
+    "ru": "стоять",
+    "ja": "立つ"
+   }
+  },
+  {
+   "h": "הָיוּ",
+   "t": "haiu",
+   "g": {
+    "en": "to be",
+    "es": "ser",
+    "fr": "être",
+    "ru": "быть",
+    "zh": "存在",
+    "ja": "である"
+   }
+  },
+  {
+   "h": "רַגְלֵינוּ",
+   "t": "ragleinu",
+   "g": {
+    "en": "our foot",
+    "es": "pie",
+    "pt": "pé",
+    "fr": "pied",
+    "ru": "нога",
+    "zh": "腿",
+    "ja": "あし"
+   }
+  },
+  {
+   "h": "בִּשְׁעָרַיִךְ",
+   "t": "bi-sharayikh",
+   "g": {
+    "en": "in your opening",
+    "es": "pelo",
+    "fr": "porte",
+    "ru": "ворота",
+    "zh": "门口",
+    "ja": "髪"
+   }
+  },
+  {
+   "h": "יְרוּשָׁלִָם",
+   "t": "yerushalam",
+   "g": {
+    "en": "Jerushalaim or Jerushalem"
+   }
+  },
+  {
+   "h": "יְרוּשָׁלִַם",
+   "t": "yerushalam",
+   "g": {
+    "en": "Jerushalaim or Jerushalem"
+   }
+  },
+  {
+   "h": "הַבְּנוּיָה",
+   "t": "ha-be-nuyah",
+   "g": {
+    "en": "the to build",
+    "fr": "construire",
+    "ru": "строить",
+    "ko": "짓다"
+   }
+  },
+  {
+   "h": "כְּעִיר",
+   "t": "ke-ir",
+   "g": {
+    "en": "like city in the widest sense",
+    "es": "ciudad",
+    "fr": "ville",
+    "ru": "город",
+    "ar": "مدينة",
+    "zh": "城市",
+    "ja": "都市"
+   }
+  },
+  {
+   "h": "שֶׁחֻבְּרָה־לָּהּ",
+   "t": "shechubberah-lah",
+   "g": {
+    "en": "that to join to her",
+    "fr": "s’unir à"
+   }
+  },
+  {
+   "h": "יַחְדָּו",
+   "t": "yachda",
+   "g": {
+    "en": "together",
+    "ru": "вместе"
+   }
+  },
+  {
+   "h": "שֶׁשָּׁם",
+   "t": "shessham",
+   "g": {
+    "en": "that there then",
+    "es": "allá",
+    "fr": "là",
+    "zh": "那里"
+   }
+  },
+  {
+   "h": "עָלוּ",
+   "t": "alu",
+   "g": {
+    "en": "to go up",
+    "es": "elevar",
+    "fr": "monter",
+    "ru": "восходить",
+    "ja": "上昇"
+   }
+  },
+  {
+   "h": "שְׁבָטִים",
+   "t": "shevatim",
+   "g": {
+    "en": "scion",
+    "fr": "sceptre",
+    "ru": "племя",
+    "zh": "部落"
+   }
+  },
+  {
+   "h": "שִׁבְטֵי־יָהּ",
+   "t": "shivtei-yah",
+   "g": {
+    "en": "scion of the LORD",
+    "fr": "sceptre l'Éternel",
+    "ru": "племя Господь",
+    "zh": "部落 耶和华"
+   }
+  },
+  {
+   "h": "עֵדוּת",
+   "t": "edut",
+   "g": {
+    "en": "testimony",
+    "ru": "свидетельство"
+   }
+  },
+  {
+   "h": "לְיִשְׂרָאֵל",
+   "t": "le-yisrael",
+   "g": {
+    "en": "to Israel",
+    "es": "Israel",
+    "pt": "Israel",
+    "fr": "Israël",
+    "de": "Staat",
+    "ru": "Израиль",
+    "zh": "以色列",
+    "hi": "इज़राइल",
+    "ja": "イスラエル",
+    "ko": "이스라엘"
+   }
+  },
+  {
+   "h": "לְהֹדוֹת",
+   "t": "le-hodot",
+   "g": {
+    "en": "to to praise of",
+    "fr": "reconnaissant"
+   }
+  },
+  {
+   "h": "לְשֵׁם",
+   "t": "le-shem",
+   "g": {
+    "en": "to name of",
+    "es": "nombre",
+    "fr": "nom",
+    "ru": "имя",
+    "zh": "名字",
+    "ja": "名前"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
+   }
+  },
+  {
+   "h": "שָׁמָּה",
+   "t": "shammah",
+   "g": {
+    "en": "there then",
+    "es": "allá",
+    "fr": "là",
+    "zh": "那里"
+   }
+  },
+  {
+   "h": "יָשְׁבוּ",
+   "t": "yashevu",
+   "g": {
+    "en": "to sit, dwell",
+    "fr": "habiter",
+    "ru": "сидеть",
+    "ja": "座る"
+   }
+  },
+  {
+   "h": "כִסְאוֹת",
+   "t": "khisot",
+   "g": {
+    "en": "covered",
+    "es": "silla",
+    "fr": "trône",
+    "de": "Stuhl"
+   }
+  },
+  {
+   "h": "לְמִשְׁפָּט",
+   "t": "le-mishpat",
+   "g": {
+    "en": "to judgment",
+    "fr": "justice",
+    "ru": "суд",
+    "ja": "法律"
+   }
+  },
+  {
+   "h": "כִּסְאוֹת",
+   "t": "kisot",
+   "g": {
+    "en": "covered",
+    "es": "silla",
+    "fr": "trône",
+    "de": "Stuhl"
+   }
+  },
+  {
+   "h": "לְבֵית",
+   "t": "le-veit",
+   "g": {
+    "en": "to house of",
+    "es": "casa",
+    "pt": "casa",
+    "fr": "maison",
+    "ru": "дом",
+    "zh": "房屋",
+    "id": "rumah",
+    "ja": "家",
+    "ko": "집"
+   }
+  },
+  {
+   "h": "דָּוִד",
+   "t": "david",
+   "g": {
+    "en": "David",
+    "es": "David",
+    "pt": "Davi",
+    "fr": "David",
+    "ru": "Давид",
+    "ja": "ダビデ"
+   }
+  },
+  {
+   "h": "שַׁאֲלוּ",
+   "t": "shaalu",
+   "g": {
+    "en": "to inquire",
+    "fr": "demander",
+    "ru": "спрашивать",
+    "zh": "询问",
+    "ja": "尋ねる"
+   }
+  },
+  {
+   "h": "שְׁלוֹם",
+   "t": "shelom",
+   "g": {
+    "en": "peace of",
+    "es": "paz",
+    "fr": "paix",
+    "de": "Judentum",
+    "ru": "благополучие",
+    "ar": "مرحبا",
+    "zh": "和平",
+    "ja": "平和"
+   }
+  },
+  {
+   "h": "יִשְׁלָיוּ",
+   "t": "yishlaiu",
+   "g": {
+    "en": "to be tranquil"
+   }
+  },
+  {
+   "h": "אֹהֲבָיִךְ",
+   "t": "ohavayikh",
+   "g": {
+    "en": "to love you",
+    "es": "amar",
+    "fr": "aimer",
+    "ru": "любить",
+    "ar": "أحب"
+   }
+  },
+  {
+   "h": "יְהִי־שָׁלוֹם",
+   "t": "yehi-shalom",
+   "g": {
+    "en": "to be peace",
+    "es": "ser paz",
+    "fr": "être paix",
+    "ru": "быть благополучие",
+    "zh": "存在 和平",
+    "ja": "である 平和"
+   }
+  },
+  {
+   "h": "בְּחֵילֵךְ",
+   "t": "be-cheilekhe",
+   "g": {
+    "en": "in your army",
+    "fr": "fortune",
+    "ru": "воин",
+    "zh": "兵团"
+   }
+  },
+  {
+   "h": "שַׁלְוָה",
+   "t": "shalvah",
+   "g": {
+    "en": "security"
+   }
+  },
+  {
+   "h": "בְּאַרְמְנוֹתָיִךְ",
+   "t": "be-armenotayikh",
+   "g": {
+    "en": "in your citadel",
+    "zh": "宫殿"
+   }
+  },
+  {
+   "h": "לְמַעַן",
+   "t": "le-maan",
+   "g": {
+    "en": "for the sake of"
+   }
+  },
+  {
+   "h": "אַחַי",
+   "t": "achai",
+   "g": {
+    "en": "my brother",
+    "es": "hermano",
+    "pt": "irmão",
+    "fr": "frère",
+    "ru": "брат",
+    "ar": "أخ",
+    "ja": "兄"
+   }
+  },
+  {
+   "h": "וְרֵעָי",
+   "t": "ve-reai",
+   "g": {
+    "en": "and my associate",
+    "fr": "mal",
+    "ru": "зло",
+    "zh": "坏事",
+    "ja": "邪悪"
+   }
+  },
+  {
+   "h": "אֲדַבְּרָה־נָּא",
+   "t": "adabberah-na",
+   "g": {
+    "en": "to speak now, please"
+   }
+  },
+  {
+   "h": "שָׁלוֹם",
+   "t": "shalom",
+   "g": {
+    "en": "peace",
+    "es": "paz",
+    "fr": "paix",
+    "de": "Judentum",
+    "ru": "благополучие",
+    "ar": "مرحبا",
+    "zh": "和平",
+    "ja": "平和"
+   }
+  },
+  {
+   "h": "בָּךְ",
+   "t": "bakhe",
+   "g": {
+    "en": "in you",
+    "es": "en",
+    "fr": "dans"
+   }
+  },
+  {
+   "h": "בֵּית־יְהוָה",
+   "t": "beit-YHWH",
+   "g": {
+    "en": "house of the LORD",
+    "es": "casa el SEÑOR",
+    "pt": "casa Senhor",
+    "fr": "maison l'Éternel",
+    "ru": "дом Господь",
+    "zh": "房屋 耶和华",
+    "id": "rumah TUHAN",
+    "ja": "家 主",
+    "ko": "집 여호와"
+   }
+  },
+  {
+   "h": "אֱלֹהֵינוּ",
+   "t": "eloheinu",
+   "g": {
+    "en": "our God",
+    "es": "dios",
+    "pt": "Deus",
+    "fr": "Dieu",
+    "ru": "Элохим",
+    "ja": "神"
+   }
+  },
+  {
+   "h": "אֲבַקְשָׁה",
+   "t": "avakshah",
+   "g": {
+    "en": "to search out",
+    "fr": "manquer",
+    "ru": "просить"
+   }
+  },
+  {
+   "h": "טוֹב",
+   "t": "tov",
+   "g": {
+    "en": "good in the widest sense",
+    "es": "bueno",
+    "fr": "bon",
+    "ru": "хороший",
+    "ar": "جيد",
+    "zh": "好",
+    "ko": "좋다"
+   }
+  },
+  {
+   "h": "לָךְ",
+   "t": "lakhe",
+   "g": {
+    "en": "to you",
+    "fr": "à"
+   }
+  }
+ ],
+ "text": "שִׁיר הַמַּעֲלוֹת לְדָוִד שָׂמַחְתִּי בְּאֹמְרִים לִי בֵּית יְהוָה נֵלֵךְ\nעֹמְדוֹת הָיוּ רַגְלֵינוּ בִּשְׁעָרַיִךְ יְרוּשָׁלִָם\nיְרוּשָׁלִַם הַבְּנוּיָה כְּעִיר שֶׁחֻבְּרָה־לָּהּ יַחְדָּו\nשֶׁשָּׁם עָלוּ שְׁבָטִים שִׁבְטֵי־יָהּ עֵדוּת לְיִשְׂרָאֵל לְהֹדוֹת לְשֵׁם יְהוָה\nכִּי שָׁמָּה יָשְׁבוּ כִסְאוֹת לְמִשְׁפָּט כִּסְאוֹת לְבֵית דָּוִד\nשַׁאֲלוּ שְׁלוֹם יְרוּשָׁלִָם יִשְׁלָיוּ אֹהֲבָיִךְ\nיְהִי־שָׁלוֹם בְּחֵילֵךְ שַׁלְוָה בְּאַרְמְנוֹתָיִךְ\nלְמַעַן אַחַי וְרֵעָי אֲדַבְּרָה־נָּא שָׁלוֹם בָּךְ\nלְמַעַן בֵּית־יְהוָה אֱלֹהֵינוּ אֲבַקְשָׁה טוֹב לָךְ"
+}

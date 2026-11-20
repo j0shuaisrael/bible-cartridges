@@ -1,0 +1,448 @@
+{
+ "chapter": 126,
+ "title": "Psalm 126",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  [
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   8,
+   14,
+   15,
+   16,
+   3,
+   17,
+   18
+  ],
+  [
+   16,
+   3,
+   17,
+   19,
+   6,
+   20
+  ],
+  [
+   21,
+   3,
+   22,
+   23,
+   24,
+   25
+  ],
+  [
+   26,
+   27,
+   28,
+   29
+  ],
+  [
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   33,
+   37
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "הַמַּעֲלוֹת",
+   "t": "hammaalot",
+   "g": {
+    "en": "the elevation",
+    "es": "escalera",
+    "ru": "подъём"
+   }
+  },
+  {
+   "h": "בְּשׁוּב",
+   "t": "be-shuv",
+   "g": {
+    "en": "in to turn back of",
+    "fr": "retourner"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "אֶת־שִׁיבַת",
+   "t": "et-shivat",
+   "g": {
+    "en": "object marker return of"
+   }
+  },
+  {
+   "h": "צִיּוֹן",
+   "t": "tzion",
+   "g": {
+    "en": "Zion",
+    "es": "Sion",
+    "ru": "Сион",
+    "ja": "シオン"
+   }
+  },
+  {
+   "h": "הָיִינוּ",
+   "t": "ha-yinu",
+   "g": {
+    "en": "to be",
+    "es": "ser",
+    "fr": "être",
+    "ru": "быть",
+    "zh": "存在",
+    "ja": "である"
+   }
+  },
+  {
+   "h": "כְּחֹלְמִים",
+   "t": "ke-cholemim",
+   "g": {
+    "en": "like to bind firmly",
+    "fr": "rêver",
+    "ru": "сниться",
+    "zh": "做梦"
+   }
+  },
+  {
+   "h": "אָז",
+   "t": "az",
+   "g": {
+    "en": "at that time or place",
+    "fr": "alors",
+    "ru": "тогда",
+    "ja": "このように"
+   }
+  },
+  {
+   "h": "יִמָּלֵא",
+   "t": "yimmale",
+   "g": {
+    "en": "to fill, be full",
+    "fr": "remplir",
+    "ru": "наполнять",
+    "ja": "満たす",
+    "ko": "채우다"
+   }
+  },
+  {
+   "h": "שְׂחוֹק",
+   "t": "sechok",
+   "g": {
+    "en": "laughter",
+    "ru": "смех"
+   }
+  },
+  {
+   "h": "פִּינוּ",
+   "t": "pinu",
+   "g": {
+    "en": "our mouth",
+    "es": "boca",
+    "pt": "boca",
+    "fr": "bouche",
+    "ru": "рот",
+    "zh": "嘴",
+    "ja": "口"
+   }
+  },
+  {
+   "h": "וּלְשׁוֹנֵנוּ",
+   "t": "u-le-shonenu",
+   "g": {
+    "en": "and our tongue, used literally",
+    "es": "lengua",
+    "fr": "langage",
+    "ru": "язык",
+    "ar": "لسان",
+    "zh": "舌头"
+   }
+  },
+  {
+   "h": "רִנָּה",
+   "t": "rinnah",
+   "g": {
+    "en": "creaking"
+   }
+  },
+  {
+   "h": "יֹאמְרוּ",
+   "t": "yomru",
+   "g": {
+    "en": "to say",
+    "es": "decir",
+    "fr": "dire",
+    "ru": "говорить",
+    "ja": "言う、話す"
+   }
+  },
+  {
+   "h": "בַגּוֹיִם",
+   "t": "va-goyim",
+   "g": {
+    "en": "in foreign nation",
+    "es": "nación",
+    "fr": "nation",
+    "ru": "народ"
+   }
+  },
+  {
+   "h": "הִגְדִּיל",
+   "t": "hi-gdil",
+   "g": {
+    "en": "to be large",
+    "es": "crecer",
+    "fr": "grandir",
+    "ru": "расти"
+   }
+  },
+  {
+   "h": "לַעֲשׂוֹת",
+   "t": "la-asot",
+   "g": {
+    "en": "to to do or make of",
+    "es": "hacer",
+    "fr": "faire",
+    "ru": "делать",
+    "ja": "する"
+   }
+  },
+  {
+   "h": "עִם־אֵלֶּה",
+   "t": "im-elleh",
+   "g": {
+    "en": "with these or those",
+    "ru": "вместе эти"
+   }
+  },
+  {
+   "h": "עִמָּנוּ",
+   "t": "immanu",
+   "g": {
+    "en": "with us",
+    "es": "con",
+    "fr": "avec",
+    "ru": "вместе",
+    "ar": "مع",
+    "zh": "和",
+    "id": "dengan"
+   }
+  },
+  {
+   "h": "שְׂמֵחִים",
+   "t": "semechim",
+   "g": {
+    "en": "blithe or gleeful",
+    "ru": "счастливый",
+    "ko": "행복하다"
+   }
+  },
+  {
+   "h": "שׁוּבָה",
+   "t": "shuvah",
+   "g": {
+    "en": "to turn back",
+    "fr": "retourner"
+   }
+  },
+  {
+   "h": "אֶת־שבותנו",
+   "t": "et-shvwtnw",
+   "g": {
+    "en": "object marker our exile, concretely"
+   }
+  },
+  {
+   "h": "שְׁבִיתֵנוּ",
+   "t": "shevitenu",
+   "g": {
+    "en": "our exile, concretely",
+    "ru": "возвращение"
+   }
+  },
+  {
+   "h": "כַּאֲפִיקִים",
+   "t": "kaafikim",
+   "g": {
+    "en": "like containing",
+    "ru": "русло",
+    "zh": "水道"
+   }
+  },
+  {
+   "h": "בַּנֶּגֶב",
+   "t": "ba-negev",
+   "g": {
+    "en": "in south",
+    "fr": "sud",
+    "ru": "юг",
+    "zh": "南方"
+   }
+  },
+  {
+   "h": "הַזֹּרְעִים",
+   "t": "hazzore'im",
+   "g": {
+    "en": "the to sow",
+    "es": "sembrar",
+    "fr": "porter semence",
+    "ru": "сеять"
+   }
+  },
+  {
+   "h": "בְּדִמְעָה",
+   "t": "be-dimah",
+   "g": {
+    "en": "in weeping",
+    "es": "lágrima",
+    "ru": "слеза"
+   }
+  },
+  {
+   "h": "בְּרִנָּה",
+   "t": "be-rinnah",
+   "g": {
+    "en": "in creaking"
+   }
+  },
+  {
+   "h": "יִקְצֹרוּ",
+   "t": "yiktzoru",
+   "g": {
+    "en": "to dock off",
+    "ru": "косить",
+    "zh": "短"
+   }
+  },
+  {
+   "h": "הָלוֹךְ",
+   "t": "halokhe",
+   "g": {
+    "en": "to walk",
+    "es": "ir",
+    "fr": "aller",
+    "ru": "идти",
+    "ar": "ذهب",
+    "zh": "去",
+    "ja": "いく"
+   }
+  },
+  {
+   "h": "יֵלֵךְ",
+   "t": "yelekhe",
+   "g": {
+    "en": "to walk",
+    "ru": "идти"
+   }
+  },
+  {
+   "h": "וּבָכֹה",
+   "t": "u-vakhoh",
+   "g": {
+    "en": "and to weep",
+    "fr": "pleurer",
+    "ru": "плакать"
+   }
+  },
+  {
+   "h": "נֹשֵׂא",
+   "t": "nose",
+   "g": {
+    "en": "to lift",
+    "fr": "lever",
+    "ru": "нести"
+   }
+  },
+  {
+   "h": "מֶשֶׁךְ־הַזָּרַע",
+   "t": "meshekh-hazzara",
+   "g": {
+    "en": "sowing of the seed",
+    "fr": "Méschec semence",
+    "ru": "Мешех семя"
+   }
+  },
+  {
+   "h": "בֹּא־יָבֹא",
+   "t": "bo-yavo",
+   "g": {
+    "en": "to go or come to go or come",
+    "fr": "venir venir"
+   }
+  },
+  {
+   "h": "בְרִנָּה",
+   "t": "ve-rinnah",
+   "g": {
+    "en": "in creaking"
+   }
+  },
+  {
+   "h": "אֲלֻמֹּתָיו",
+   "t": "alummotaiw",
+   "g": {
+    "en": "his something bound",
+    "fr": "gerbe"
+   }
+  }
+ ],
+ "text": "שִׁיר הַמַּעֲלוֹת בְּשׁוּב יְהוָה אֶת־שִׁיבַת צִיּוֹן הָיִינוּ כְּחֹלְמִים\nאָז יִמָּלֵא שְׂחוֹק פִּינוּ וּלְשׁוֹנֵנוּ רִנָּה אָז יֹאמְרוּ בַגּוֹיִם הִגְדִּיל יְהוָה לַעֲשׂוֹת עִם־אֵלֶּה\nהִגְדִּיל יְהוָה לַעֲשׂוֹת עִמָּנוּ הָיִינוּ שְׂמֵחִים\nשׁוּבָה יְהוָה אֶת־שבותנו שְׁבִיתֵנוּ כַּאֲפִיקִים בַּנֶּגֶב\nהַזֹּרְעִים בְּדִמְעָה בְּרִנָּה יִקְצֹרוּ\nהָלוֹךְ יֵלֵךְ וּבָכֹה נֹשֵׂא מֶשֶׁךְ־הַזָּרַע בֹּא־יָבֹא בְרִנָּה נֹשֵׂא אֲלֻמֹּתָיו"
+}

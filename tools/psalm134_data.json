@@ -1,0 +1,239 @@
+{
+ "chapter": 134,
+ "title": "Psalm 134",
+ "languages": [
+  "en",
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  [
+   10,
+   11,
+   12,
+   4
+  ],
+  [
+   13,
+   6,
+   14,
+   15,
+   16,
+   17
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "שִׁיר",
+   "t": "shir",
+   "g": {
+    "en": "song",
+    "es": "canción",
+    "fr": "chant",
+    "ru": "песня",
+    "zh": "歌"
+   }
+  },
+  {
+   "h": "הַמַּעֲלוֹת",
+   "t": "hammaalot",
+   "g": {
+    "en": "the elevation",
+    "es": "escalera",
+    "ru": "подъём"
+   }
+  },
+  {
+   "h": "הִנֵּה",
+   "t": "hinneh",
+   "g": {
+    "en": "lo!",
+    "es": "aquí"
+   }
+  },
+  {
+   "h": "בָּרְכוּ",
+   "t": "barekhu",
+   "g": {
+    "en": "to bless",
+    "fr": "bénir",
+    "ru": "благословлять"
+   }
+  },
+  {
+   "h": "אֶת־יְהוָה",
+   "t": "et-YHWH",
+   "g": {
+    "en": "object marker the LORD"
+   }
+  },
+  {
+   "h": "כָּל־עַבְדֵי",
+   "t": "kal-avdei",
+   "g": {
+    "en": "all of servant of",
+    "es": "todo siervo",
+    "fr": "tous serviteur",
+    "ru": "весь раб",
+    "ja": "全体 奴隷"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
+   }
+  },
+  {
+   "h": "הָעֹמְדִים",
+   "t": "haomedim",
+   "g": {
+    "en": "the to stand",
+    "es": "pararse",
+    "fr": "se tenir",
+    "ru": "стоять",
+    "ja": "立つ"
+   }
+  },
+  {
+   "h": "בְּבֵית־יְהוָה",
+   "t": "be-veit-YHWH",
+   "g": {
+    "en": "in house of the LORD",
+    "es": "casa el SEÑOR",
+    "pt": "casa Senhor",
+    "fr": "maison l'Éternel",
+    "ru": "дом Господь",
+    "zh": "房屋 耶和华",
+    "id": "rumah TUHAN",
+    "ja": "家 主",
+    "ko": "집 여호와"
+   }
+  },
+  {
+   "h": "בַּלֵּילוֹת",
+   "t": "ba-leilot",
+   "g": {
+    "en": "in night",
+    "ru": "ночь"
+   }
+  },
+  {
+   "h": "שְׂאוּ־יְדֵכֶם",
+   "t": "seu-yedekhem",
+   "g": {
+    "en": "to lift your hand",
+    "fr": "lever main",
+    "ru": "нести рука"
+   }
+  },
+  {
+   "h": "קֹדֶשׁ",
+   "t": "kodesh",
+   "g": {
+    "en": "holiness"
+   }
+  },
+  {
+   "h": "וּבָרְכוּ",
+   "t": "u-varekhu",
+   "g": {
+    "en": "and to bless",
+    "fr": "bénir",
+    "ru": "благословлять"
+   }
+  },
+  {
+   "h": "יְבָרֶכְךָ",
+   "t": "yevarekhkha",
+   "g": {
+    "en": "to bless you",
+    "fr": "bénir",
+    "ru": "благословлять"
+   }
+  },
+  {
+   "h": "מִצִּיּוֹן",
+   "t": "mittzion",
+   "g": {
+    "en": "from Zion",
+    "es": "Sion",
+    "ru": "Сион",
+    "ja": "シオン"
+   }
+  },
+  {
+   "h": "עֹשֵׂה",
+   "t": "oseh",
+   "g": {
+    "en": "to do or make of",
+    "es": "hacer",
+    "fr": "faire",
+    "ru": "делать",
+    "ja": "する"
+   }
+  },
+  {
+   "h": "שָׁמַיִם",
+   "t": "shamayim",
+   "g": {
+    "en": "sky",
+    "es": "cielo",
+    "pt": "céu",
+    "fr": "ciel",
+    "ru": "небо",
+    "zh": "天空",
+    "ja": "天"
+   }
+  },
+  {
+   "h": "וָאָרֶץ",
+   "t": "va-aretz",
+   "g": {
+    "en": "and earth",
+    "es": "tierra",
+    "pt": "Terra",
+    "fr": "terre",
+    "ru": "страна",
+    "ar": "أرض",
+    "zh": "国家",
+    "ja": "大地"
+   }
+  }
+ ],
+ "text": "שִׁיר הַמַּעֲלוֹת הִנֵּה בָּרְכוּ אֶת־יְהוָה כָּל־עַבְדֵי יְהוָה הָעֹמְדִים בְּבֵית־יְהוָה בַּלֵּילוֹת\nשְׂאוּ־יְדֵכֶם קֹדֶשׁ וּבָרְכוּ אֶת־יְהוָה\nיְבָרֶכְךָ יְהוָה מִצִּיּוֹן עֹשֵׂה שָׁמַיִם וָאָרֶץ"
+}
