@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<!--
+  Bible Cartridges — chapter viewer (TEMPLATE for all 150 Psalms).
+  A floating scroll in a first-person 3D scene. The scroll carries the
+  chapter decoded from its cartridge PNG (see chapter.js in this folder):
+  Hebrew text, transliteration and a gloss in the viewer's device language,
+  plus the chapter reading as Opus audio, played on tap.
+
+  Nothing chapter-specific lives in this file: the chapter number, titles
+  and filenames come from chapter.js, and the text/glosses/audio come from
+  the cartridge. To make another psalm's page, copy this whole folder and
+  replace chapter.js, cartridge.png, audio.webm and cover.png.
+
+  GLB credits:
+  "FREE - SkyBox Anime Sky" by Paul
+  "Cloud palace column Hall" by xinige
+  (Credits live only in this comment, never in the 3D scene itself.)
+
+  Run by serving this folder over HTTP, e.g. from the project root:
+      python3 -m http.server 8000
+  then open http://localhost:8000/psalms/NNN/
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Bible Cartridge</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0b1020;
+    font-family: system-ui, -apple-system, sans-serif; }
+  #scene { position: fixed; inset: 0; touch-action: none; }
+  #title { position: fixed; top: 10px; left: 14px; color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,.8); font-size: 15px; pointer-events: none; }
+  #hint { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+    color: #fff; background: rgba(0,0,0,.45); padding: 6px 12px; border-radius: 16px;
+    font-size: 13px; white-space: nowrap; pointer-events: none; }
+  #status { position: fixed; top: 10px; right: 14px; color: #cfe3ff; font-size: 11px;
+    text-shadow: 0 1px 3px rgba(0,0,0,.9); text-align: right; pointer-events: none; }
+  #joy { position: fixed; left: 22px; bottom: 54px; width: 112px; height: 112px;
+    border-radius: 50%; background: rgba(255,255,255,.12);
+    border: 2px solid rgba(255,255,255,.35); touch-action: none; }
+  #knob { position: absolute; left: 31px; top: 31px; width: 50px; height: 50px;
+    border-radius: 50%; background: rgba(255,255,255,.55); }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="scene"></div>
+<div id="title"></div>
+<div id="status">loading…</div>
+<div id="hint">Tap the scroll to play the reading · drag or scroll on the scroll to read on · drag elsewhere to look around</div>
+<div id="joy"><div id="knob"></div></div>
+<audio id="chap-audio" preload="auto"></audio>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { decodeCartridge, pickLanguage, intercalate } from './decode.js';
+import { CHAPTER } from './chapter.js';
+
+// Chapter metadata (titles, filenames) comes from chapter.js — the viewer
+// itself holds nothing chapter-specific.
+document.title = CHAPTER.title + ' — Bible Cartridge';
+document.getElementById('title').textContent = CHAPTER.title;
+document.getElementById('chap-audio').src = CHAPTER.audio;
+
+// ---------------------------------------------------------------- status --
+const statusEl = document.getElementById('status');
+const hintEl = document.getElementById('hint');
+window.__psalmStatus = { ready: false, errors: [], lang: null };
+function setStatus(text) { statusEl.textContent = text; }
+function fail(msg) {
+  window.__psalmStatus.errors.push(msg);
+  setStatus('ERROR: ' + msg);
+  console.error(msg);
+}
+
+// Query params (for testing): ?lang=en|es  ?scroll=0..1
+const params = new URLSearchParams(location.search);
+const forcedLang = params.get('lang');
+const forcedScroll = params.has('scroll') ? Math.min(1, Math.max(0, parseFloat(params.get('scroll')) || 0)) : null;
+
+// ------------------------------------------------------- scroll text canvas --
+// The scroll shows the chapter decoded from the cartridge, one intercalated
+// token per word:  HEBREW (transliteration, gloss-in-device-language).
+// Hebrew runs right-to-left; each wrapped line is drawn as one fillText
+// with direction 'rtl' so the browser's bidi algorithm orders the Hebrew
+// words and the Latin parentheticals correctly.
+const CW = 1400;                 // canvas width (px)
+const PAD = 80;                  // side padding (px)
+// Font stack: the first face covers Hebrew, the second covers the Latin
+// transliteration/gloss — canvas fillText falls back per character, so one
+// draw call per line keeps the bidi order right in both scripts.
+const FONT = '46px "Noto Serif Hebrew", "Noto Serif", "Times New Roman", serif';
+const FONT_BOLD = 'bold 58px "Noto Serif Hebrew", "Noto Serif", "Times New Roman", serif';
+const FONT_SEP = '34px "Noto Serif Hebrew", "Noto Serif", "Times New Roman", serif';
+const LINE_H = 78;
+const SHEET_W = 7, SHEET_H = 3.5; // world units; visible window aspect 2:1
+
+function layoutScrollText(verses) {
+  const c = document.createElement('canvas');
+  c.width = CW;
+  const ctx = c.getContext('2d');
+  ctx.font = FONT;
+  const maxW = CW - PAD * 2;
+  const lines = []; // {text, kind: 'head'|'verse'|'sep'|'text'}
+  lines.push({ text: CHAPTER.title, kind: 'head' });
+  lines.push({ text: CHAPTER.hebrewTitle, kind: 'head' });
+  verses.forEach((tokens, vi) => {
+    lines.push({ text: `— ${vi + 1} —`, kind: 'sep' });
+    let cur = '';
+    for (const tok of tokens) {
+      const next = cur ? cur + ' ' + tok : tok;
+      if (ctx.measureText(next).width > maxW && cur) {
+        lines.push({ text: cur, kind: 'text' });
+        cur = tok;
+      } else {
+        cur = next;
+      }
+    }
+    if (cur) lines.push({ text: cur, kind: 'text' });
+  });
+  const canvasH = Math.max(700, lines.length * LINE_H + PAD * 2);
+  c.height = canvasH;
+  const g = c.getContext('2d');
+  g.fillStyle = '#efe3c0'; // parchment
+  g.fillRect(0, 0, CW, canvasH);
+  g.fillStyle = '#2a2118';
+  g.textBaseline = 'middle';
+  let y = PAD + LINE_H / 2;
+  for (const ln of lines) {
+    if (ln.kind === 'head') {
+      g.font = FONT_BOLD;
+      g.direction = 'ltr'; g.textAlign = 'center';
+      g.fillText(ln.text, CW / 2, y);
+      g.font = FONT;
+    } else if (ln.kind === 'sep') {
+      g.font = FONT_SEP;
+      g.direction = 'ltr'; g.textAlign = 'center';
+      g.fillText(ln.text, CW / 2, y);
+      g.font = FONT;
+    } else {
+      g.direction = 'rtl'; g.textAlign = 'right';
+      g.fillText(ln.text, CW - PAD, y);
+    }
+    y += LINE_H;
+  }
+  return { canvas: c, canvasH };
+}
+
+// ------------------------------------------------------------------ scene --
+const container = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+container.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0b1020);
+const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 500);
+let yaw = 0, pitch = -0.06;
+const EYE_Y = 2.0;
+camera.position.set(0, EYE_Y, 11);
+camera.rotation.order = 'YXZ';
+
+scene.add(new THREE.HemisphereLight(0xbfd9ff, 0x8a6f4d, 0.9));
+const sun = new THREE.DirectionalLight(0xfff2dd, 1.6);
+sun.position.set(20, 30, 10);
+scene.add(sun);
+
+// Polished-metal environment: a small studio room baked to a PMREM map.
+// It is assigned per-material to the palace pillars only (never
+// scene-wide), so the mosaic floor and the scroll keep exactly their
+// current look. Polished metal with nothing to reflect reads black —
+// this map is what makes the pillars show bright reflections.
+const pmrem = new THREE.PMREMGenerator(renderer);
+const studioEnv = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+pmrem.dispose();
+
+const loader = new GLTFLoader();
+const loadState = { palace: false, skybox: false, cartridge: false };
+
+function recenterOnFloor(group) {
+  const box = new THREE.Box3().setFromObject(group);
+  const c = box.getCenter(new THREE.Vector3());
+  group.position.x -= c.x;
+  group.position.z -= c.z;
+  group.position.y -= box.min.y;
+  return box;
+}
+
+loader.load('../../assets/cloud-palace.glb', (g) => {
+  recenterOnFloor(g.scene);
+  // IMPORTANT: setFromObject() below reads matrixWorld, which is stale until
+  // this runs — without it the floor bbox comes back in the pre-recenter
+  // frame and the shift below lands ~3.3 units too high, putting the camera
+  // under the whole palace.
+  g.scene.updateMatrixWorld(true);
+  // The palace's walkable floor is NOT the bounding-box bottom: the flat
+  // floor plane (the flattest mesh — a 13x13 slab, only ~50 verts) sits
+  // ~2.8 units above the bbox min, on top of a base plinth. If the camera
+  // stands at y=2.0 against the bbox floor, it ends up UNDER the floor
+  // plane, which then hides the scroll's top half and most of the hall.
+  // So: shift the palace down until the floor plane's centre is at y=0.
+  let floor = null, floorFlat = Infinity, floorMesh = null;
+  g.scene.traverse((o) => {
+    if (!o.isMesh) return;
+    const b = new THREE.Box3().setFromObject(o);
+    const s = b.getSize(new THREE.Vector3());
+    const flat = s.y / Math.max(s.x, s.z);
+    if (flat < floorFlat) { floorFlat = flat; floor = b; floorMesh = o; }
+  });
+  if (floor) {
+    const c = floor.getCenter(new THREE.Vector3());
+    g.scene.position.y -= c.y;
+  }
+  // Sleek, glossy pillar arches: every structure mesh except the flat
+  // floor plane becomes polished metal — metalness 1, roughness 0.05 —
+  // lit by the studio environment map, so the pillars show clear bright
+  // mirror-like reflections. The floor keeps its own mosaic material.
+  const pillarMetal = new THREE.MeshStandardMaterial({
+    color: 0xf2f3f5, metalness: 1.0, roughness: 0.05,
+    envMap: studioEnv, envMapIntensity: 1.25, side: THREE.DoubleSide,
+  });
+  g.scene.traverse((o) => {
+    if (o.isMesh && o !== floorMesh) o.material = pillarMetal;
+  });
+  scene.add(g.scene);
+  loadState.palace = true;
+  refreshStatus();
+}, undefined, (e) => fail('palace GLB failed to load: ' + (e?.message || e)));
+
+// Repair a sky texture whose image data ends early (the fallback path,
+// when the hand-built texture is unavailable): draw the loader's image
+// to a canvas, heal its pole band the same way buildSkyTexture does
+// (see healSkyPoleBand), then orient it the same way (see
+// orientSkyTexture). Returns the original texture untouched when
+// nothing is missing.
+function repairSkyTexture(tex) {
+  if (!tex || !tex.image || !tex.image.width) return tex;
+  const img = tex.image, w = img.width, h = img.height;
+  const cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  const ctx = cv.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+  healSkyPoleBand(cv);
+  const oriented = orientSkyTexture(cv);
+  const fixed = new THREE.CanvasTexture(oriented);
+  fixed.colorSpace = tex.colorSpace;
+  fixed.flipY = tex.flipY;
+  fixed.wrapS = tex.wrapS; fixed.wrapT = tex.wrapT;
+  fixed.minFilter = THREE.LinearFilter; fixed.magFilter = THREE.LinearFilter;
+  fixed.generateMipmaps = false;
+  return fixed;
+}
+
+// Orient a decoded sky canvas so the scene background shows the panorama
+// exactly as the GLB's sphere mesh showed it — the background must be a
+// drop-in replacement for the sphere, not a re-framed sky. Two corrections,
+// both measured, not guessed:
+// (1) HORIZONTAL FLIP. The sphere's UVs map u = local-longitude/2pi + 0.5
+// (read off the mesh: equator vertex at local lon -2.847 rad has u=0.047,
+// at +3.043 rad u=0.984), and the GLB node transforms map local
+// (cos p, sin p, 0) to world (cos p, 0, -sin p). scene.background's
+// equirect mapping assigns u_bg = atan(dir.z, dir.x)/2pi + 0.5 = -p/2pi
+// + 0.5 at that same world direction. So the sphere shows column u and
+// the background shows column 1-u at the same direction — the sphere's
+// panorama is mirrored relative to the background's. Without the flip,
+// looking out of the palace shows a different landscape (measured
+// 2026-11-19: no yaw rotation in a +/-86 deg sweep could align the
+// background's outward view with the sphere's). The flip restores the
+// authored orientation — the palace was composed against it.
+// (2) VERTICAL SHIFT, 80 rows down (~7 deg). The sphere was centred at
+// y=9 while the camera stands at y=2, so the sphere showed the horizon
+// ~7 deg above eye level (it samples v=0.476 at a level ray; the
+// background samples v=0.516). Shifting the content down 80 rows puts
+// the horizon back where the sphere had it. Wraparound: the rows that
+// fall off the bottom re-enter at the top (the nadir, under the floor,
+// invisible), and the pole rows that move down are real sky either way.
+// Applied AFTER the heal, so a healed (truncated) copy shifts with its
+// fill, and a complete copy — the normal case now — just shifts real sky.
+function orientSkyTexture(cv) {
+  const w = cv.width, h = cv.height;
+  const shift = 80; // rows down, ~7 deg, matching the sphere's y=9 centre
+  const out = document.createElement('canvas');
+  out.width = w; out.height = h;
+  const ctx = out.getContext('2d');
+  ctx.save();
+  ctx.translate(w, 0); ctx.scale(-1, 1); // horizontal mirror
+  ctx.drawImage(cv, 0, shift, w, h);     // main: content shifted down
+  ctx.drawImage(cv, 0, shift - h, w, h); // wraparound: bottom rows to top
+  ctx.restore();
+  return out;
+}
+
+// Parse a GLB container directly into its JSON header + BIN chunk, without
+// going through GLTFLoader. Used to decode the sky texture ourselves (see
+// buildSkyTexture): the skybox GLB uses KHR_materials_pbrSpecularGlossiness,
+// whose texture path through GLTFLoader is the known-weak one — in an
+// earlier globe build the pole came out sampling a flat grey because the
+// loader's fallback material carried no texture at all.
+function parseGlbContainer(buf) {
+  const dv = new DataView(buf);
+  if (dv.getUint32(0, true) !== 0x46546C67) throw new Error('not a GLB file');
+  // Clamp chunk lengths to the bytes actually present: a truncated copy
+  // of this GLB (the one we shipped with until 2026-11-20) declares
+  // 2,697,556 bytes but has only 2,660,849 — trusting the declared
+  // lengths throws a RangeError. The current file is complete (verified
+  // 2,697,556 bytes on disk, embedded JPEG ffd8->ffd9), so the clamp is
+  // now just defensive; the bytes that ARE there are all we need either way.
+  const jsonLen = Math.min(dv.getUint32(12, true), buf.byteLength - 20);
+  if (dv.getUint32(16, true) !== 0x4E4F534A) throw new Error('GLB first chunk is not JSON');
+  const json = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 20, jsonLen)));
+  const binOff = 20 + jsonLen;
+  if (binOff + 8 > buf.byteLength) throw new Error('GLB has no BIN chunk');
+  const binLen = Math.min(dv.getUint32(binOff, true), buf.byteLength - binOff - 8);
+  const bin = new Uint8Array(buf, binOff + 8, binLen);
+  return { json, bin };
+}
+
+// Build the sky texture by hand: fetch the GLB, parse the container,
+// decode the material's colour image straight out of the BIN chunk, and
+// hand it to the scene background (see setSkyBackground below) — never
+// onto a mesh. The pole band is healed (see healSkyPoleBand) only if
+// rows are actually missing — the current GLB is complete (verified
+// 2026-11-20: 2,697,556 bytes, embedded JPEG ffd8->ffd9), so the heal
+// no-ops and the texture is the author's own pixels; a truncated copy
+// still heals instead of showing a flat fill. Then the texture is
+// oriented to match the sphere it replaces (see orientSkyTexture).
+async function buildSkyTexture() {
+  const res = await fetch('../../assets/skybox.glb');
+  if (!res.ok) throw new Error('skybox GLB fetch failed: ' + res.status);
+  const { json, bin } = parseGlbContainer(await res.arrayBuffer());
+  const mat = (json.materials && json.materials[0]) || {};
+  const ext = (mat.extensions || {})['KHR_materials_pbrSpecularGlossiness'] || {};
+  const texInfo = mat.emissiveTexture || ext.diffuseTexture;
+  if (!texInfo) throw new Error('skybox material has no colour texture');
+  const texDef = json.textures[texInfo.index];
+  const imgDef = json.images[texDef.source];
+  const bv = json.bufferViews[imgDef.bufferView];
+  const bytes = bin.subarray(bv.byteOffset || 0, (bv.byteOffset || 0) + bv.byteLength);
+  // Decode through an <img> element over a blob: URL. Measured 2026-11-19
+  // on the truncated copy: createImageBitmap decodes a truncated JPEG as
+  // an all-black bitmap (mean luminance 0.000, no error thrown), while
+  // <img> decodes it partially and correctly (mean luminance 0.668, only
+  // the missing bottom rows black). The current file is complete, so
+  // either path would work now; the <img> path is kept because it also
+  // degrades gracefully on a truncated copy. Blob URLs work fine in this viewer.
+  const url = URL.createObjectURL(new Blob([bytes], { type: imgDef.mimeType || 'image/jpeg' }));
+  const imgEl = new Image();
+  try {
+    await new Promise((resolve, reject) => {
+      imgEl.onload = resolve;
+      imgEl.onerror = () => reject(new Error('sky texture image failed to decode'));
+      imgEl.src = url;
+    });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+  const cv = document.createElement('canvas');
+  cv.width = imgEl.naturalWidth; cv.height = imgEl.naturalHeight;
+  const ctx = cv.getContext('2d');
+  ctx.drawImage(imgEl, 0, 0);
+  healSkyPoleBand(cv);
+  const oriented = orientSkyTexture(cv);
+  const out = new THREE.CanvasTexture(oriented);
+  out.colorSpace = THREE.SRGBColorSpace;
+  out.flipY = false;
+  out.wrapS = THREE.RepeatWrapping; out.wrapT = THREE.RepeatWrapping;
+  // No mipmaps: at the pole, mipmaps sample across the seam and smear it.
+  out.minFilter = THREE.LinearFilter;
+  out.magFilter = THREE.LinearFilter;
+  out.generateMipmaps = false;
+  return out;
+}
+
+// Heal the pole band of a decoded sky texture (adapted from the rainbow
+// globe's healPoleTexture). This sphere's zenith pole samples the BOTTOM
+// rows of the texture (v near 1.0), so the pole band is the bottom 8% of
+// rows and the reference band is 65-80% of height. The missing rows are
+// the contiguous uniform run at the very bottom edge — a real sky row is
+// never exactly uniform across the whole width — and they are filled by
+// MIRRORING the good rows just above the damage downward, then fading
+// the mirrored band — and the good rows just above it — toward the mean
+// colour of those good rows, reaching flat mean colour at the pole (a
+// mirrored cloud edge folded at the pole makes a kaleidoscope disc; the
+// fade flattens it into soft sky, and starting the fade 100 rows above
+// the damage leaves no circular edge where the treatment stops), with a
+// narrow blur only over the mirror's crease. No band-wide blur:
+// blurring the whole pole band leaves a visible circular edge where the
+// blur stops.
+// This is RECONSTRUCTION of lost data, not restoration, and it only
+// runs on a truncated copy: the missing rows are gone from a truncated
+// GLB, and no fill can bring the exact rows back — mirroring real
+// adjacent rows is the least-invented fill available. The exact rows
+// came back for real on 2026-11-20, when Pol signed in to Sketchfab and
+// a fresh, complete download (2,697,556 bytes) replaced the truncated
+// copy in assets/skybox.glb; on that file this function logs "ok" and
+// changes nothing. The truncated copy is kept as
+// assets/skybox-truncated-backup.glb. Logs a pole check like the
+// rainbow one: "[sky] pole check: healed|ok sat:… lum:… flat:…".
+function healSkyPoleBand(cv) {
+  const ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height;
+  const data = ctx.getImageData(0, 0, w, h).data;
+  const rowInfo = (y) => {
+    let r0 = -1, g0 = -1, b0 = -1, uniform = true, sat = 0, lum = 0, cnt = 0;
+    for (let x = 0; x < w; x += 16) {
+      const o = (y * w + x) * 4;
+      const R = data[o], G = data[o + 1], B = data[o + 2];
+      if (r0 < 0) { r0 = R; g0 = G; b0 = B; }
+      else if (R !== r0 || G !== g0 || B !== b0) uniform = false;
+      const mx = Math.max(R, G, B), mn = Math.min(R, G, B);
+      sat += mx ? (mx - mn) / mx : 0;
+      lum += (0.2126 * R + 0.7152 * G + 0.0722 * B) / 255;
+      cnt++;
+    }
+    return { uniform, sat: sat / cnt, lum: lum / cnt };
+  };
+  const bandStats = (y0, y1) => {
+    let sat = 0, lum = 0, flat = 0, n = 0;
+    for (let y = y0; y < y1; y += 2) {
+      const info = rowInfo(y);
+      sat += info.sat; lum += info.lum; if (info.uniform) flat++; n++;
+    }
+    return { sat: sat / n, lum: lum / n, flat: flat / n };
+  };
+  const pole = bandStats(Math.floor(h * 0.92), h);
+  const ref = bandStats(Math.floor(h * 0.65), Math.floor(h * 0.80));
+  // The missing rows are the contiguous uniform run at the very bottom
+  // edge — only ~70 rows here, so the whole 8% pole band is just 44%
+  // flat and a band-fraction test would miss it. The run itself is the
+  // signal: real sky rows are never exactly uniform across the width.
+  let run = 0;
+  for (let y = h - 1; y >= 0; y--) {
+    if (rowInfo(y).uniform) run++; else break;
+  }
+  let healed = false;
+  if (run > 0 && ref.flat < 0.5) {
+    // First good row above the run: not uniform, with some real colour.
+    let goodY = -1;
+    for (let y = h - run - 1; y >= 0; y--) {
+      const info = rowInfo(y);
+      if (!info.uniform && info.sat > 0.03) { goodY = y; break; }
+    }
+    if (goodY >= 0) {
+      const badTop = goodY + 1;
+      const runH = h - badTop;
+      // MIRROR, don't smear: reflect the good rows just above the damage
+      // downward across the boundary, so real cloud structure continues
+      // into the missing band instead of one row stretched into radial
+      // streaks. (drawImage with a negative destination height flips
+      // vertically: dest row badTop+k takes source row badTop-1-k.)
+      if (badTop - runH >= 0) {
+        ctx.drawImage(cv, 0, badTop - runH, w, runH, 0, badTop + runH, w, -runH);
+      } else {
+        ctx.drawImage(cv, 0, goodY, w, 1, 0, badTop, w, runH);
+      }
+      // FADE the mirrored band — and the good rows just above it —
+      // toward the mean colour of the good rows just above the damage,
+      // reaching flat mean colour at the pole. A mirrored cloud edge
+      // folded at the pole makes a kaleidoscope disc, so the mirror must
+      // flatten out completely as it reaches the pole; and the fade
+      // starts 100 rows ABOVE the damage so there is no circular edge
+      // where the treatment stops — the pole becomes featureless soft
+      // sky (the professional "paint the pole flat" workflow), blending
+      // into the real cloud above it. (The mean is taken from the
+      // pre-mirror snapshot above, so it is real sky colour, not the fill.)
+      const fadeTop = Math.max(0, badTop - 100);
+      let mr = 0, mg = 0, mb = 0, mc = 0;
+      for (let y = fadeTop; y < badTop; y += 2) {
+        for (let x = 0; x < w; x += 64) {
+          const o = (y * w + x) * 4;
+          mr += data[o]; mg += data[o + 1]; mb += data[o + 2]; mc++;
+        }
+      }
+      if (mc > 0) {
+        mr /= mc; mg /= mc; mb /= mc;
+        const grad = ctx.createLinearGradient(0, fadeTop, 0, h);
+        grad.addColorStop(0, 'rgba(' + mr + ',' + mg + ',' + mb + ',0)');
+        grad.addColorStop(1, 'rgba(' + mr + ',' + mg + ',' + mb + ',1)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, fadeTop, w, h - fadeTop);
+      }
+      // Soften only the mirror's crease at the boundary (guarded: filter
+      // may be absent). No band-wide blur: blurring the whole pole band
+      // leaves a visible circular edge where the blur stops.
+      try {
+        const seamTop = Math.max(0, badTop - 10);
+        const seamH = Math.min(20, h - seamTop);
+        const tmp = document.createElement('canvas');
+        tmp.width = w; tmp.height = seamH;
+        const tctx = tmp.getContext('2d');
+        tctx.drawImage(cv, 0, seamTop, w, seamH, 0, 0, w, seamH);
+        ctx.save();
+        ctx.filter = 'blur(2px)';
+        ctx.drawImage(tmp, 0, seamTop);
+        ctx.restore();
+      } catch (e) { /* blur unsupported — the mirror alone is seamless */ }
+      healed = true;
+    }
+  }
+  console.log('[sky] pole check: ' + (healed ? 'healed (mirror) ' + run + ' rows' : 'ok') +
+    ' sat:' + pole.sat.toFixed(3) + ' lum:' + pole.lum.toFixed(3) +
+    ' flat:' + pole.flat.toFixed(2) +
+    ' (ref sat:' + ref.sat.toFixed(3) + ' flat:' + ref.flat.toFixed(2) + ')');
+}
+
+// The sky is the scene background now — NOT a sphere mesh. The hand-built
+// texture is assigned to scene.background with EquirectangularReflection-
+// Mapping, so three.js samples it per-pixel from the view direction
+// (converting it to a cubemap internally) instead of interpolating UVs
+// across the GLB's low-poly 64-triangle pole fan. That is the REAL fix
+// for the zenith starburst: the fan wedges are gone because there is no
+// fan geometry left. The pole pinch itself — clouds converging to a
+// point — is the geometry of equirectangular panoramas and stays; it
+// just reads as a soft convergence now instead of hard wedges. (The
+// background is not tone-mapped when its texture is sRGB — the renderer
+// sets toneMapped false for sRGB backgrounds — so the sky keeps the full
+// brightness the old unlit sphere had.)
+// The texture is oriented to match the sphere it replaces (see
+// orientSkyTexture): flipped horizontally and shifted 80 rows down, so
+// the landscape out of the palace and the horizon height are exactly
+// as the sphere showed them.
+// The embedded sky JPEG used to be TRUNCATED (measured 2026-11-19: the
+// file declared 4096x2048 but its scan data ended ~70 rows early with no
+// EOI marker), so the bottom rows of the image — exactly the rows the
+// zenith pole samples (v near 1.0) — decoded as a flat fill. That copy
+// was replaced 2026-11-20 by a fresh, complete download (2,697,556
+// bytes, JPEG ffd8->ffd9); the heal (see healSkyPoleBand) now no-ops on
+// it and remains only as a fallback for truncated copies. The GLB is untouched.
+function setSkyBackground(tex) {
+  tex.mapping = THREE.EquirectangularReflectionMapping;
+  scene.background = tex;
+  loadState.skybox = true;
+  refreshStatus();
+}
+
+// Hand-built sky texture (decoded straight from the GLB's BIN chunk, pole
+// band healed). Starts loading immediately; if it fails for any reason the
+// viewer falls back to GLTFLoader's own texture, healed the same way and
+// used as the background too — still no sphere mesh.
+const skyTexPromise = buildSkyTexture().catch((err) => {
+  console.warn('[sky] hand-built texture failed, using loader texture:', err);
+  return null;
+});
+skyTexPromise.then((handTex) => {
+  if (handTex) { setSkyBackground(handTex); return; }
+  loader.load('../../assets/skybox.glb', (g) => {
+    let srcTex = null;
+    g.scene.traverse((o) => {
+      if (o.isMesh && o.material) srcTex = srcTex || o.material.emissiveMap || o.material.map;
+    });
+    const fixed = repairSkyTexture(srcTex);
+    if (fixed) setSkyBackground(fixed);
+    else fail('skybox texture unavailable');
+  }, undefined, (e) => fail('skybox GLB failed to load: ' + (e?.message || e)));
+});
+
+// ------------------------------------------------------------------ scroll --
+const scrollGroup = new THREE.Group();
+const TAN = 0xc8a06a, TAN_DARK = 0xb08d55, WOOD = 0x7a5230;
+let scrollTex = null;
+let scrollFrac = forcedScroll ?? 0;
+let scrollMaxFrac = 0; // 1 - visible fraction of the text canvas
+
+function buildScrollTexture(verses) {
+  const { canvas, canvasH } = layoutScrollText(verses);
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.ClampToEdgeWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  const visibleH = CW * (SHEET_H / SHEET_W);
+  const repeatY = Math.min(1, visibleH / canvasH);
+  tex.repeat.set(1, repeatY);
+  scrollMaxFrac = 1 - repeatY;
+  applyScrollOffset(tex);
+  return tex;
+}
+function applyScrollOffset(tex) {
+  // frac 0 = top of the text, 1 = bottom. (flipY: v=1 is the canvas top.)
+  tex.offset.y = (1 - tex.repeat.y) * (1 - scrollFrac);
+}
+
+const sheetMats = [
+  new THREE.MeshStandardMaterial({ color: TAN_DARK, roughness: 0.9 }), // +x
+  new THREE.MeshStandardMaterial({ color: TAN_DARK, roughness: 0.9 }), // -x
+  new THREE.MeshStandardMaterial({ color: TAN_DARK, roughness: 0.9 }), // +y
+  new THREE.MeshStandardMaterial({ color: TAN_DARK, roughness: 0.9 }), // -y
+  new THREE.MeshStandardMaterial({ roughness: 0.9 }),                  // +z front (text)
+  new THREE.MeshStandardMaterial({ color: TAN_DARK, roughness: 0.9 }), // -z back
+];
+const sheet = new THREE.Mesh(new THREE.BoxGeometry(SHEET_W, SHEET_H, 0.06), sheetMats);
+sheet.name = 'scroll-sheet';
+scrollGroup.add(sheet);
+
+const rollGeo = new THREE.CylinderGeometry(0.5, 0.5, SHEET_H, 24);
+const rollMat = new THREE.MeshStandardMaterial({ color: TAN, roughness: 0.85 });
+const rodGeo = new THREE.CylinderGeometry(0.07, 0.07, 4.3, 12);
+const rodMat = new THREE.MeshStandardMaterial({ color: WOOD, roughness: 0.8 });
+const capGeo = new THREE.CylinderGeometry(0.56, 0.56, 0.12, 24);
+const capMat = new THREE.MeshStandardMaterial({ color: WOOD, roughness: 0.8 });
+for (const side of [-1, 1]) {
+  const x = side * (SHEET_W / 2 + 0.30); // sheet edge tucks into the roll
+  const roll = new THREE.Mesh(rollGeo, rollMat);
+  roll.position.set(x, 0, 0);
+  scrollGroup.add(roll);
+  const rod = new THREE.Mesh(rodGeo, rodMat);
+  rod.position.set(x, 0, 0);
+  scrollGroup.add(rod);
+  for (const end of [-1, 1]) {
+    const cap = new THREE.Mesh(capGeo, capMat);
+    cap.position.set(x, end * 1.81, 0);
+    scrollGroup.add(cap);
+  }
+}
+// The sheet and the rolls are ONE continuous object: the tan sheet and
+// the tan rolls share the same height (SHEET_H), and the sheet's edge
+// sits INSIDE the roll — at the sheet edge (x = ±3.5) the roll (centre
+// ±3.8, radius 0.5) spans z ±0.4, while the sheet plane sits at
+// z = -0.30, so the sheet's edge face is fully inside the roll volume
+// and no seam or see-through gap can show from any angle. The sheet
+// plane sits slightly behind the roll centres; the text faces +z,
+// toward the arriving visitor.
+sheet.position.z = -0.30;
+// The scroll floats above the palace's central feature (a low step/dais
+// rising to y≈1.57 at the platform centre): its sheet bottom sits at 1.85,
+// clear of it even at the lowest point of the bob.
+scrollGroup.position.set(0, 3.6, 0);
+scene.add(scrollGroup);
+
+// ------------------------------------------------------- cartridge + audio --
+const audio = document.getElementById('chap-audio');
+let audioReady = false;
+audio.addEventListener('canplay', () => { audioReady = true; refreshStatus(); });
+audio.addEventListener('error', () => {
+  hintEl.textContent = 'Audio file not available — the scroll still reads fine.';
+  refreshStatus();
+});
+function toggleAudio() {
+  if (!audioReady || !audio.src) {
+    hintEl.textContent = 'Audio file not available yet.';
+    return;
+  }
+  if (audio.paused) {
+    audio.play().catch(() => { hintEl.textContent = 'Audio could not start.'; });
+    hintEl.textContent = '❚❚ Playing the reading — tap the scroll to pause';
+  } else {
+    audio.pause();
+    hintEl.textContent = '▶ Paused — tap the scroll to play the reading';
+  }
+}
+
+let langUsed = null;
+decodeCartridge(CHAPTER.cartridge).then(({ header, pack }) => {
+  const deviceLang = forcedLang || navigator.language || 'en';
+  langUsed = pickLanguage(header, deviceLang);
+  window.__psalmStatus.lang = langUsed;
+  const verses = intercalate(pack, langUsed);
+  scrollTex = buildScrollTexture(verses);
+  sheetMats[4].map = scrollTex;
+  sheetMats[4].needsUpdate = true;
+  loadState.cartridge = true;
+  refreshStatus();
+}).catch((e) => {
+  // Graceful failure: the scene still loads, the scroll says so.
+  fail('cartridge decode failed: ' + e.message);
+  const c = document.createElement('canvas');
+  c.width = CW; c.height = 700;
+  const g = c.getContext('2d');
+  g.fillStyle = '#efe3c0'; g.fillRect(0, 0, CW, 700);
+  g.fillStyle = '#2a2118'; g.font = '40px sans-serif';
+  g.textAlign = 'center';
+  g.fillText('Cartridge could not be decoded.', CW / 2, 320);
+  g.fillText(String(e.message).slice(0, 90), CW / 2, 400);
+  scrollTex = new THREE.CanvasTexture(c);
+  scrollTex.colorSpace = THREE.SRGBColorSpace;
+  sheetMats[4].map = scrollTex;
+  sheetMats[4].needsUpdate = true;
+});
+
+function refreshStatus() {
+  const bits = [
+    'palace ' + (loadState.palace ? 'OK' : '…'),
+    'skybox ' + (loadState.skybox ? 'OK' : '…'),
+    'cartridge ' + (loadState.cartridge ? 'OK' : '…'),
+    langUsed ? ('lang ' + langUsed) : '',
+    audioReady ? 'audio OK' : 'audio …',
+  ].filter(Boolean);
+  setStatus(bits.join(' · '));
+  if (loadState.palace && loadState.skybox && loadState.cartridge) {
+    window.__psalmStatus.ready = true;
+  }
+}
+
+// --------------------------------------------------------------- controls --
+// First person: joystick (bottom-left) or WASD moves on the platform;
+// drag anywhere else to look around; drag the scroll itself to read on.
+const keys = {};
+addEventListener('keydown', (e) => { keys[e.key.toLowerCase()] = true; });
+addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
+
+const joy = document.getElementById('joy');
+const knob = document.getElementById('knob');
+let joyVec = { x: 0, y: 0 };
+let joyId = null;
+function joySet(cx, cy) {
+  const r = joy.getBoundingClientRect();
+  let dx = (cx - (r.left + r.width / 2)) / (r.width / 2);
+  let dy = (cy - (r.top + r.height / 2)) / (r.height / 2);
+  const len = Math.hypot(dx, dy);
+  if (len > 1) { dx /= len; dy /= len; }
+  if (len < 0.12) { dx = 0; dy = 0; } // dead zone
+  joyVec = { x: dx, y: dy };
+  knob.style.left = 31 + dx * 30 + 'px';
+  knob.style.top = 31 + dy * 30 + 'px';
+}
+joy.addEventListener('pointerdown', (e) => { joyId = e.pointerId; joy.setPointerCapture(e.pointerId); joySet(e.clientX, e.clientY); });
+joy.addEventListener('pointermove', (e) => { if (e.pointerId === joyId) joySet(e.clientX, e.clientY); });
+function joyEnd(e) {
+  if (e.pointerId !== joyId) return;
+  joyId = null; joyVec = { x: 0, y: 0 };
+  knob.style.left = '31px'; knob.style.top = '31px';
+}
+joy.addEventListener('pointerup', joyEnd);
+joy.addEventListener('pointercancel', joyEnd);
+
+const ray = new THREE.Raycaster();
+const ptr = new THREE.Vector2();
+let dragMode = null; // 'look' | 'scroll'
+let downPos = null, downTime = 0, lastPos = null;
+function pickScroll(e) {
+  ptr.x = (e.clientX / innerWidth) * 2 - 1;
+  ptr.y = -(e.clientY / innerHeight) * 2 + 1;
+  ray.setFromCamera(ptr, camera);
+  return ray.intersectObject(sheet, false).length > 0;
+}
+renderer.domElement.addEventListener('pointerdown', (e) => {
+  downPos = { x: e.clientX, y: e.clientY };
+  downTime = performance.now();
+  lastPos = { x: e.clientX, y: e.clientY };
+  dragMode = pickScroll(e) ? 'scroll' : 'look';
+  renderer.domElement.setPointerCapture(e.pointerId);
+});
+renderer.domElement.addEventListener('pointermove', (e) => {
+  if (!dragMode || !lastPos) return;
+  const dx = e.clientX - lastPos.x, dy = e.clientY - lastPos.y;
+  lastPos = { x: e.clientX, y: e.clientY };
+  if (dragMode === 'look') {
+    yaw -= dx * 0.004;
+    pitch = Math.max(-1.2, Math.min(1.2, pitch - dy * 0.004));
+  } else if (dragMode === 'scroll' && scrollTex && scrollMaxFrac > 0) {
+    scrollFrac = Math.min(1, Math.max(0, scrollFrac - dy * 0.002));
+    applyScrollOffset(scrollTex);
+  }
+});
+renderer.domElement.addEventListener('pointerup', (e) => {
+  // A short, still press on the scroll is a tap: play / pause the reading.
+  if (dragMode === 'scroll' && downPos) {
+    const moved = Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y);
+    if (moved < 8 && performance.now() - downTime < 500) toggleAudio();
+  }
+  dragMode = null; downPos = null; lastPos = null;
+});
+renderer.domElement.addEventListener('pointercancel', () => {
+  dragMode = null; downPos = null; lastPos = null;
+});
+
+// Two-finger trackpad scroll reads the chapter too: a wheel over the
+// scroll advances the text (same direction as dragging up), in addition
+// to drag-to-scroll. Scoped to the scroll by raycast — a wheel anywhere
+// else does nothing, and the page never scrolls (overflow is hidden).
+renderer.domElement.addEventListener('wheel', (e) => {
+  if (!scrollTex || scrollMaxFrac <= 0) return;
+  if (!pickScroll(e)) return;
+  e.preventDefault();
+  let d = e.deltaY;
+  if (e.deltaMode === 1) d *= 16;              // lines
+  else if (e.deltaMode === 2) d *= innerHeight; // pages
+  scrollFrac = Math.min(1, Math.max(0, scrollFrac + d * 0.0008));
+  applyScrollOffset(scrollTex);
+}, { passive: false });
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+// ------------------------------------------------------------------- loop --
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  const t = clock.elapsedTime;
+
+  // The scroll floats: a gentle bob, no spin (the text must stay readable).
+  scrollGroup.position.y = 3.6 + Math.sin(t * 0.8) * 0.12;
+
+  // Movement: joystick + WASD, relative to where the camera faces.
+  let mx = joyVec.x, mz = joyVec.y;
+  if (keys['w'] || keys['arrowup']) mz -= 1;
+  if (keys['s'] || keys['arrowdown']) mz += 1;
+  if (keys['a'] || keys['arrowleft']) mx -= 1;
+  if (keys['d'] || keys['arrowright']) mx += 1;
+  const len = Math.hypot(mx, mz);
+  if (len > 0.01) {
+    const sp = 4 * dt * Math.min(len, 1);
+    const sin = Math.sin(yaw), cos = Math.cos(yaw);
+    camera.position.x += (-sin * -mz + cos * mx) * sp;
+    camera.position.z += (-cos * -mz - sin * mx) * sp;
+    // Stay on the platform (palace spans ~28 units).
+    const r = Math.hypot(camera.position.x, camera.position.z);
+    if (r > 11) {
+      camera.position.x *= 11 / r;
+      camera.position.z *= 11 / r;
+    }
+    camera.position.y = EYE_Y;
+  }
+  camera.rotation.set(pitch, yaw, 0);
+  renderer.render(scene, camera);
+}
+
+// Debug hook (only with ?debug): lets a headless check inspect the exact
+// scroll texture, camera and scene instead of guessing.
+if (new URLSearchParams(location.search).has('debug')) {
+  window.__psalmDebug = {
+    get scrollTex() { return scrollTex; },
+    get scrollFrac() { return scrollFrac; },
+    set scrollFrac(v) {
+      scrollFrac = Math.min(1, Math.max(0, v));
+      if (scrollTex) applyScrollOffset(scrollTex);
+    },
+    get scrollMaxFrac() { return scrollMaxFrac; },
+    get yaw() { return yaw; },
+    set yaw(v) { yaw = v; },
+    get pitch() { return pitch; },
+    set pitch(v) { pitch = v; },
+    camera, scene, scrollGroup, THREE,
+  };
+}
+animate();
+</script>
+</body>
+</html>
