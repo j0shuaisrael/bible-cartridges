@@ -11,8 +11,9 @@
   the cartridge. To make another psalm's page, copy this whole folder and
   replace chapter.js, cartridge.png, audio.webm and cover.png.
 
-  GLB credits (to be filled in by Pol): Cloud Palace — [author];
-  Anime Skybox — [author].
+  GLB credits:
+  "FREE - SkyBox Anime Sky" by Paul
+  "Cloud palace column Hall" by xinige
   (Credits live only in this comment, never in the 3D scene itself.)
 
   Run by serving this folder over HTTP, e.g. from the project root:
@@ -240,6 +241,211 @@ loader.load('../../assets/cloud-palace.glb', (g) => {
   refreshStatus();
 }, undefined, (e) => fail('palace GLB failed to load: ' + (e?.message || e)));
 
+// Repair a sky texture whose image data ends early: the skybox JPEG is
+// truncated, so its bottom rows (the ones the sphere's zenith pole
+// samples) decode as a flat fill instead of sky. Detect the run of
+// exactly-uniform rows at the bottom edge — a real sky row is never
+// perfectly uniform across the whole width — and extend the last good
+// row down over them, so the zenith renders sky instead of a black disc.
+// Returns the original texture untouched when nothing is missing.
+function repairSkyTexture(tex) {
+  if (!tex || !tex.image || !tex.image.width) return tex;
+  const img = tex.image, w = img.width, h = img.height;
+  const cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  const ctx = cv.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+  // Scan the bottom quarter, sampled, for exactly-uniform rows.
+  const bandH = Math.max(1, Math.floor(h / 4));
+  const data = ctx.getImageData(0, h - bandH, w, bandH).data;
+  const rowUniform = (r) => {
+    const o0 = r * w * 4;
+    const r0 = data[o0], g0 = data[o0 + 1], b0 = data[o0 + 2];
+    for (let x = 8; x < w; x += 8) {
+      const o = o0 + x * 4;
+      if (data[o] !== r0 || data[o + 1] !== g0 || data[o + 2] !== b0) return false;
+    }
+    return true;
+  };
+  let badTop = bandH; // first bad row within the band (band-relative)
+  for (let r = bandH - 1; r >= 0; r--) {
+    if (rowUniform(r)) badTop = r; else break;
+  }
+  if (badTop >= bandH) return tex; // nothing missing
+  const goodY = h - bandH + badTop - 1; // last good row (absolute)
+  const badY = h - bandH + badTop;      // first bad row (absolute)
+  if (goodY < 0) return tex;
+  // Stretch the last good row down over the missing rows.
+  ctx.drawImage(cv, 0, goodY, w, 1, 0, badY, w, h - badY);
+  const fixed = new THREE.CanvasTexture(cv);
+  fixed.colorSpace = tex.colorSpace;
+  fixed.flipY = tex.flipY;
+  fixed.wrapS = tex.wrapS; fixed.wrapT = tex.wrapT;
+  fixed.minFilter = tex.minFilter; fixed.magFilter = tex.magFilter;
+  fixed.generateMipmaps = tex.generateMipmaps;
+  return fixed;
+}
+
+// Parse a GLB container directly into its JSON header + BIN chunk, without
+// going through GLTFLoader. Used to decode the sky texture ourselves (see
+// buildSkyTexture): the skybox GLB uses KHR_materials_pbrSpecularGlossiness,
+// whose texture path through GLTFLoader is the known-weak one — in an
+// earlier globe build the pole came out sampling a flat grey because the
+// loader's fallback material carried no texture at all.
+function parseGlbContainer(buf) {
+  const dv = new DataView(buf);
+  if (dv.getUint32(0, true) !== 0x46546C67) throw new Error('not a GLB file');
+  // Clamp chunk lengths to the bytes actually present: this skybox GLB is
+  // itself cut short (header declares 2,697,556 bytes, the file has
+  // 2,660,849 — 36,707 bytes missing off the end), which is exactly why
+  // its embedded JPEG is truncated. Trusting the declared lengths throws
+  // a RangeError; the bytes that ARE there are all we need.
+  const jsonLen = Math.min(dv.getUint32(12, true), buf.byteLength - 20);
+  if (dv.getUint32(16, true) !== 0x4E4F534A) throw new Error('GLB first chunk is not JSON');
+  const json = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 20, jsonLen)));
+  const binOff = 20 + jsonLen;
+  if (binOff + 8 > buf.byteLength) throw new Error('GLB has no BIN chunk');
+  const binLen = Math.min(dv.getUint32(binOff, true), buf.byteLength - binOff - 8);
+  const bin = new Uint8Array(buf, binOff + 8, binLen);
+  return { json, bin };
+}
+
+// Build the sky texture by hand: fetch the GLB, parse the container,
+// decode the material's colour image straight out of the BIN chunk into
+// an ImageBitmap, and put it on a fresh white-based material so the
+// texture shows purely. The pole band is healed (see healSkyPoleBand)
+// because the embedded JPEG is truncated (measured: it declares
+// 4096x2048 but its scan data ends ~70 rows early with no EOI marker),
+// so the rows the zenith pole samples decode as a flat fill.
+async function buildSkyTexture() {
+  const res = await fetch('../../assets/skybox.glb');
+  if (!res.ok) throw new Error('skybox GLB fetch failed: ' + res.status);
+  const { json, bin } = parseGlbContainer(await res.arrayBuffer());
+  const mat = (json.materials && json.materials[0]) || {};
+  const ext = (mat.extensions || {})['KHR_materials_pbrSpecularGlossiness'] || {};
+  const texInfo = mat.emissiveTexture || ext.diffuseTexture;
+  if (!texInfo) throw new Error('skybox material has no colour texture');
+  const texDef = json.textures[texInfo.index];
+  const imgDef = json.images[texDef.source];
+  const bv = json.bufferViews[imgDef.bufferView];
+  const bytes = bin.subarray(bv.byteOffset || 0, (bv.byteOffset || 0) + bv.byteLength);
+  // Decode through an <img> element over a blob: URL. Measured 2026-11-19:
+  // createImageBitmap decodes this truncated JPEG as an all-black bitmap
+  // (mean luminance 0.000, no error thrown), while <img> decodes it
+  // partially and correctly (mean luminance 0.668, only the missing
+  // bottom rows black). Blob URLs work fine in this viewer.
+  const url = URL.createObjectURL(new Blob([bytes], { type: imgDef.mimeType || 'image/jpeg' }));
+  const imgEl = new Image();
+  try {
+    await new Promise((resolve, reject) => {
+      imgEl.onload = resolve;
+      imgEl.onerror = () => reject(new Error('sky texture image failed to decode'));
+      imgEl.src = url;
+    });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+  const cv = document.createElement('canvas');
+  cv.width = imgEl.naturalWidth; cv.height = imgEl.naturalHeight;
+  const ctx = cv.getContext('2d');
+  ctx.drawImage(imgEl, 0, 0);
+  healSkyPoleBand(cv);
+  const out = new THREE.CanvasTexture(cv);
+  out.colorSpace = THREE.SRGBColorSpace;
+  out.flipY = false;
+  out.wrapS = THREE.RepeatWrapping; out.wrapT = THREE.RepeatWrapping;
+  out.minFilter = THREE.LinearMipmapLinearFilter;
+  out.magFilter = THREE.LinearFilter;
+  out.generateMipmaps = true;
+  return out;
+}
+
+// Heal the pole band of a decoded sky texture (adapted from the rainbow
+// globe's healPoleTexture). This sphere's zenith pole samples the BOTTOM
+// rows of the texture (v near 1.0), so the pole band is the bottom 8% of
+// rows and the reference band is 65-80% of height. If the pole band is
+// grey/flat (most rows exactly uniform — a truncated fill) while the
+// reference band is not, replicate the first good row downward over the
+// bad rows and blur the seam lightly. Logs a pole check like the
+// rainbow one: "[sky] pole check: healed|ok sat:… lum:… flat:…".
+function healSkyPoleBand(cv) {
+  const ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height;
+  const data = ctx.getImageData(0, 0, w, h).data;
+  const rowInfo = (y) => {
+    let r0 = -1, g0 = -1, b0 = -1, uniform = true, sat = 0, lum = 0, cnt = 0;
+    for (let x = 0; x < w; x += 16) {
+      const o = (y * w + x) * 4;
+      const R = data[o], G = data[o + 1], B = data[o + 2];
+      if (r0 < 0) { r0 = R; g0 = G; b0 = B; }
+      else if (R !== r0 || G !== g0 || B !== b0) uniform = false;
+      const mx = Math.max(R, G, B), mn = Math.min(R, G, B);
+      sat += mx ? (mx - mn) / mx : 0;
+      lum += (0.2126 * R + 0.7152 * G + 0.0722 * B) / 255;
+      cnt++;
+    }
+    return { uniform, sat: sat / cnt, lum: lum / cnt };
+  };
+  const bandStats = (y0, y1) => {
+    let sat = 0, lum = 0, flat = 0, n = 0;
+    for (let y = y0; y < y1; y += 2) {
+      const info = rowInfo(y);
+      sat += info.sat; lum += info.lum; if (info.uniform) flat++; n++;
+    }
+    return { sat: sat / n, lum: lum / n, flat: flat / n };
+  };
+  const pole = bandStats(Math.floor(h * 0.92), h);
+  const ref = bandStats(Math.floor(h * 0.65), Math.floor(h * 0.80));
+  // The missing rows are the contiguous uniform run at the very bottom
+  // edge — only ~70 rows here, so the whole 8% pole band is just 44%
+  // flat and a band-fraction test would miss it. The run itself is the
+  // signal: real sky rows are never exactly uniform across the width.
+  let run = 0;
+  for (let y = h - 1; y >= 0; y--) {
+    if (rowInfo(y).uniform) run++; else break;
+  }
+  let healed = false;
+  if (run > 0 && ref.flat < 0.5) {
+    // First good row above the run: not uniform, with some real colour.
+    let goodY = -1;
+    for (let y = h - run - 1; y >= 0; y--) {
+      const info = rowInfo(y);
+      if (!info.uniform && info.sat > 0.03) { goodY = y; break; }
+    }
+    if (goodY >= 0) {
+      const badTop = goodY + 1;
+      ctx.drawImage(cv, 0, goodY, w, 1, 0, badTop, w, h - badTop);
+      // Light blur over the seam so the stretched row meets its
+      // neighbours without a hard line (guarded: filter may be absent).
+      try {
+        const seamTop = Math.max(0, badTop - 8);
+        const seamH = Math.min(24, h - seamTop);
+        const tmp = document.createElement('canvas');
+        tmp.width = w; tmp.height = seamH;
+        const tctx = tmp.getContext('2d');
+        tctx.drawImage(cv, 0, seamTop, w, seamH, 0, 0, w, seamH);
+        ctx.save();
+        ctx.filter = 'blur(2px)';
+        ctx.drawImage(tmp, 0, seamTop);
+        ctx.restore();
+      } catch (e) { /* blur unsupported — the fill alone is seamless */ }
+      healed = true;
+    }
+  }
+  console.log('[sky] pole check: ' + (healed ? 'healed ' + run + ' rows' : 'ok') +
+    ' sat:' + pole.sat.toFixed(3) + ' lum:' + pole.lum.toFixed(3) +
+    ' flat:' + pole.flat.toFixed(2) +
+    ' (ref sat:' + ref.sat.toFixed(3) + ' flat:' + ref.flat.toFixed(2) + ')');
+}
+
+// Hand-built sky texture (decoded straight from the GLB's BIN chunk, pole
+// band healed). Starts loading immediately; if it fails for any reason the
+// viewer falls back to GLTFLoader's own texture, repaired the same way.
+const skyTexPromise = buildSkyTexture().catch((err) => {
+  console.warn('[sky] hand-built texture failed, using loader texture:', err);
+  return null;
+});
+
 loader.load('../../assets/skybox.glb', (g) => {
   g.scene.traverse((o) => {
     if (!o.isMesh) return;
@@ -252,12 +458,30 @@ loader.load('../../assets/skybox.glb', (g) => {
     // loader DID decode (emissiveMap), double-sided so the winding
     // cannot hide it, and un-tone-mapped so the anime sky shows at full
     // brightness.
+    //
+    // The embedded sky JPEG is also TRUNCATED (measured 2026-11-19: the
+    // file declares 4096x2048 but its scan data ends ~70 rows early with
+    // no EOI marker), so the bottom rows of the image — exactly the rows
+    // the sphere's zenith pole samples (v near 1.0) — decode as a flat
+    // fill (black in this browser), which rendered as a black disc at
+    // the very top of the sky. The asset still displays fine on
+    // Sketchfab, whose pipeline fills the missing rows differently; our
+    // viewer repairs the texture itself instead, so the GLB is untouched.
     const src = o.material;
-    const tex = (src && (src.emissiveMap || src.map)) || null;
+    // Start on the loader's own texture, repaired the same way, so the
+    // first frame is already correct; swap in the hand-built texture
+    // (pure white base, pole band healed) as soon as it is ready.
+    const fallbackTex = repairSkyTexture((src && (src.emissiveMap || src.map)) || null);
     o.material = new THREE.MeshBasicMaterial({
-      map: tex, side: THREE.DoubleSide, toneMapped: false, depthWrite: false,
+      map: fallbackTex, color: 0xffffff, side: THREE.DoubleSide, toneMapped: false, depthWrite: false,
     });
     o.renderOrder = -1;
+    skyTexPromise.then((handTex) => {
+      if (handTex && o.material) {
+        o.material.map = handTex;
+        o.material.needsUpdate = true;
+      }
+    });
     if (src) src.dispose();
   });
   // The file's sphere is radius 1 in local space but its nodes carry a

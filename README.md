@@ -175,14 +175,49 @@ missing it shows a note and the scroll still reads fine.
   drag tests pass with measured text offsets; screenshots inspected
   (default, outward, sky-up, pillar close-up, scroll side/back/joint).
 
+## Refinement round 2 — 2026-11-19 (the very top of the skybox)
+
+* **Zenith black disc — fixed.** Looking straight up showed a black disc
+  (~5–7° radius, serrated edge, tiny blue speck at its centre) at the top
+  of the sky. Root cause, measured: the skybox GLB file itself is cut
+  short — its header declares 2,697,556 bytes but the file has 2,660,849
+  (36,707 bytes missing off the end) — so its embedded JPEG has no EOI
+  marker and its scan data ends ~70 rows early. The sphere's zenith pole
+  samples exactly those bottom rows (v near 1.0), which decode as a flat
+  fill (black in the browser), hence the disc. Sketchfab displays the
+  same asset fine because its pipeline fills the missing rows
+  differently. The fix is viewer-side, in `psalms/001/index.html`, and
+  the GLB is untouched: the viewer parses the GLB container directly
+  (`parseGlbContainer`, clamping chunk lengths to the bytes present),
+  decodes the sky image straight out of the BIN chunk, and rebuilds the
+  sky material by hand on a pure-white base. Two things that did NOT
+  work, measured: `createImageBitmap` decodes this truncated JPEG as an
+  all-black bitmap (mean luminance 0.000, no error thrown), so the decode
+  goes through an `<img>` element over a blob: URL instead (verified
+  working here: mean luminance 0.668, only the missing rows black); and
+  the stock-like emissive material also showed the disc (brown, from the
+  hemisphere ground light on the backfaces), so the material swap alone
+  was never the fix. The pole band is healed (`healSkyPoleBand`, adapted
+  from the rainbow globe's `healPoleTexture`): the bottom 8% of rows is
+  compared against a 65–80% reference band, and the contiguous uniform
+  run at the bottom edge is filled by extending the first good row
+  downward with a light seam blur — the log reads
+  `[sky] pole check: healed 72 rows …`. If the hand-built texture fails
+  for any reason, the viewer falls back to GLTFLoader's own texture with
+  the same bottom-row repair (`repairSkyTexture`).
+* Verified in headless WebKit (Playwright): straight-up, max-drag-up,
+  and yaw-90 straight-up views all show blue sky with clouds at the
+  zenith (0 near-black pixels in the old disc zone); default and outward
+  views unchanged; zero console errors.
+
 ## Still missing
 
 * **Real cover art** — `psalms/001/cover.png` is a clearly marked
   placeholder. Replace that one file and re-run the encoder; nothing else
   changes.
-* **GLB credit lines** — the viewer source carries the comment
-  `GLB credits (to be filled in by Pol): Cloud Palace — [author]; Anime
-  Skybox — [author]`. Fill in the authors; credits live only in that
-  comment, never in the 3D scene.
+* **GLB credit lines** — the viewer source carries the comment with both
+  real lines, supplied by Pol 2026-11-19: `"FREE - SkyBox Anime Sky" by
+  Paul` and `"Cloud palace column Hall" by xinige`. Credits live only in
+  that comment, never in the 3D scene.
 * More chapters — each is the same shape: data JSON + audio + cover +
   cartridge + one `psalms/NNN/` viewer. The index page lists them.
