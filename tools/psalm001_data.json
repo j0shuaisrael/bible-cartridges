@@ -1,0 +1,475 @@
+{
+ "chapter": 1,
+ "title": "Psalm 1",
+ "languages": [
+  "en",
+  "es"
+ ],
+ "fallback": "en",
+ "verses": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   3,
+   9,
+   10,
+   11,
+   3,
+   12
+  ],
+  [
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21
+  ],
+  [
+   22,
+   23,
+   24,
+   25,
+   2,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33
+  ],
+  [
+   34,
+   35,
+   13,
+   36,
+   37,
+   38
+  ],
+  [
+   39,
+   40,
+   6,
+   41,
+   42,
+   43,
+   44
+  ],
+  [
+   45,
+   16,
+   46,
+   44,
+   47,
+   6,
+   48
+  ]
+ ],
+ "lexicon": [
+  {
+   "h": "אַשְׁרֵי",
+   "t": "ashrei",
+   "g": {
+    "en": "happy is",
+    "es": "dichoso es"
+   }
+  },
+  {
+   "h": "הָאִישׁ",
+   "t": "ha-ish",
+   "g": {
+    "en": "the man",
+    "es": "el hombre"
+   }
+  },
+  {
+   "h": "אֲשֶׁר",
+   "t": "asher",
+   "g": {
+    "en": "who",
+    "es": "que"
+   }
+  },
+  {
+   "h": "לֹא",
+   "t": "lo",
+   "g": {
+    "en": "not",
+    "es": "no"
+   }
+  },
+  {
+   "h": "הָלַךְ",
+   "t": "halakh",
+   "g": {
+    "en": "walked",
+    "es": "anduvo"
+   }
+  },
+  {
+   "h": "בַּעֲצַת",
+   "t": "ba-atsat",
+   "g": {
+    "en": "in the counsel of",
+    "es": "en el consejo de"
+   }
+  },
+  {
+   "h": "רְשָׁעִים",
+   "t": "resha'im",
+   "g": {
+    "en": "the wicked",
+    "es": "los malvados"
+   }
+  },
+  {
+   "h": "וּבְדֶרֶךְ",
+   "t": "u-ve-derekh",
+   "g": {
+    "en": "and in the way of",
+    "es": "y en el camino de"
+   }
+  },
+  {
+   "h": "חַטָּאִים",
+   "t": "chatta'im",
+   "g": {
+    "en": "sinners",
+    "es": "pecadores"
+   }
+  },
+  {
+   "h": "עָמָד",
+   "t": "amad",
+   "g": {
+    "en": "stood",
+    "es": "estuvo en pie"
+   }
+  },
+  {
+   "h": "וּבְמוֹשַׁב",
+   "t": "u-ve-moshav",
+   "g": {
+    "en": "and in the seat of",
+    "es": "y en el asiento de"
+   }
+  },
+  {
+   "h": "לֵצִים",
+   "t": "letsim",
+   "g": {
+    "en": "scoffers",
+    "es": "burladores"
+   }
+  },
+  {
+   "h": "יָשָׁב",
+   "t": "yashav",
+   "g": {
+    "en": "sat",
+    "es": "se sentó"
+   }
+  },
+  {
+   "h": "כִּי",
+   "t": "ki",
+   "g": {
+    "en": "for",
+    "es": "porque"
+   }
+  },
+  {
+   "h": "אִם",
+   "t": "im",
+   "g": {
+    "en": "but",
+    "es": "sino"
+   }
+  },
+  {
+   "h": "בְּתוֹרַת",
+   "t": "be-torat",
+   "g": {
+    "en": "in the teaching of",
+    "es": "en la ley de"
+   }
+  },
+  {
+   "h": "יְהוָה",
+   "t": "YHWH",
+   "g": {
+    "en": "the LORD",
+    "es": "el SEÑOR"
+   }
+  },
+  {
+   "h": "חֶפְצוֹ",
+   "t": "cheftzo",
+   "g": {
+    "en": "his delight",
+    "es": "su deleite"
+   }
+  },
+  {
+   "h": "וּבְתוֹרָתוֹ",
+   "t": "u-ve-torato",
+   "g": {
+    "en": "and in his teaching",
+    "es": "y en su ley"
+   }
+  },
+  {
+   "h": "יֶהְגֶּה",
+   "t": "yehgeh",
+   "g": {
+    "en": "he meditates",
+    "es": "medita"
+   }
+  },
+  {
+   "h": "יוֹמָם",
+   "t": "yomam",
+   "g": {
+    "en": "by day",
+    "es": "de día"
+   }
+  },
+  {
+   "h": "וָלָיְלָה",
+   "t": "va-laylah",
+   "g": {
+    "en": "and by night",
+    "es": "y de noche"
+   }
+  },
+  {
+   "h": "וְהָיָה",
+   "t": "ve-hayah",
+   "g": {
+    "en": "and he will be",
+    "es": "y será"
+   }
+  },
+  {
+   "h": "כְּעֵץ",
+   "t": "ke-etz",
+   "g": {
+    "en": "like a tree",
+    "es": "como un árbol"
+   }
+  },
+  {
+   "h": "שָׁתוּל",
+   "t": "shatul",
+   "g": {
+    "en": "planted",
+    "es": "plantado"
+   }
+  },
+  {
+   "h": "עַל־פַּלְגֵי־מָיִם",
+   "t": "al-palgei-mayim",
+   "g": {
+    "en": "by streams of water",
+    "es": "junto a corrientes de agua"
+   }
+  },
+  {
+   "h": "פִּרְיוֹ",
+   "t": "piryo",
+   "g": {
+    "en": "its fruit",
+    "es": "su fruto"
+   }
+  },
+  {
+   "h": "יִתֵּן",
+   "t": "yitten",
+   "g": {
+    "en": "it gives",
+    "es": "da"
+   }
+  },
+  {
+   "h": "בְּעִתּוֹ",
+   "t": "be-itto",
+   "g": {
+    "en": "in its season",
+    "es": "a su tiempo"
+   }
+  },
+  {
+   "h": "וְעָלֵהוּ",
+   "t": "ve-alehu",
+   "g": {
+    "en": "and its leaf",
+    "es": "y su hoja"
+   }
+  },
+  {
+   "h": "לֹא־יִבּוֹל",
+   "t": "lo-yibbol",
+   "g": {
+    "en": "does not wither",
+    "es": "no se marchita"
+   }
+  },
+  {
+   "h": "וְכֹל",
+   "t": "ve-khol",
+   "g": {
+    "en": "and all",
+    "es": "y todo"
+   }
+  },
+  {
+   "h": "אֲשֶׁר־יַעֲשֶׂה",
+   "t": "asher-ya'aseh",
+   "g": {
+    "en": "that he does",
+    "es": "que él hace"
+   }
+  },
+  {
+   "h": "יַצְלִיחַ",
+   "t": "yatzliach",
+   "g": {
+    "en": "he prospers",
+    "es": "prospera"
+   }
+  },
+  {
+   "h": "לֹא־כֵן",
+   "t": "lo-khen",
+   "g": {
+    "en": "not so",
+    "es": "no así"
+   }
+  },
+  {
+   "h": "הָרְשָׁעִים",
+   "t": "ha-resha'im",
+   "g": {
+    "en": "the wicked",
+    "es": "los malvados"
+   }
+  },
+  {
+   "h": "אִם־כַּמֹּץ",
+   "t": "im-kammotz",
+   "g": {
+    "en": "but like chaff",
+    "es": "sino como el tamo"
+   }
+  },
+  {
+   "h": "אֲשֶׁר־תִּדְּפֶנּוּ",
+   "t": "asher-tiddeffennu",
+   "g": {
+    "en": "that the wind drives away",
+    "es": "que el viento se lleva"
+   }
+  },
+  {
+   "h": "רוּחַ",
+   "t": "ruach",
+   "g": {
+    "en": "wind",
+    "es": "viento"
+   }
+  },
+  {
+   "h": "עַל־כֵּן",
+   "t": "al-ken",
+   "g": {
+    "en": "therefore",
+    "es": "por tanto"
+   }
+  },
+  {
+   "h": "לֹא־יָקֻמוּ",
+   "t": "lo-yakumu",
+   "g": {
+    "en": "they will not stand",
+    "es": "no se levantarán"
+   }
+  },
+  {
+   "h": "בַּמִּשְׁפָּט",
+   "t": "ba-mishpat",
+   "g": {
+    "en": "in the judgment",
+    "es": "en el juicio"
+   }
+  },
+  {
+   "h": "וְחַטָּאִים",
+   "t": "ve-chatta'im",
+   "g": {
+    "en": "and sinners",
+    "es": "y los pecadores"
+   }
+  },
+  {
+   "h": "בַּעֲדַת",
+   "t": "ba-adat",
+   "g": {
+    "en": "in the assembly of",
+    "es": "en la congregación de"
+   }
+  },
+  {
+   "h": "צַדִּיקִים",
+   "t": "tzaddikim",
+   "g": {
+    "en": "the righteous",
+    "es": "los justos"
+   }
+  },
+  {
+   "h": "כִּי־יוֹדֵעַ",
+   "t": "ki-yodea",
+   "g": {
+    "en": "for he knows",
+    "es": "porque conoce"
+   }
+  },
+  {
+   "h": "דֶּרֶךְ",
+   "t": "derekh",
+   "g": {
+    "en": "the way of",
+    "es": "el camino de"
+   }
+  },
+  {
+   "h": "וְדֶרֶךְ",
+   "t": "ve-derekh",
+   "g": {
+    "en": "and the way of",
+    "es": "y el camino de"
+   }
+  },
+  {
+   "h": "תֹּאבֵד",
+   "t": "toved",
+   "g": {
+    "en": "will perish",
+    "es": "perecerá"
+   }
+  }
+ ],
+ "text": "אַשְׁרֵי הָאִישׁ אֲשֶׁר לֹא הָלַךְ בַּעֲצַת רְשָׁעִים וּבְדֶרֶךְ חַטָּאִים לֹא עָמָד וּבְמוֹשַׁב לֵצִים לֹא יָשָׁב\nכִּי אִם בְּתוֹרַת יְהוָה חֶפְצוֹ וּבְתוֹרָתוֹ יֶהְגֶּה יוֹמָם וָלָיְלָה\nוְהָיָה כְּעֵץ שָׁתוּל עַל־פַּלְגֵי־מָיִם אֲשֶׁר פִּרְיוֹ יִתֵּן בְּעִתּוֹ וְעָלֵהוּ לֹא־יִבּוֹל וְכֹל אֲשֶׁר־יַעֲשֶׂה יַצְלִיחַ\nלֹא־כֵן הָרְשָׁעִים כִּי אִם־כַּמֹּץ אֲשֶׁר־תִּדְּפֶנּוּ רוּחַ\nעַל־כֵּן לֹא־יָקֻמוּ רְשָׁעִים בַּמִּשְׁפָּט וְחַטָּאִים בַּעֲדַת צַדִּיקִים\nכִּי־יוֹדֵעַ יְהוָה דֶּרֶךְ צַדִּיקִים וְדֶרֶךְ רְשָׁעִים תֹּאבֵד"
+}

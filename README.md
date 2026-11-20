@@ -1,0 +1,161 @@
+# Bible Cartridges — prototype (Psalm 1)
+
+A chapter of Psalms steganographed into a PNG ("Bible cartridge"), presented
+as a floating scroll in a first-person 3D scene. One isolated webapp per
+chapter. This prototype is **Psalm 1 only**.
+
+## Layout
+
+```
+index.html                  plain white "Index of /" directory listing (the hub)
+assets/
+  cloud-palace.glb          the platform (sky strip surgically removed, see below)
+  skybox.glb                the surrounding sky (single sphere)
+psalms/001/
+  index.html                the Psalm 1 viewer (three.js) — THE TEMPLATE, see below
+  chapter.js                chapter metadata: number, titles, filenames
+  decode.js                 in-browser PSLM cartridge decoder
+  cartridge.png             the cartridge: cover + Psalm 1 text + audio, steganographed
+  cover.png                 cover art (PLACEHOLDER — replace with real art)
+  audio.webm                the chapter reading, Opus in WebM (58 s)
+  t2601.mp3                 the original Mechon Mamre MP3 (source for audio.webm)
+tools/
+  build_psalm001_data.py    builds psalm001_data.json (verses + lexicon) from the
+                            hand-written gloss table; verifies every token
+  psalm001_data.json        chapter data: 6 verses as lexicon indices + the
+                            per-unique-word lexicon (Hebrew, transliteration,
+                            baked gloss per language)
+  encode.py                 builds a cartridge PNG from cover + data + audio
+  decode.py                 verifies + extracts a cartridge PNG (Python)
+```
+
+## The platform GLB
+
+`assets/cloud-palace.glb` is the Cloud Palace with its built-in sky strip
+removed **properly, in the file** — not hidden at runtime. The strip was
+mesh `GeometryNode_15` (84×84×42 units, 182 vertices, emissive material);
+removing its node + mesh + now-unused material + orphaned accessors /
+bufferViews / texture with gltf-transform shrank the file from 1,207,616 to
+795,224 bytes and the bounding box from 84×84×42 to 28×28×18. The remaining
+4 meshes are the real palace. `assets/skybox.glb` is the anime skybox
+unchanged; the viewer measures its loaded size at runtime and scales it to
+a ~60-unit radius (the file's own node matrix already makes it ~1000 units,
+so a blind 60x would have made it invisible).
+
+## The cartridge format (PSLM v2)
+
+All lossless and exactly reversible. The decoder verifies a SHA-256 over the
+text pack and over the audio, and returns the exact original bytes — or
+reports damage.
+
+* **Visible strip** — the top 16 rows of the cover hold the text pack as raw
+  RGB bytes (3 bytes/pixel): magic `PSLM`, version byte, a JSON header
+  (chapter, packed languages, lengths, SHA-256s, strip height), then the
+  zlib-compressed text pack. Bytes past the payload inside the strip are
+  deterministic filler and are ignored by the decoder.
+* **Invisible LSB layer** — the Opus audio is hidden in the lowest bit of
+  each colour channel of every pixel below the strip (1 bit × RGB). A channel
+  changes by at most 1/255: invisible to the eye. Psalm 1's 192,766-byte
+  audio uses 49.8% of a 1024×1024 cover's LSB capacity.
+
+The text pack is the chapter data JSON: verses as indices into a lexicon,
+plus one entry per **unique** Hebrew word (49 for Psalm 1) — Hebrew token,
+SBL-style transliteration, and a gloss in each packed language.
+
+## Translations are baked in — no API, no cost, offline forever
+
+The parentheticals on the scroll are `(transliteration, meaning in the
+user's device language)`. The meanings are **baked into the cartridge once,
+at build time** — one gloss per language per unique word, stored in the text
+pack, and the cartridge header lists which languages are packed (Psalm 1:
+English + Spanish). The decoder reads `navigator.language`, picks the best
+matching packed language (`es-MX` → `es`), and falls back to English when
+the device language isn't packed. Hebrew + transliteration always work
+regardless of language. Decoding never fetches anything and never costs
+anything. Adding a language later means adding one gloss per word at build
+time — the format needs no redesign.
+
+## The template: one page per psalm (all 150)
+
+`psalms/001/index.html` is the reusable template for every psalm. It holds
+**nothing chapter-specific**: the chapter number, the titles shown on the
+page and the scroll, and the cartridge/audio filenames all come from
+`chapter.js` in the same folder; the text, transliteration, glosses and
+audio all come from the cartridge itself, decoded in the browser. The 3D
+world (palace, skybox, scroll, controls) is shared logic.
+
+To make another psalm's page (e.g. Psalm 23):
+
+1. Copy the whole `psalms/001/` folder to `psalms/023/`.
+2. Replace `chapter.js` (number, title, Hebrew title).
+3. Replace `cartridge.png` (built with `tools/encode.py` from that
+   chapter's data + audio + cover), `audio.webm`, `cover.png`, `t2601.mp3`.
+4. Add one line to the hub `index.html`.
+5. Change nothing in `index.html` or `decode.js`.
+
+Long chapters need a bigger cover: the LSB audio layer holds ~393 KB in a
+1024×1024 cover, ~1.5 MB in 2048×2048. Psalm 119 (~10 min of audio,
+~1.8 MB at 24 kbps) will not fit a 1024×1024 cover — use a larger cover
+image for it (or 2 LSBs, or a lower Opus bitrate). The encoder fails loudly
+at build time if a payload doesn't fit; it never silently truncates.
+
+Planned later (not built yet): a separate encoder page per psalm — the
+cartridge's "pregnant twin" maker — hooked to that psalm's chapter + audio,
+which accepts an image and produces the cartridge. That page is a sibling
+of the viewer, not part of it.
+
+## Building a cartridge
+
+```sh
+# 1. Audio: MP3 -> Opus in WebM (plays on iPhone Safari; plain .opus/Ogg does not)
+ffmpeg -i t2601.mp3 -c:a libopus -b:a 24k audio.webm
+
+# 2. Chapter data (regenerate after editing the gloss table in
+#    tools/build_psalm001_data.py)
+python3 tools/build_psalm001_data.py
+
+# 3. Cartridge: cover + text pack + audio
+python3 tools/encode.py --cover psalms/001/cover.png \
+    --audio psalms/001/audio.webm \
+    --data tools/psalm001_data.json \
+    --out psalms/001/cartridge.png
+
+# 4. Verify (round-trip: exact bytes or DAMAGE)
+python3 tools/decode.py psalms/001/cartridge.png \
+    --out-text /tmp/text.json --out-audio /tmp/audio.webm
+```
+
+The encoder accepts `--audio` as optional: a cartridge without audio still
+builds and decodes, with `audio_len: 0` in the header.
+
+## Running the viewer
+
+The viewer is an ES module and fetches its files, so serve the folder over
+HTTP — opening the file directly will not work:
+
+```sh
+python3 -m http.server 8000        # from the project root
+# open http://localhost:8000/  ->  white index  ->  psalms/001/
+```
+
+Controls: virtual joystick (bottom-left) or WASD to move; drag anywhere else
+to look around; drag the scroll itself to read on when the text exceeds the
+sheet; tap/click the scroll to play or pause the reading. `?lang=es` forces
+Spanish glosses; `?scroll=0.5` starts halfway down the text.
+
+The viewer decodes `cartridge.png` in the browser (see `decode.js`) and
+renders the scroll from the decoded pack. If the cartridge is damaged it
+says so on the scroll instead of failing silently. If `audio.webm` is
+missing it shows a note and the scroll still reads fine.
+
+## Still missing
+
+* **Real cover art** — `psalms/001/cover.png` is a clearly marked
+  placeholder. Replace that one file and re-run the encoder; nothing else
+  changes.
+* **GLB credit lines** — the viewer source carries the comment
+  `GLB credits (to be filled in by Pol): Cloud Palace — [author]; Anime
+  Skybox — [author]`. Fill in the authors; credits live only in that
+  comment, never in the 3D scene.
+* More chapters — each is the same shape: data JSON + audio + cover +
+  cartridge + one `psalms/NNN/` viewer. The index page lists them.
