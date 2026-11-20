@@ -241,13 +241,12 @@ loader.load('../../assets/cloud-palace.glb', (g) => {
   refreshStatus();
 }, undefined, (e) => fail('palace GLB failed to load: ' + (e?.message || e)));
 
-// Repair a sky texture whose image data ends early: the skybox JPEG is
-// truncated, so its bottom rows (the ones the sphere's zenith pole
-// samples) decode as a flat fill instead of sky. Detect the run of
-// exactly-uniform rows at the bottom edge — a real sky row is never
-// perfectly uniform across the whole width — and extend the last good
-// row down over them, so the zenith renders sky instead of a black disc.
-// Returns the original texture untouched when nothing is missing.
+// Repair a sky texture whose image data ends early (the fallback path,
+// when the hand-built texture is unavailable): draw the loader's image
+// to a canvas, heal its pole band the same way buildSkyTexture does
+// (see healSkyPoleBand), then orient it the same way (see
+// orientSkyTexture). Returns the original texture untouched when
+// nothing is missing.
 function repairSkyTexture(tex) {
   if (!tex || !tex.image || !tex.image.width) return tex;
   const img = tex.image, w = img.width, h = img.height;
@@ -255,35 +254,54 @@ function repairSkyTexture(tex) {
   cv.width = w; cv.height = h;
   const ctx = cv.getContext('2d');
   ctx.drawImage(img, 0, 0);
-  // Scan the bottom quarter, sampled, for exactly-uniform rows.
-  const bandH = Math.max(1, Math.floor(h / 4));
-  const data = ctx.getImageData(0, h - bandH, w, bandH).data;
-  const rowUniform = (r) => {
-    const o0 = r * w * 4;
-    const r0 = data[o0], g0 = data[o0 + 1], b0 = data[o0 + 2];
-    for (let x = 8; x < w; x += 8) {
-      const o = o0 + x * 4;
-      if (data[o] !== r0 || data[o + 1] !== g0 || data[o + 2] !== b0) return false;
-    }
-    return true;
-  };
-  let badTop = bandH; // first bad row within the band (band-relative)
-  for (let r = bandH - 1; r >= 0; r--) {
-    if (rowUniform(r)) badTop = r; else break;
-  }
-  if (badTop >= bandH) return tex; // nothing missing
-  const goodY = h - bandH + badTop - 1; // last good row (absolute)
-  const badY = h - bandH + badTop;      // first bad row (absolute)
-  if (goodY < 0) return tex;
-  // Stretch the last good row down over the missing rows.
-  ctx.drawImage(cv, 0, goodY, w, 1, 0, badY, w, h - badY);
-  const fixed = new THREE.CanvasTexture(cv);
+  healSkyPoleBand(cv);
+  const oriented = orientSkyTexture(cv);
+  const fixed = new THREE.CanvasTexture(oriented);
   fixed.colorSpace = tex.colorSpace;
   fixed.flipY = tex.flipY;
   fixed.wrapS = tex.wrapS; fixed.wrapT = tex.wrapT;
-  fixed.minFilter = tex.minFilter; fixed.magFilter = tex.magFilter;
-  fixed.generateMipmaps = tex.generateMipmaps;
+  fixed.minFilter = THREE.LinearFilter; fixed.magFilter = THREE.LinearFilter;
+  fixed.generateMipmaps = false;
   return fixed;
+}
+
+// Orient a decoded sky canvas so the scene background shows the panorama
+// exactly as the GLB's sphere mesh showed it — the background must be a
+// drop-in replacement for the sphere, not a re-framed sky. Two corrections,
+// both measured, not guessed:
+// (1) HORIZONTAL FLIP. The sphere's UVs map u = local-longitude/2pi + 0.5
+// (read off the mesh: equator vertex at local lon -2.847 rad has u=0.047,
+// at +3.043 rad u=0.984), and the GLB node transforms map local
+// (cos p, sin p, 0) to world (cos p, 0, -sin p). scene.background's
+// equirect mapping assigns u_bg = atan(dir.z, dir.x)/2pi + 0.5 = -p/2pi
+// + 0.5 at that same world direction. So the sphere shows column u and
+// the background shows column 1-u at the same direction — the sphere's
+// panorama is mirrored relative to the background's. Without the flip,
+// looking out of the palace shows a different landscape (measured
+// 2026-11-19: no yaw rotation in a +/-86 deg sweep could align the
+// background's outward view with the sphere's). The flip restores the
+// authored orientation — the palace was composed against it.
+// (2) VERTICAL SHIFT, 80 rows down (~7 deg). The sphere was centred at
+// y=9 while the camera stands at y=2, so the sphere showed the horizon
+// ~7 deg above eye level (it samples v=0.476 at a level ray; the
+// background samples v=0.516). Shifting the content down 80 rows puts
+// the horizon back where the sphere had it. Wraparound: the rows that
+// fall off the bottom re-enter at the top (the nadir, under the floor,
+// invisible), and the pole rows that move down are real sky either way.
+// Applied AFTER the heal, so a healed (truncated) copy shifts with its
+// fill, and a complete copy — the normal case now — just shifts real sky.
+function orientSkyTexture(cv) {
+  const w = cv.width, h = cv.height;
+  const shift = 80; // rows down, ~7 deg, matching the sphere's y=9 centre
+  const out = document.createElement('canvas');
+  out.width = w; out.height = h;
+  const ctx = out.getContext('2d');
+  ctx.save();
+  ctx.translate(w, 0); ctx.scale(-1, 1); // horizontal mirror
+  ctx.drawImage(cv, 0, shift, w, h);     // main: content shifted down
+  ctx.drawImage(cv, 0, shift - h, w, h); // wraparound: bottom rows to top
+  ctx.restore();
+  return out;
 }
 
 // Parse a GLB container directly into its JSON header + BIN chunk, without
@@ -295,11 +313,12 @@ function repairSkyTexture(tex) {
 function parseGlbContainer(buf) {
   const dv = new DataView(buf);
   if (dv.getUint32(0, true) !== 0x46546C67) throw new Error('not a GLB file');
-  // Clamp chunk lengths to the bytes actually present: this skybox GLB is
-  // itself cut short (header declares 2,697,556 bytes, the file has
-  // 2,660,849 — 36,707 bytes missing off the end), which is exactly why
-  // its embedded JPEG is truncated. Trusting the declared lengths throws
-  // a RangeError; the bytes that ARE there are all we need.
+  // Clamp chunk lengths to the bytes actually present: a truncated copy
+  // of this GLB (the one we shipped with until 2026-11-20) declares
+  // 2,697,556 bytes but has only 2,660,849 — trusting the declared
+  // lengths throws a RangeError. The current file is complete (verified
+  // 2,697,556 bytes on disk, embedded JPEG ffd8->ffd9), so the clamp is
+  // now just defensive; the bytes that ARE there are all we need either way.
   const jsonLen = Math.min(dv.getUint32(12, true), buf.byteLength - 20);
   if (dv.getUint32(16, true) !== 0x4E4F534A) throw new Error('GLB first chunk is not JSON');
   const json = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 20, jsonLen)));
@@ -311,12 +330,14 @@ function parseGlbContainer(buf) {
 }
 
 // Build the sky texture by hand: fetch the GLB, parse the container,
-// decode the material's colour image straight out of the BIN chunk into
-// an ImageBitmap, and put it on a fresh white-based material so the
-// texture shows purely. The pole band is healed (see healSkyPoleBand)
-// because the embedded JPEG is truncated (measured: it declares
-// 4096x2048 but its scan data ends ~70 rows early with no EOI marker),
-// so the rows the zenith pole samples decode as a flat fill.
+// decode the material's colour image straight out of the BIN chunk, and
+// hand it to the scene background (see setSkyBackground below) — never
+// onto a mesh. The pole band is healed (see healSkyPoleBand) only if
+// rows are actually missing — the current GLB is complete (verified
+// 2026-11-20: 2,697,556 bytes, embedded JPEG ffd8->ffd9), so the heal
+// no-ops and the texture is the author's own pixels; a truncated copy
+// still heals instead of showing a flat fill. Then the texture is
+// oriented to match the sphere it replaces (see orientSkyTexture).
 async function buildSkyTexture() {
   const res = await fetch('../../assets/skybox.glb');
   if (!res.ok) throw new Error('skybox GLB fetch failed: ' + res.status);
@@ -329,11 +350,13 @@ async function buildSkyTexture() {
   const imgDef = json.images[texDef.source];
   const bv = json.bufferViews[imgDef.bufferView];
   const bytes = bin.subarray(bv.byteOffset || 0, (bv.byteOffset || 0) + bv.byteLength);
-  // Decode through an <img> element over a blob: URL. Measured 2026-11-19:
-  // createImageBitmap decodes this truncated JPEG as an all-black bitmap
-  // (mean luminance 0.000, no error thrown), while <img> decodes it
-  // partially and correctly (mean luminance 0.668, only the missing
-  // bottom rows black). Blob URLs work fine in this viewer.
+  // Decode through an <img> element over a blob: URL. Measured 2026-11-19
+  // on the truncated copy: createImageBitmap decodes a truncated JPEG as
+  // an all-black bitmap (mean luminance 0.000, no error thrown), while
+  // <img> decodes it partially and correctly (mean luminance 0.668, only
+  // the missing bottom rows black). The current file is complete, so
+  // either path would work now; the <img> path is kept because it also
+  // degrades gracefully on a truncated copy. Blob URLs work fine in this viewer.
   const url = URL.createObjectURL(new Blob([bytes], { type: imgDef.mimeType || 'image/jpeg' }));
   const imgEl = new Image();
   try {
@@ -350,23 +373,42 @@ async function buildSkyTexture() {
   const ctx = cv.getContext('2d');
   ctx.drawImage(imgEl, 0, 0);
   healSkyPoleBand(cv);
-  const out = new THREE.CanvasTexture(cv);
+  const oriented = orientSkyTexture(cv);
+  const out = new THREE.CanvasTexture(oriented);
   out.colorSpace = THREE.SRGBColorSpace;
   out.flipY = false;
   out.wrapS = THREE.RepeatWrapping; out.wrapT = THREE.RepeatWrapping;
-  out.minFilter = THREE.LinearMipmapLinearFilter;
+  // No mipmaps: at the pole, mipmaps sample across the seam and smear it.
+  out.minFilter = THREE.LinearFilter;
   out.magFilter = THREE.LinearFilter;
-  out.generateMipmaps = true;
+  out.generateMipmaps = false;
   return out;
 }
 
 // Heal the pole band of a decoded sky texture (adapted from the rainbow
 // globe's healPoleTexture). This sphere's zenith pole samples the BOTTOM
 // rows of the texture (v near 1.0), so the pole band is the bottom 8% of
-// rows and the reference band is 65-80% of height. If the pole band is
-// grey/flat (most rows exactly uniform — a truncated fill) while the
-// reference band is not, replicate the first good row downward over the
-// bad rows and blur the seam lightly. Logs a pole check like the
+// rows and the reference band is 65-80% of height. The missing rows are
+// the contiguous uniform run at the very bottom edge — a real sky row is
+// never exactly uniform across the whole width — and they are filled by
+// MIRRORING the good rows just above the damage downward, then fading
+// the mirrored band — and the good rows just above it — toward the mean
+// colour of those good rows, reaching flat mean colour at the pole (a
+// mirrored cloud edge folded at the pole makes a kaleidoscope disc; the
+// fade flattens it into soft sky, and starting the fade 100 rows above
+// the damage leaves no circular edge where the treatment stops), with a
+// narrow blur only over the mirror's crease. No band-wide blur:
+// blurring the whole pole band leaves a visible circular edge where the
+// blur stops.
+// This is RECONSTRUCTION of lost data, not restoration, and it only
+// runs on a truncated copy: the missing rows are gone from a truncated
+// GLB, and no fill can bring the exact rows back — mirroring real
+// adjacent rows is the least-invented fill available. The exact rows
+// came back for real on 2026-11-20, when Pol signed in to Sketchfab and
+// a fresh, complete download (2,697,556 bytes) replaced the truncated
+// copy in assets/skybox.glb; on that file this function logs "ok" and
+// changes nothing. The truncated copy is kept as
+// assets/skybox-truncated-backup.glb. Logs a pole check like the
 // rainbow one: "[sky] pole check: healed|ok sat:… lum:… flat:…".
 function healSkyPoleBand(cv) {
   const ctx = cv.getContext('2d');
@@ -414,12 +456,49 @@ function healSkyPoleBand(cv) {
     }
     if (goodY >= 0) {
       const badTop = goodY + 1;
-      ctx.drawImage(cv, 0, goodY, w, 1, 0, badTop, w, h - badTop);
-      // Light blur over the seam so the stretched row meets its
-      // neighbours without a hard line (guarded: filter may be absent).
+      const runH = h - badTop;
+      // MIRROR, don't smear: reflect the good rows just above the damage
+      // downward across the boundary, so real cloud structure continues
+      // into the missing band instead of one row stretched into radial
+      // streaks. (drawImage with a negative destination height flips
+      // vertically: dest row badTop+k takes source row badTop-1-k.)
+      if (badTop - runH >= 0) {
+        ctx.drawImage(cv, 0, badTop - runH, w, runH, 0, badTop + runH, w, -runH);
+      } else {
+        ctx.drawImage(cv, 0, goodY, w, 1, 0, badTop, w, runH);
+      }
+      // FADE the mirrored band — and the good rows just above it —
+      // toward the mean colour of the good rows just above the damage,
+      // reaching flat mean colour at the pole. A mirrored cloud edge
+      // folded at the pole makes a kaleidoscope disc, so the mirror must
+      // flatten out completely as it reaches the pole; and the fade
+      // starts 100 rows ABOVE the damage so there is no circular edge
+      // where the treatment stops — the pole becomes featureless soft
+      // sky (the professional "paint the pole flat" workflow), blending
+      // into the real cloud above it. (The mean is taken from the
+      // pre-mirror snapshot above, so it is real sky colour, not the fill.)
+      const fadeTop = Math.max(0, badTop - 100);
+      let mr = 0, mg = 0, mb = 0, mc = 0;
+      for (let y = fadeTop; y < badTop; y += 2) {
+        for (let x = 0; x < w; x += 64) {
+          const o = (y * w + x) * 4;
+          mr += data[o]; mg += data[o + 1]; mb += data[o + 2]; mc++;
+        }
+      }
+      if (mc > 0) {
+        mr /= mc; mg /= mc; mb /= mc;
+        const grad = ctx.createLinearGradient(0, fadeTop, 0, h);
+        grad.addColorStop(0, 'rgba(' + mr + ',' + mg + ',' + mb + ',0)');
+        grad.addColorStop(1, 'rgba(' + mr + ',' + mg + ',' + mb + ',1)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, fadeTop, w, h - fadeTop);
+      }
+      // Soften only the mirror's crease at the boundary (guarded: filter
+      // may be absent). No band-wide blur: blurring the whole pole band
+      // leaves a visible circular edge where the blur stops.
       try {
-        const seamTop = Math.max(0, badTop - 8);
-        const seamH = Math.min(24, h - seamTop);
+        const seamTop = Math.max(0, badTop - 10);
+        const seamH = Math.min(20, h - seamTop);
         const tmp = document.createElement('canvas');
         tmp.width = w; tmp.height = seamH;
         const tctx = tmp.getContext('2d');
@@ -428,77 +507,66 @@ function healSkyPoleBand(cv) {
         ctx.filter = 'blur(2px)';
         ctx.drawImage(tmp, 0, seamTop);
         ctx.restore();
-      } catch (e) { /* blur unsupported — the fill alone is seamless */ }
+      } catch (e) { /* blur unsupported — the mirror alone is seamless */ }
       healed = true;
     }
   }
-  console.log('[sky] pole check: ' + (healed ? 'healed ' + run + ' rows' : 'ok') +
+  console.log('[sky] pole check: ' + (healed ? 'healed (mirror) ' + run + ' rows' : 'ok') +
     ' sat:' + pole.sat.toFixed(3) + ' lum:' + pole.lum.toFixed(3) +
     ' flat:' + pole.flat.toFixed(2) +
     ' (ref sat:' + ref.sat.toFixed(3) + ' flat:' + ref.flat.toFixed(2) + ')');
 }
 
+// The sky is the scene background now — NOT a sphere mesh. The hand-built
+// texture is assigned to scene.background with EquirectangularReflection-
+// Mapping, so three.js samples it per-pixel from the view direction
+// (converting it to a cubemap internally) instead of interpolating UVs
+// across the GLB's low-poly 64-triangle pole fan. That is the REAL fix
+// for the zenith starburst: the fan wedges are gone because there is no
+// fan geometry left. The pole pinch itself — clouds converging to a
+// point — is the geometry of equirectangular panoramas and stays; it
+// just reads as a soft convergence now instead of hard wedges. (The
+// background is not tone-mapped when its texture is sRGB — the renderer
+// sets toneMapped false for sRGB backgrounds — so the sky keeps the full
+// brightness the old unlit sphere had.)
+// The texture is oriented to match the sphere it replaces (see
+// orientSkyTexture): flipped horizontally and shifted 80 rows down, so
+// the landscape out of the palace and the horizon height are exactly
+// as the sphere showed them.
+// The embedded sky JPEG used to be TRUNCATED (measured 2026-11-19: the
+// file declared 4096x2048 but its scan data ended ~70 rows early with no
+// EOI marker), so the bottom rows of the image — exactly the rows the
+// zenith pole samples (v near 1.0) — decoded as a flat fill. That copy
+// was replaced 2026-11-20 by a fresh, complete download (2,697,556
+// bytes, JPEG ffd8->ffd9); the heal (see healSkyPoleBand) now no-ops on
+// it and remains only as a fallback for truncated copies. The GLB is untouched.
+function setSkyBackground(tex) {
+  tex.mapping = THREE.EquirectangularReflectionMapping;
+  scene.background = tex;
+  loadState.skybox = true;
+  refreshStatus();
+}
+
 // Hand-built sky texture (decoded straight from the GLB's BIN chunk, pole
 // band healed). Starts loading immediately; if it fails for any reason the
-// viewer falls back to GLTFLoader's own texture, repaired the same way.
+// viewer falls back to GLTFLoader's own texture, healed the same way and
+// used as the background too — still no sphere mesh.
 const skyTexPromise = buildSkyTexture().catch((err) => {
   console.warn('[sky] hand-built texture failed, using loader texture:', err);
   return null;
 });
-
-loader.load('../../assets/skybox.glb', (g) => {
-  g.scene.traverse((o) => {
-    if (!o.isMesh) return;
-    // The skybox GLB's material uses KHR_materials_pbrSpecularGlossiness
-    // (unsupported in three r160 — the loader warns and falls back to a
-    // metalness-1 standard material), and its sphere winds inward
-    // (signed volume < 0), so with the old BackSide material the sphere
-    // rendered nothing at all — the dark navy was the scene background
-    // showing through. Fix: an unlit material using the texture the
-    // loader DID decode (emissiveMap), double-sided so the winding
-    // cannot hide it, and un-tone-mapped so the anime sky shows at full
-    // brightness.
-    //
-    // The embedded sky JPEG is also TRUNCATED (measured 2026-11-19: the
-    // file declares 4096x2048 but its scan data ends ~70 rows early with
-    // no EOI marker), so the bottom rows of the image — exactly the rows
-    // the sphere's zenith pole samples (v near 1.0) — decode as a flat
-    // fill (black in this browser), which rendered as a black disc at
-    // the very top of the sky. The asset still displays fine on
-    // Sketchfab, whose pipeline fills the missing rows differently; our
-    // viewer repairs the texture itself instead, so the GLB is untouched.
-    const src = o.material;
-    // Start on the loader's own texture, repaired the same way, so the
-    // first frame is already correct; swap in the hand-built texture
-    // (pure white base, pole band healed) as soon as it is ready.
-    const fallbackTex = repairSkyTexture((src && (src.emissiveMap || src.map)) || null);
-    o.material = new THREE.MeshBasicMaterial({
-      map: fallbackTex, color: 0xffffff, side: THREE.DoubleSide, toneMapped: false, depthWrite: false,
+skyTexPromise.then((handTex) => {
+  if (handTex) { setSkyBackground(handTex); return; }
+  loader.load('../../assets/skybox.glb', (g) => {
+    let srcTex = null;
+    g.scene.traverse((o) => {
+      if (o.isMesh && o.material) srcTex = srcTex || o.material.emissiveMap || o.material.map;
     });
-    o.renderOrder = -1;
-    skyTexPromise.then((handTex) => {
-      if (handTex && o.material) {
-        o.material.map = handTex;
-        o.material.needsUpdate = true;
-      }
-    });
-    if (src) src.dispose();
-  });
-  // The file's sphere is radius 1 in local space but its nodes carry a
-  // ~500x matrix, so as loaded it already spans ~1000 units. Measure it and
-  // scale to a ~60-unit radius instead of assuming a scale: a blind 60x
-  // would have made it 60,000 units and invisible past the far plane.
-  const box = new THREE.Box3().setFromObject(g.scene);
-  const size = box.getSize(new THREE.Vector3());
-  const c = box.getCenter(new THREE.Vector3());
-  const s = 120 / Math.max(size.x, size.y, size.z);
-  g.scene.scale.setScalar(s);
-  g.scene.position.set(-c.x * s, 9 - c.y * s, -c.z * s);
-  g.scene.renderOrder = -1;
-  scene.add(g.scene);
-  loadState.skybox = true;
-  refreshStatus();
-}, undefined, (e) => fail('skybox GLB failed to load: ' + (e?.message || e)));
+    const fixed = repairSkyTexture(srcTex);
+    if (fixed) setSkyBackground(fixed);
+    else fail('skybox texture unavailable');
+  }, undefined, (e) => fail('skybox GLB failed to load: ' + (e?.message || e)));
+});
 
 // ------------------------------------------------------------------ scroll --
 const scrollGroup = new THREE.Group();
