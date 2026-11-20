@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Regenerate tools/built-psalms.json: the psalms actually built on disk.
 
-A psalm counts as built when BOTH its chapter data and its audio exist:
-    tools/psalmNNN_data.json AND psalms/NNN/audio.webm
+A psalm counts as built when BOTH its chapter data and its cartridge exist:
+    tools/psalmNNN_data.json AND psalms/NNN/cartridge.png
 
 The universal encoder (psalms/encode.html) reads this one file to know
 which picker entries to enable — one request, no probing, and no console
@@ -26,8 +26,8 @@ def main():
     for n in range(1, 151):
         nnn = f"{n:03d}"
         data = os.path.join(REPO, "tools", f"psalm{nnn}_data.json")
-        audio = os.path.join(REPO, "psalms", nnn, "audio.webm")
-        if os.path.exists(data) and os.path.exists(audio):
+        cartridge = os.path.join(REPO, "psalms", nnn, "cartridge.png")
+        if os.path.exists(data) and os.path.exists(cartridge):
             built.append(n)
     out = {"built": built}
     with open(os.path.join(REPO, "tools", "built-psalms.json"), "w", encoding="utf-8") as f:

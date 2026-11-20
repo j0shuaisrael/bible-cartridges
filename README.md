@@ -23,7 +23,6 @@ psalms/001/
   encode.html               redirect → ../encode.html (the universal encoder)
   cartridge.png             the cartridge: cover + Psalm 1 text + audio, steganographed
   cover.png                 cover art (PLACEHOLDER — replace with real art)
-  audio.webm                the chapter reading, Opus in WebM (58 s)
 tools/
   build_psalm001_data.py    builds psalm001_data.json (verses + lexicon) from the
                             hand-written gloss table; verifies every token
@@ -162,7 +161,7 @@ To make another psalm's page (e.g. Psalm 23):
 1. Copy the whole `psalms/001/` folder to `psalms/023/`.
 2. Replace `chapter.js` (number, title, Hebrew title).
 3. Replace `cartridge.png` (built with `tools/encode.py` from that
-   chapter's data + audio + cover), `audio.webm`, `cover.png`.
+   chapter's data + audio + cover), `cover.png`.
 4. Add one line to the hub `index.html`.
 5. Re-run `python3 tools/build_built_psalms.py` so the universal
    encoder's picker offers the new psalm.
@@ -192,8 +191,8 @@ silently drops the models.
   download, in PSLM v3: text pack + audio + the full palace and skybox
   GLBs, all in the image, at the minimum LSB depth that fits (1, then 2).
   The picked psalm's chapter data is fetched from
-  `tools/psalmNNN_data.json`, the audio from `psalms/NNN/audio.webm`, and
-  the models from `assets/` — the same files the viewer uses, fetched
+  `tools/psalmNNN_data.json`, the audio decoded out of that psalm's own
+  cartridge (`psalms/NNN/cartridge.png`), and the models from `assets/` — the same files the viewer uses, fetched
   once per page load (the same two models serve every psalm). Data and
   audio are also embedded in the page as fallbacks, but only for Psalm 1,
   used only when fetch is blocked (opening the page directly from
@@ -438,8 +437,8 @@ to play or pause the reading. `?lang=es` forces Spanish glosses;
 
 The viewer decodes `cartridge.png` in the browser (see `decode.js`) and
 renders the scroll from the decoded pack. If the cartridge is damaged it
-says so on the scroll instead of failing silently. If `audio.webm` is
-missing it shows a note and the scroll still reads fine.
+says so on the scroll instead of failing silently. If the cartridge's
+audio is missing or damaged it shows a note and the scroll still reads fine.
 
 ## Refinement round — 2026-11-19 (Pol's first look at the live site)
 

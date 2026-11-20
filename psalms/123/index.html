@@ -9,7 +9,7 @@
   Nothing chapter-specific lives in this file: the chapter number, titles
   and filenames come from chapter.js, and the text/glosses/audio come from
   the cartridge. To make another psalm's page, copy this whole folder and
-  replace chapter.js, cartridge.png, audio.webm and cover.png.
+  replace chapter.js, cartridge.png and cover.png.
 
   GLB credits:
   "FREE - SkyBox Anime Sky" by Paul
@@ -70,7 +70,6 @@ import { CHAPTER } from './chapter.js';
 // itself holds nothing chapter-specific.
 document.title = CHAPTER.title + ' — Bible Cartridge';
 document.getElementById('title').textContent = CHAPTER.title;
-document.getElementById('chap-audio').src = CHAPTER.audio;
 
 // ---------------------------------------------------------------- status --
 const statusEl = document.getElementById('status');
@@ -649,7 +648,13 @@ audio.addEventListener('error', () => {
   refreshStatus();
 });
 function toggleAudio() {
-  if (!audioReady || !audio.src) {
+  // Do not gate on audioReady: on iOS the browser does not preload audio,
+  // so `canplay` may not have fired yet when the user first taps — refusing
+  // to even try left the reading silent (the page was fine on desktop,
+  // where preload works). A tap is a user gesture, so calling play() here
+  // starts the load; only a missing src (nothing decoded yet) refuses,
+  // and a rejected play() reports itself.
+  if (!audio.src) {
     hintEl.textContent = 'Audio file not available yet.';
     return;
   }
@@ -663,7 +668,15 @@ function toggleAudio() {
 }
 
 let langUsed = null;
-decodeCartridge(CHAPTER.cartridge).then(({ header, pack }) => {
+decodeCartridge(CHAPTER.cartridge).then(({ header, pack, audio: audioBytes }) => {
+  // The reading plays from the cartridge itself: the decoder hands back
+  // the SHA-256-verified Opus/WebM bytes, so the <audio> element plays
+  // them from a blob URL — there is no separate audio file. If the
+  // cartridge carries no audio, the element simply stays unset and the
+  // existing graceful path (toggleAudio refuses, hint says so) applies.
+  if (audioBytes && audioBytes.length) {
+    audio.src = URL.createObjectURL(new Blob([audioBytes], { type: 'audio/webm' }));
+  }
   const deviceLang = forcedLang || navigator.language || 'en';
   langUsed = pickLanguage(header, deviceLang);
   window.__psalmStatus.lang = langUsed;
