@@ -24,7 +24,6 @@ psalms/001/
   cartridge.png             the cartridge: cover + Psalm 1 text + audio, steganographed
   cover.png                 cover art (PLACEHOLDER — replace with real art)
   audio.webm                the chapter reading, Opus in WebM (58 s)
-  t2601.mp3                 the original Mechon Mamre MP3 (source for audio.webm)
 tools/
   build_psalm001_data.py    builds psalm001_data.json (verses + lexicon) from the
                             hand-written gloss table; verifies every token
@@ -163,7 +162,7 @@ To make another psalm's page (e.g. Psalm 23):
 1. Copy the whole `psalms/001/` folder to `psalms/023/`.
 2. Replace `chapter.js` (number, title, Hebrew title).
 3. Replace `cartridge.png` (built with `tools/encode.py` from that
-   chapter's data + audio + cover), `audio.webm`, `cover.png`, `t2601.mp3`.
+   chapter's data + audio + cover), `audio.webm`, `cover.png`.
 4. Add one line to the hub `index.html`.
 5. Re-run `python3 tools/build_built_psalms.py` so the universal
    encoder's picker offers the new psalm.
@@ -188,7 +187,8 @@ silently drops the models.
   request, no console noise; if the manifest is missing the page falls
   back to probing for each psalm's data file, which works but logs one
   console line per psalm not built yet). The rest are shown as "not built
-  yet"; `?psalm=NNN` links straight to one. Drop a PNG or JPEG; it builds that psalm's cartridge as a
+  yet"; `?psalm=NNN` links straight to one. Drop a PNG, JPEG, WebP, GIF,
+  BMP, AVIF or HEIC image; it builds that psalm's cartridge as a
   download, in PSLM v3: text pack + audio + the full palace and skybox
   GLBs, all in the image, at the minimum LSB depth that fits (1, then 2).
   The picked psalm's chapter data is fetched from
@@ -209,7 +209,20 @@ silently drops the models.
   explicit opt-in **"Allow remote models"** (off by default) and a
   separate **"Encode text + audio only"** button — neither automatic.
   `psalms/001/encode.html` is now just a redirect to this page, so old
-  links land on the one encoder.
+  links land on the one encoder. HEIC — the format iPhone photos use by
+  default — is decoded by a bundled WASM build of libheif (libheif-js
+  1.23.5, libheif 1.23.3, LGPLv3) inlined in the page as text and loaded
+  only when a HEIC file is dropped: never from a CDN, never fetched at
+  runtime, so the encoder stays fully portable and works from `file://`.
+  The page says plainly, where a HEIC is loaded, that the decode recovers
+  exactly the pixels the HEIC holds and writing them out as PNG is
+  lossless (zero further loss) — and that the HEVC compression the iPhone
+  already applied is lossy and cannot be undone, and that a 10-bit/HDR
+  HEIC drops to 8-bit (warned when it happens). TIFF, RAW and anything
+  else a browser cannot read are refused plainly ("this format can't be
+  read in a browser — export it as PNG or JPEG first"), detected by magic
+  bytes and by extension; the HEIC refusal with that wording is kept as
+  the fallback, shown only when the bundled WASM decoder cannot start.
 * **`decode.html`** (repo root) — the universal decoder, fully portable
   and fully offline (1.1 MB, three.js bundled in as base64 data: URLs —
   zero external requests, no CDN, no webfonts, no analytics). Anyone can
@@ -245,6 +258,20 @@ silently drops the models.
   never re-encoded as JPEG. EXIF → `eXIf`, XMP → `iTXt`
   "XML:com.adobe.xmp", IPTC → `zTXt` "Raw profile type iptc"
   (ImageMagick convention, hex-encoded), ICC profile → `iCCP`.
+* WebP / GIF / BMP / AVIF input: decoded once to PNG — pixels identical
+  to the decoded input, never re-encoded. WebP EXIF → `eXIf`, XMP →
+  `iTXt` "XML:com.adobe.xmp", ICC profile → `iCCP`; AVIF EXIF / XMP /
+  ICC the same way (read from the ISO-BMFF meta box); GIF comments →
+  `tEXt` "Comment" and GIF XMP → `iTXt`. BMP carries no standard
+  metadata — nothing to carry. Animated WebP/GIF and AVIF sequences use
+  the first frame only, warned about before encoding.
+* HEIC input: decoded by the bundled offline libheif WASM (see above) —
+  pixels identical to the decoded HEIC, stored losslessly as PNG. EXIF →
+  `eXIf`, XMP → `iTXt`, ICC → `iCCP`. The EXIF orientation is applied to
+  the pixels (libheif does not do it) and the carried EXIF is patched to
+  orientation 1, so no viewer rotates the image twice. Anything that
+  cannot be carried is warned about before encoding, never silently
+  dropped.
 * The numbers are shown before encoding (pack bytes, audio bytes, model
   bytes and their stored sizes, strip rows, LSB capacity at 1 and 2 bits,
   % used, LSB depth). If the payload does not fit, the page refuses
@@ -292,6 +319,65 @@ silently drops the models.
 * Oversize: a 64×64 image refuses loudly — 192,766 bytes of audio vs
   1,152 bytes of LSB capacity (16,733.2%), encode button disabled.
 * Zero console errors on both pages, over HTTP and from `file://`.
+
+### Verification — more image types + HEIC (2026-11-20, headless WebKit + Chromium + Python)
+
+* Accepted types, all encoded through the page as real 3072×3072
+  covers (Pillow / pillow-heif / ffmpeg sources): WebP with EXIF + XMP
+  + ICC (2,045,408 bytes in); GIF, animated 2 frames, with a comment +
+  XMP (670,629 bytes in); BMP (28,311,606 bytes in); HEIC 8-bit with
+  EXIF (4,422,195 bytes in). AVIF with EXIF (1,081,467 bytes in) was
+  encoded through the page in headless Chromium — this Playwright
+  WebKit build cannot decode AVIF at all (`Loading error`), so in WebKit
+  an AVIF is refused plainly ("Could not decode this AVIF file"), no
+  crash; Safari and Chromium decode AVIF natively.
+* `tools/decode.py` round-trips every browser-encoded cartridge above:
+  text pack SHA-256 `c6737a7b…` (exactly `psalm001_data.json`), audio
+  SHA-256 `5474dd97…` (exactly `audio.webm`), palace `79ee05c9…`,
+  skybox `91f314f4…` — all verified. Output sizes: WebP 12,837,317
+  bytes, GIF 5,732,209, BMP 6,676,792, AVIF 11,769,099, HEIC 10,093,313.
+  Dimensions 3072×3072 in, 3072×3072 out throughout.
+* Metadata carried (checked byte-for-byte in the output PNG chunks):
+  WebP `eXIf` (EXIF bytes identical, 136 bytes), `iTXt` (XMP bytes
+  identical), `iCCP` (profile bytes identical, 465-byte sRGB profile);
+  GIF `iTXt` (XMP identical) + `tEXt` "Comment" ("Test GIF comment
+  123"); AVIF `eXIf` (EXIF bytes identical, 136 bytes); HEIC `eXIf`
+  (EXIF bytes identical, 136 bytes). BMP carries nothing, as stated.
+  Chunk order in each output: `IHDR`, metadata chunks, `IDAT`, `IEND`.
+* Pixels below the strip (sampled every 7th row): max channel change
+  1/255 at 1 LSB for WebP, GIF, BMP and AVIF — exactly the LSB audio,
+  no other change. HEIC max change 3/255 (two libheif decoders differing
+  slightly on lossy HEVC content). The lossy sources (WebP q90, HEVC
+  q90, AV1 q90) otherwise match their own decodes.
+* HEIC orientation: a 1024×512 HEIC with EXIF orientation 6 encodes as
+  a 512×1024 cartridge (remote-models path, 1,204,217 bytes — the image
+  is too small for the models), text + audio SHA-256s verified, the
+  pixels match the 90°-rotated source (mean abs change 0.975; only
+  0.78% of sampled pixels differ by more than 10, all on sharp pattern
+  edges), and the carried `eXIf` is patched to orientation 1.
+* HEIC 10-bit: a 512×512 10-bit HEIC loads and warns before encoding —
+  "This HEIC is 10-bit per channel (10-bit/HDR). The decode path is
+  8-bit, so the cartridge stores 8-bit values (same colours, coarser
+  steps). The HEVC compression the iPhone already applied when saving
+  the photo is lossy and cannot be undone…".
+* WASM cost: the inlined libheif-js bundle is 2,044,206 bytes
+  (1.4 MB of WASM as base64 inside it); `psalms/encode.html` is now
+  2,404,380 bytes total. The bundle loads only when a HEIC file is
+  dropped — PNG/JPEG/WebP/GIF/BMP/AVIF users pay nothing for it. No CDN,
+  no runtime fetch.
+* Refusals, all plain and crash-free, zero console errors: a real TIFF
+  and a fake `.CR2` are refused with "This format can't be read in a
+  browser — export it as PNG or JPEG first" (TIFF / Canon RAW named).
+  With WebAssembly removed before load, a HEIC shows the fallback:
+  "HEIC needs its built-in decoder — and it couldn't start … this
+  format can't be read in a browser … Export it as PNG or JPEG first",
+  naming HEIC and iPhone photos explicitly, with Preview/`sips`/`ffmpeg`
+  conversion commands.
+* Not verified here: a real iPhone/Safari run (headless engines only);
+  AVIF in Safari specifically (works in Chromium; this WebKit build
+  lacks an AVIF decoder). Audio handling is untouched by this change —
+  Opus/WebM stands as designed; the AAC dual-audio work is a separate
+  compatibility enhancement for older iOS / other devices.
 
 ### Follow-ups (not in this round)
 
