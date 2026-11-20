@@ -46,21 +46,79 @@ unchanged; the viewer measures its loaded size at runtime and scales it to
 a ~60-unit radius (the file's own node matrix already makes it ~1000 units,
 so a blind 60x would have made it invisible).
 
-## The cartridge format (PSLM v2)
+## The cartridge format (PSLM v3)
 
-All lossless and exactly reversible. The decoder verifies a SHA-256 over the
-text pack and over the audio, and returns the exact original bytes — or
-reports damage.
+All lossless and exactly reversible. The decoder verifies a SHA-256 over
+the text pack, over the audio, and over **each 3D model**, and returns the
+exact original bytes — or reports damage.
 
-* **Visible strip** — the top 16 rows of the cover hold the text pack as raw
-  RGB bytes (3 bytes/pixel): magic `PSLM`, version byte, a JSON header
-  (chapter, packed languages, lengths, SHA-256s, strip height), then the
-  zlib-compressed text pack. Bytes past the payload inside the strip are
-  deterministic filler and are ignored by the decoder.
-* **Invisible LSB layer** — the Opus audio is hidden in the lowest bit of
-  each colour channel of every pixel below the strip (1 bit × RGB). A channel
-  changes by at most 1/255: invisible to the eye. Psalm 1's 192,766-byte
-  audio uses 49.8% of a 1024×1024 cover's LSB capacity.
+* **Visible strip** — the top rows of the cover hold the text pack as raw
+  RGB bytes (3 bytes/pixel): magic `PSLM`, version byte (`3`), a JSON
+  header (chapter, packed languages, lengths, SHA-256s, strip height,
+  LSB depth, the models list), then the zlib-compressed text pack. Bytes
+  past the payload inside the strip are deterministic filler and are
+  ignored by the decoder. The strip is at least 16 rows tall.
+* **Invisible LSB layer** — ONE bitstream below the strip, at `lsb_depth`
+  bits per colour channel (1 or 2, chosen as the minimum that fits),
+  row-major, MSB-first within each byte. Sections in order: the Opus
+  audio, then each model in header order. A channel changes by at most
+  1/255 (depth 1) or 3/255 (depth 2): invisible to the eye.
+* **Models** — the cartridge carries the FULL palace and skybox GLBs.
+  Each model entry records its original length, its SHA-256, how many
+  bytes it occupies in the LSB stream (`stored_len`), and whether those
+  bytes are zlib-compressed. A model is stored compressed **only when
+  that actually shrinks it** — and only losslessly, so the decoded bytes
+  are byte-identical to the original GLB. Measured (2026-11-19, zlib 9):
+  palace 795,224 → 291,028 (36.6%); skybox 2,697,556 → 2,622,191 (97.2%
+  — its 2.58 MB is an already-compressed embedded JPEG). Draco/meshopt
+  was measured and NOT adopted: it saves ~178 KB (5.7% of the payload)
+  but is lossy (quantised geometry) and its decoder is a ~763 KB JS+WASM
+  pair that would have to be bundled into the decoder — the decoder would
+  grow by ~1 MB to save ~178 KB in the cartridge.
+
+**Full quality is the default.** The cartridge holds the complete,
+unmodified models, audio and text. Lossless zlib is the only compression
+applied by default. Nothing lossy (Draco/meshopt, JPEG re-encode, lower
+Opus bitrate) is ever applied without an explicit opt-in from the person
+encoding.
+
+**Capacity** (Psalm 1: audio 192,766 + palace stored 291,028 + skybox
+stored 2,622,191 = 3,105,985 bytes in the LSB stream; strip 16 rows):
+
+| cover | depth 1 | depth 2 |
+|---|---|---|
+| 1024×1024 | 387,072 B | 774,144 B — cannot hold the models |
+| 2048×2048 | 1,560,576 B | 3,121,152 B — fits at depth 2 (99.5%, ~15 KB spare; tight) |
+| 3072×3072 | 3,520,512 B — fits at depth 1 (88%) | 7,041,024 B |
+| 4096×4096 | 6,266,880 B — fits at depth 1 (50%) | 12,533,760 B |
+
+The encoder chooses the minimum depth that fits and **refuses loudly
+with the numbers** when no depth fits — it never silently drops the
+models, never truncates, and never falls back to fetching them.
+
+**Small images — remote models (explicit opt-in only).** If the cover
+cannot hold the models even at 2 LSBs, the encoder first refuses loudly.
+The person encoding then has two explicit choices, neither automatic:
+(1) turn on **"allow remote models"** (off by default): the header
+records the models as remote — `{"name":"palace","remote":true,
+"url":"https://j0shuaisrael.github.io/bible-cartridges/assets/cloud-palace.glb",
+"len":795224,"sha256":"<hex>"}` — instead of their bytes; the decoder
+fetches them ONLY when the header says remote, verifies length + SHA-256
+against the header, and ALWAYS warns the cartridge is not fully offline;
+(2) encode **text + audio only** (`models: []`) — the resulting cartridge
+is INCOMPLETE for the world, and the decoder reports it and never fetches
+models to fill the gap. Order of attempts: fit everything in the image
+first (with lossless compression); offer the toggle only when the models
+do not fit.
+
+**The models never depend on the site.** The decoder builds the world
+from the GLBs extracted from the image. It NEVER fetches models from the
+site or from `assets/` — except a remote model, and only when the header
+explicitly records it as remote. A cartridge with no models (PSLM v2, or
+v3 with `models: []`) is INCOMPLETE for the world: the decoder shows its
+text and audio, reports it incomplete, and never fetches models to fill
+the gap. v2 cartridges still read (text + audio verify), but are
+incomplete for the world.
 
 The text pack is the chapter data JSON: verses as indices into a lexicon,
 plus one entry per **unique** Hebrew word (49 for Psalm 1) — Hebrew token,
@@ -72,10 +130,16 @@ The parentheticals on the scroll are `(transliteration, meaning in the
 user's device language)`. The meanings are **baked into the cartridge once,
 at build time** — one gloss per language per unique word, stored in the text
 pack, and the cartridge header lists which languages are packed (Psalm 1:
-English + Spanish). The decoder reads `navigator.language`, picks the best
+all 12 — en, es, pt, fr, de, ru, ar, zh, hi, id, ja, ko; the human-editable
+table is `tools/psalm001_meanings.csv`, one row per word, one column per
+language). The decoder reads `navigator.language`, picks the best
 matching packed language (`es-MX` → `es`), and falls back to English when
-the device language isn't packed. Hebrew + transliteration always work
-regardless of language. Decoding never fetches anything and never costs
+the device language isn't packed — and per word, when a language has no
+gloss for that word, it falls back to English for that word. Hebrew +
+transliteration always work regardless of language. The transliteration is
+rendered in the reader's own alphabet by rule tables (Cyrillic, Arabic,
+Devanagari, Hangul, katakana; Latin as stored for the rest) — rules, not
+data, so nothing is fetched. Decoding never fetches anything and never costs
 anything. Adding a language later means adding one gloss per word at build
 time — the format needs no redesign.
 
@@ -97,32 +161,56 @@ To make another psalm's page (e.g. Psalm 23):
 4. Add one line to the hub `index.html`.
 5. Change nothing in `index.html` or `decode.js`.
 
-Long chapters need a bigger cover: the LSB audio layer holds ~393 KB in a
-1024×1024 cover, ~1.5 MB in 2048×2048. Psalm 119 (~10 min of audio,
-~1.8 MB at 24 kbps) will not fit a 1024×1024 cover — use a larger cover
-image for it (or 2 LSBs, or a lower Opus bitrate). The encoder fails loudly
-at build time if a payload doesn't fit; it never silently truncates.
+Long chapters need a bigger cover: the LSB layer holds the audio AND the
+full models (3,105,985 bytes for Psalm 1) — a 1024×1024 cover cannot hold
+them at all, a 2048×2048 cover fits them at 2 LSBs (tight, ~15 KB spare),
+and 3072×3072 fits them at 1 LSB. Psalm 119 (~10 min of audio, ~1.8 MB
+at 24 kbps) will need a large cover too. The encoder fails loudly at
+build time if a payload doesn't fit; it never silently truncates or
+silently drops the models.
 
 ## Encoder + decoder pages — the "pregnant twin" maker (2026-11-20)
 
 * **`psalms/001/encode.html`** — the per-psalm encoder (template for all
-  150). Drop a PNG or JPEG; it builds this psalm's cartridge as a download.
-  The psalm number comes from the page's own folder; the chapter data is
-  fetched from `tools/psalmNNN_data.json` and the audio from `audio.webm`
-  in the same folder — the same files the viewer uses. Both are also
-  embedded in the page as fallbacks, used only when fetch is blocked
-  (opening the page directly from `file://`). On GitHub Pages the live
-  files are always preferred. To clone for another psalm: copy the folder,
-  replace the data + audio, and regenerate the two embedded blobs from
-  those files.
-* **`decode.html`** (repo root) — the universal decoder. Anyone can drag
-  any cartridge PNG onto it (or pick a file) and read the chapter: verified
-  intercalated Hebrew + transliteration + gloss in the device language
-  (English fallback, manual language picker), plus the audio player. On
-  any SHA-256 mismatch it reports DAMAGE and shows nothing unverified. It
-  accepts cartridges made by either the Python encoder or the web encoder.
-  Its decoder is a standalone copy of `psalms/001/decode.js`, inlined so
-  the page works from `file://` (a module import would be blocked there).
+  150). Drop a PNG or JPEG; it builds this psalm's cartridge as a download,
+  in PSLM v3: text pack + audio + the full palace and skybox GLBs, all in
+  the image, at the minimum LSB depth that fits (1, then 2). The psalm
+  number comes from the page's own folder; the chapter data is fetched
+  from `tools/psalmNNN_data.json`, the audio from `audio.webm` in the same
+  folder, and the models from `assets/` — the same files the viewer uses.
+  Data and audio are also embedded in the page as fallbacks, used only
+  when fetch is blocked (opening the page directly from `file://`). The
+  GLBs are NOT embedded (3.5 MB): on `file://` the page says plainly that
+  the models cannot be packed in from there and offers only the
+  remote-models or text+audio-only paths — it never silently drops them.
+  Full quality is the default and is stated on the page. When the image
+  is too small for the models, the page warns BEFORE encoding and offers
+  the explicit opt-in **"Allow remote models"** (off by default) and a
+  separate **"Encode text + audio only"** button — neither automatic.
+  To clone for another psalm: copy the folder, replace the data + audio,
+  and regenerate the two embedded blobs from those files.
+* **`decode.html`** (repo root) — the universal decoder, fully portable
+  and fully offline (1.1 MB, three.js bundled in as base64 data: URLs —
+  zero external requests, no CDN, no webfonts, no analytics). Anyone can
+  drag any cartridge PNG onto it (or pick a file) and read the chapter:
+  verified intercalated Hebrew + transliteration + gloss in the device
+  language (English fallback, manual language picker, transliteration in
+  the reader's alphabet), plus the audio player. A valid v3 cartridge
+  takes over the display with the chapter's 3D world — the same floating
+  scroll in the palace-and-sky world as the psalm's viewer page, built
+  from the GLBs extracted from the image itself. A v2 cartridge (or a v3
+  with no models) is reported INCOMPLETE: text and audio shown, no world,
+  no fetch. A remote-models cartridge shows a clear "not fully offline"
+  warning. On any SHA-256 mismatch it reports DAMAGE and shows nothing
+  unverified. It accepts cartridges made by either the Python encoder or
+  the web encoder. Its decoder is a standalone copy of
+  `psalms/001/decode.js`, inlined so the page works from `file://` (a
+  module import would be blocked there). The page also carries a copyable
+  AI spec (a complete prompt for rebuilding an equivalent decoder from
+  scratch), a "Download this decoder" button (saves the page itself, works
+  from https:// and file://), and plain offline instructions (Add to Home
+  on iOS/Android; opening the saved file offline on PC/Mac/Linux/Android/
+  iPhone).
 
 ### The no-downgrade rule — how it is kept
 
@@ -136,11 +224,16 @@ at build time if a payload doesn't fit; it never silently truncates.
   never re-encoded as JPEG. EXIF → `eXIf`, XMP → `iTXt`
   "XML:com.adobe.xmp", IPTC → `zTXt` "Raw profile type iptc"
   (ImageMagick convention, hex-encoded), ICC profile → `iCCP`.
-* The numbers are shown before encoding (pack bytes, audio bytes, strip
-  rows, LSB capacity, % used). If the audio does not fit, the page refuses
-  loudly with those numbers and disables encoding — it never silently
-  truncates. An in-page self-check re-reads the built strip and verifies
-  both SHA-256s before offering the download.
+* The numbers are shown before encoding (pack bytes, audio bytes, model
+  bytes and their stored sizes, strip rows, LSB capacity at 1 and 2 bits,
+  % used, LSB depth). If the payload does not fit, the page refuses
+  loudly with those numbers and disables the full-quality encode — it
+  never silently truncates or silently drops the models. When the image
+  is too small for the models, the page warns first and offers the
+  explicit remote-models toggle (off by default) and the text+audio-only
+  button. An in-page self-check re-reads the built strip and verifies
+  the text pack, the audio, and every packed model SHA-256 before
+  offering the download.
 * Known limits: 16-bit PNG input is stored as 8-bit (the browser canvas
   holds 8-bit pixels) — the page warns when it happens. The strip filler
   bytes use a small deterministic PRNG (mulberry32) instead of Python's
@@ -196,11 +289,20 @@ ffmpeg -i t2601.mp3 -c:a libopus -b:a 24k audio.webm
 #    tools/build_psalm001_data.py)
 python3 tools/build_psalm001_data.py
 
-# 3. Cartridge: cover + text pack + audio
-python3 tools/encode.py --cover psalms/001/cover.png \
+# 3. Cartridge: cover + text pack + audio + full models (PSLM v3).
+#    The cover must be at least 3072x3072 to hold the models at 1 LSB
+#    (2048x2048 fits them at 2 LSBs, tight; 1024x1024 cannot hold them
+#    at all — the encoder refuses loudly). Use the COMPLETE skybox GLB.
+python3 tools/encode.py --cover psalms/001/cover-test-4096.png \
     --audio psalms/001/audio.webm \
     --data tools/psalm001_data.json \
+    --palace assets/cloud-palace.glb \
+    --skybox assets/skybox.glb \
     --out psalms/001/cartridge.png
+
+#    Small cover? Two explicit opt-ins, neither automatic:
+#    --remote-models   (models recorded as remote URLs; world needs network)
+#    --text-audio-only (cartridge incomplete for the world)
 
 # 4. Verify (round-trip: exact bytes or DAMAGE)
 python3 tools/decode.py psalms/001/cartridge.png \

@@ -3,7 +3,17 @@
  "title": "Psalm 1",
  "languages": [
   "en",
-  "es"
+  "es",
+  "pt",
+  "fr",
+  "de",
+  "ru",
+  "ar",
+  "zh",
+  "hi",
+  "id",
+  "ja",
+  "ko"
  ],
  "fallback": "en",
  "verses": [
@@ -83,7 +93,8 @@
    "t": "ashrei",
    "g": {
     "en": "happy is",
-    "es": "dichoso es"
+    "es": "dichoso es",
+    "fr": "bonheur"
    }
   },
   {
@@ -91,7 +102,12 @@
    "t": "ha-ish",
    "g": {
     "en": "the man",
-    "es": "el hombre"
+    "es": "el hombre",
+    "fr": "homme",
+    "ru": "мужчина",
+    "ar": "رجل",
+    "zh": "男人",
+    "ja": "男"
    }
   },
   {
@@ -99,7 +115,10 @@
    "t": "asher",
    "g": {
     "en": "who",
-    "es": "que"
+    "es": "que",
+    "fr": "qui",
+    "ru": "который",
+    "ja": "関係代名詞"
    }
   },
   {
@@ -107,7 +126,12 @@
    "t": "lo",
    "g": {
     "en": "not",
-    "es": "no"
+    "es": "no",
+    "fr": "ne… pas",
+    "ru": "нет",
+    "ar": "لا",
+    "id": "tidak",
+    "ja": "ではない"
    }
   },
   {
@@ -115,7 +139,12 @@
    "t": "halakh",
    "g": {
     "en": "walked",
-    "es": "anduvo"
+    "es": "anduvo",
+    "fr": "aller",
+    "ru": "ходить",
+    "ar": "ذهب",
+    "zh": "走",
+    "ja": "いく"
    }
   },
   {
@@ -123,7 +152,8 @@
    "t": "ba-atsat",
    "g": {
     "en": "in the counsel of",
-    "es": "en el consejo de"
+    "es": "en el consejo de",
+    "ru": "совет"
    }
   },
   {
@@ -131,7 +161,10 @@
    "t": "resha'im",
    "g": {
     "en": "the wicked",
-    "es": "los malvados"
+    "es": "los malvados",
+    "fr": "méchant",
+    "ru": "злодей",
+    "ja": "悪人"
    }
   },
   {
@@ -139,7 +172,10 @@
    "t": "u-ve-derekh",
    "g": {
     "en": "and in the way of",
-    "es": "y en el camino de"
+    "es": "y en el camino de",
+    "fr": "chemin",
+    "ru": "дорога",
+    "ja": "道"
    }
   },
   {
@@ -147,7 +183,9 @@
    "t": "chatta'im",
    "g": {
     "en": "sinners",
-    "es": "pecadores"
+    "es": "pecadores",
+    "fr": "pécheur",
+    "ru": "грех"
    }
   },
   {
@@ -155,7 +193,10 @@
    "t": "amad",
    "g": {
     "en": "stood",
-    "es": "estuvo en pie"
+    "es": "estuvo en pie",
+    "fr": "se tenir",
+    "ru": "стоять",
+    "ja": "立つ"
    }
   },
   {
@@ -163,7 +204,8 @@
    "t": "u-ve-moshav",
    "g": {
     "en": "and in the seat of",
-    "es": "y en el asiento de"
+    "es": "y en el asiento de",
+    "ru": "место для сидения"
    }
   },
   {
@@ -171,7 +213,8 @@
    "t": "letsim",
    "g": {
     "en": "scoffers",
-    "es": "burladores"
+    "es": "burladores",
+    "ru": "кощунник"
    }
   },
   {
@@ -179,7 +222,10 @@
    "t": "yashav",
    "g": {
     "en": "sat",
-    "es": "se sentó"
+    "es": "se sentó",
+    "fr": "s'asseoir",
+    "ru": "сидеть",
+    "ja": "座る"
    }
   },
   {
@@ -187,7 +233,9 @@
    "t": "ki",
    "g": {
     "en": "for",
-    "es": "porque"
+    "es": "porque",
+    "fr": "car",
+    "ja": "なぜなら"
    }
   },
   {
@@ -203,7 +251,11 @@
    "t": "be-torat",
    "g": {
     "en": "in the teaching of",
-    "es": "en la ley de"
+    "es": "en la ley de",
+    "pt": "lei",
+    "fr": "loi",
+    "ru": "закон",
+    "ja": "教え"
    }
   },
   {
@@ -211,7 +263,17 @@
    "t": "YHWH",
    "g": {
     "en": "the LORD",
-    "es": "el SEÑOR"
+    "es": "el SEÑOR",
+    "pt": "Senhor",
+    "fr": "l'Éternel",
+    "de": "HERR",
+    "ru": "Господь",
+    "ar": "الرب",
+    "zh": "耶和华",
+    "hi": "यहोवा",
+    "id": "TUHAN",
+    "ja": "主",
+    "ko": "여호와"
    }
   },
   {
@@ -219,7 +281,8 @@
    "t": "cheftzo",
    "g": {
     "en": "his delight",
-    "es": "su deleite"
+    "es": "su deleite",
+    "ru": "желание"
    }
   },
   {
@@ -227,7 +290,11 @@
    "t": "u-ve-torato",
    "g": {
     "en": "and in his teaching",
-    "es": "y en su ley"
+    "es": "y en su ley",
+    "pt": "lei",
+    "fr": "loi",
+    "ru": "закон",
+    "ja": "教え"
    }
   },
   {
@@ -243,7 +310,8 @@
    "t": "yomam",
    "g": {
     "en": "by day",
-    "es": "de día"
+    "es": "de día",
+    "zh": "白天"
    }
   },
   {
@@ -251,7 +319,10 @@
    "t": "va-laylah",
    "g": {
     "en": "and by night",
-    "es": "y de noche"
+    "es": "y de noche",
+    "ru": "ночь",
+    "ar": "ليلة",
+    "zh": "夜晚"
    }
   },
   {
@@ -259,7 +330,11 @@
    "t": "ve-hayah",
    "g": {
     "en": "and he will be",
-    "es": "y será"
+    "es": "y será",
+    "fr": "être",
+    "ru": "быть",
+    "zh": "存在",
+    "ja": "ある"
    }
   },
   {
@@ -267,7 +342,12 @@
    "t": "ke-etz",
    "g": {
     "en": "like a tree",
-    "es": "como un árbol"
+    "es": "como un árbol",
+    "fr": "arbre",
+    "ru": "дерево",
+    "ar": "شجرة",
+    "zh": "树",
+    "ja": "木"
    }
   },
   {
@@ -283,7 +363,9 @@
    "t": "al-palgei-mayim",
    "g": {
     "en": "by streams of water",
-    "es": "junto a corrientes de agua"
+    "es": "junto a corrientes de agua",
+    "ru": "на ручей вода",
+    "ja": "の上に 細流 水"
    }
   },
   {
@@ -291,7 +373,12 @@
    "t": "piryo",
    "g": {
     "en": "its fruit",
-    "es": "su fruto"
+    "es": "su fruto",
+    "pt": "fruta",
+    "fr": "fruit",
+    "ru": "плод",
+    "zh": "水果",
+    "ja": "果実"
    }
   },
   {
@@ -299,7 +386,10 @@
    "t": "yitten",
    "g": {
     "en": "it gives",
-    "es": "da"
+    "es": "da",
+    "fr": "donner",
+    "ru": "дать",
+    "ja": "与える"
    }
   },
   {
@@ -307,7 +397,10 @@
    "t": "be-itto",
    "g": {
     "en": "in its season",
-    "es": "a su tiempo"
+    "es": "a su tiempo",
+    "fr": "temps",
+    "ru": "время",
+    "zh": "时间"
    }
   },
   {
@@ -315,7 +408,9 @@
    "t": "ve-alehu",
    "g": {
     "en": "and its leaf",
-    "es": "y su hoja"
+    "es": "y su hoja",
+    "fr": "feuille",
+    "ru": "лист"
    }
   },
   {
@@ -323,7 +418,8 @@
    "t": "lo-yibbol",
    "g": {
     "en": "does not wither",
-    "es": "no se marchita"
+    "es": "no se marchita",
+    "ru": "нет вянуть"
    }
   },
   {
@@ -331,7 +427,11 @@
    "t": "ve-khol",
    "g": {
     "en": "and all",
-    "es": "y todo"
+    "es": "y todo",
+    "fr": "tous",
+    "ru": "весь",
+    "ar": "كل",
+    "ja": "すべて"
    }
   },
   {
@@ -339,7 +439,10 @@
    "t": "asher-ya'aseh",
    "g": {
     "en": "that he does",
-    "es": "que él hace"
+    "es": "que él hace",
+    "fr": "qui faire",
+    "ru": "который делать",
+    "ja": "関係代名詞 する"
    }
   },
   {
@@ -347,7 +450,9 @@
    "t": "yatzliach",
    "g": {
     "en": "he prospers",
-    "es": "prospera"
+    "es": "prospera",
+    "fr": "donner le succès",
+    "ru": "успевать"
    }
   },
   {
@@ -355,7 +460,9 @@
    "t": "lo-khen",
    "g": {
     "en": "not so",
-    "es": "no así"
+    "es": "no así",
+    "fr": "ne… pas ainsi",
+    "ru": "нет так"
    }
   },
   {
@@ -363,7 +470,10 @@
    "t": "ha-resha'im",
    "g": {
     "en": "the wicked",
-    "es": "los malvados"
+    "es": "los malvados",
+    "fr": "méchant",
+    "ru": "злодей",
+    "ja": "悪人"
    }
   },
   {
@@ -387,7 +497,11 @@
    "t": "ruach",
    "g": {
     "en": "wind",
-    "es": "viento"
+    "es": "viento",
+    "fr": "vent",
+    "ru": "ветер",
+    "zh": "风",
+    "ja": "風"
    }
   },
   {
@@ -395,7 +509,17 @@
    "t": "al-ken",
    "g": {
     "en": "therefore",
-    "es": "por tanto"
+    "es": "por tanto",
+    "pt": "portanto",
+    "fr": "donc",
+    "de": "darum",
+    "ru": "поэтому",
+    "ar": "لذلك",
+    "zh": "因此",
+    "hi": "इसलिए",
+    "id": "Sebab itu",
+    "ja": "したがって",
+    "ko": "그러므로"
    }
   },
   {
@@ -403,7 +527,9 @@
    "t": "lo-yakumu",
    "g": {
     "en": "they will not stand",
-    "es": "no se levantarán"
+    "es": "no se levantarán",
+    "fr": "ne… pas se lever",
+    "ru": "нет вставать"
    }
   },
   {
@@ -411,7 +537,10 @@
    "t": "ba-mishpat",
    "g": {
     "en": "in the judgment",
-    "es": "en el juicio"
+    "es": "en el juicio",
+    "fr": "justice",
+    "ru": "суд",
+    "ja": "裁判"
    }
   },
   {
@@ -419,7 +548,9 @@
    "t": "ve-chatta'im",
    "g": {
     "en": "and sinners",
-    "es": "y los pecadores"
+    "es": "y los pecadores",
+    "fr": "pécheur",
+    "ru": "грех"
    }
   },
   {
@@ -427,7 +558,9 @@
    "t": "ba-adat",
    "g": {
     "en": "in the assembly of",
-    "es": "en la congregación de"
+    "es": "en la congregación de",
+    "ru": "община",
+    "zh": "一群人"
    }
   },
   {
@@ -435,7 +568,10 @@
    "t": "tzaddikim",
    "g": {
     "en": "the righteous",
-    "es": "los justos"
+    "es": "los justos",
+    "fr": "juste",
+    "ru": "праведник",
+    "ja": "正しい者"
    }
   },
   {
@@ -443,7 +579,9 @@
    "t": "ki-yodea",
    "g": {
     "en": "for he knows",
-    "es": "porque conoce"
+    "es": "porque conoce",
+    "fr": "car savoir",
+    "ja": "なぜなら 知る"
    }
   },
   {
@@ -451,7 +589,10 @@
    "t": "derekh",
    "g": {
     "en": "the way of",
-    "es": "el camino de"
+    "es": "el camino de",
+    "fr": "chemin",
+    "ru": "дорога",
+    "ja": "道"
    }
   },
   {
@@ -459,7 +600,10 @@
    "t": "ve-derekh",
    "g": {
     "en": "and the way of",
-    "es": "y el camino de"
+    "es": "y el camino de",
+    "fr": "chemin",
+    "ru": "дорога",
+    "ja": "道"
    }
   },
   {
@@ -467,7 +611,8 @@
    "t": "toved",
    "g": {
     "en": "will perish",
-    "es": "perecerá"
+    "es": "perecerá",
+    "ru": "погибать"
    }
   }
  ],
