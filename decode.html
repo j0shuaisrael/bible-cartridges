@@ -74,6 +74,9 @@
   textarea#minspec { width: 100%; min-height: 230px; font-family: ui-monospace, Menlo, monospace;
     font-size: .8rem; line-height: 1.45; padding: 10px; border: 1px solid #aaa; border-radius: 8px;
     background: #f8f8f8; color: #222; }
+  textarea#readspec { width: 100%; min-height: 200px; font-family: ui-monospace, Menlo, monospace;
+    font-size: .8rem; line-height: 1.45; padding: 10px; border: 1px solid #aaa; border-radius: 8px;
+    background: #f8f8f8; color: #222; }
   section.block { margin-top: 40px; border-top: 1px solid #ddd; padding-top: 8px; }
   section.block h2 { font-size: 1.15rem; }
   /* ---- the 3D world (same overlay the psalm viewer uses) ---- */
@@ -195,6 +198,12 @@ right here, built from the models inside the image itself.</p>
   <textarea id="minspec" readonly></textarea>
   <p><button id="copyMinSpec" class="secondary">Copy the short spec</button>
   <span class="small" id="copyMinNote"></span></p>
+  <h2>Just reading the code</h2>
+  <p>Nothing about what is inside the cartridge — only how to read
+  the code out of the pixels. If you can read pixels, you can read this.</p>
+  <textarea id="readspec" readonly></textarea>
+  <p><button id="copyReadSpec" class="secondary">Copy the reading spec</button>
+  <span class="small" id="copyReadNote"></span></p>
 </section>
 
 <script type="module">
@@ -1748,8 +1757,49 @@ const MIN_SPEC_TEXT = [
 '  not the content. The exact scene recipe — camera, sky, scroll,',
 '  controls — is in the WORLD section of the full spec.',
 ].join('\n');
+const READ_SPEC_TEXT = [
+'PSLM cartridge — just reading the code.',
+'',
+'A cartridge is a PNG. The code is the pixels. Nothing else is',
+'needed: no key, no password, no account, no network, no other',
+'file. Any environment that can read PNG pixels can read it.',
+'',
+'HOW TO GET THE BYTES OUT OF THE PIXELS',
+'Read the image row by row, top-left first, red, green, blue per',
+'pixel (ignore alpha). Bytes live in the pixels in two ways:',
+'',
+'1. As the pixel values themselves: R, then G, then B, 3 bytes',
+'   per pixel.',
+'2. In the least-significant bit of each channel value: take bit',
+'   0 of R, then G, then B, pixel by pixel; 8 bits make one byte,',
+'   most-significant bit first. (A channel can also carry 2 bits:',
+'   take bit 1 first, then bit 0.)',
+'',
+'Which way to try first: the least-significant bit of each',
+'channel, from the top-left. If the first four bytes are not the',
+'letters P S L M, try the lowest 2 bits of each channel instead.',
+'If they are still not P S L M, try the pixel values themselves,',
+'from the top rows.',
+'',
+'HOW THE STREAM INTRODUCES ITSELF',
+'The byte stream starts with the letters P S L M, then one',
+'version byte, then a 4-byte big-endian number. That number is',
+'the length of the next part, which is JSON text. That JSON is',
+'the table of contents: it says what follows, how long each part',
+'is, and the SHA-256 of each part. Read the JSON first, then read',
+'exactly what it describes, in the order it describes.',
+'',
+'HOW TO KNOW YOU READ IT RIGHT',
+'Hash each part with SHA-256 and compare it with the SHA-256 in',
+'the JSON. A match means you read it right. Any mismatch means',
+'the image is damaged: say so, and show nothing unverified.',
+'',
+'That is all. What the parts ARE is in the JSON header, not in',
+'this spec. Read the header, and the cartridge tells you the rest.',
+].join('\n');
 document.getElementById('spec').value = SPEC_TEXT;
 document.getElementById('minspec').value = MIN_SPEC_TEXT;
+document.getElementById('readspec').value = READ_SPEC_TEXT;
 document.getElementById('copySpec').addEventListener('click', async () => {
   const ta = document.getElementById('spec');
   const note = document.getElementById('copyNote');
@@ -1770,6 +1820,23 @@ document.getElementById('copySpec').addEventListener('click', async () => {
 document.getElementById('copyMinSpec').addEventListener('click', async () => {
   const ta = document.getElementById('minspec');
   const note = document.getElementById('copyMinNote');
+  try {
+    await navigator.clipboard.writeText(ta.value);
+    note.textContent = 'Copied.';
+  } catch (e) {
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand('copy');
+      note.textContent = 'Copied.';
+    } catch (e2) {
+      note.textContent = 'Copy failed — select the text manually.';
+    }
+  }
+});
+document.getElementById('copyReadSpec').addEventListener('click', async () => {
+  const ta = document.getElementById('readspec');
+  const note = document.getElementById('copyReadNote');
   try {
     await navigator.clipboard.writeText(ta.value);
     note.textContent = 'Copied.';
