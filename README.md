@@ -50,27 +50,46 @@ unchanged; the viewer measures its loaded size at runtime and scales it to
 a ~60-unit radius (the file's own node matrix already makes it ~1000 units,
 so a blind 60x would have made it invisible).
 
-## The cartridge format (PSLM v3)
+## The cartridge format (PSLM v4)
 
 All lossless and exactly reversible. The decoder verifies a SHA-256 over
 the text pack, over the audio, and over **each 3D model**, and returns the
 exact original bytes — or reports damage.
 
-* **Visible strip** — the top rows of the cover hold the text pack as raw
-  RGB bytes (3 bytes/pixel): magic `PSLM`, version byte (`3`), a JSON
-  header (chapter, packed languages, lengths, SHA-256s, strip height,
-  LSB depth, the models list), then the zlib-compressed text pack. Bytes
-  past the payload inside the strip are deterministic filler and are
-  ignored by the decoder. The strip is at least 16 rows tall.
-* **Invisible LSB layer** — ONE bitstream below the strip, at `lsb_depth`
-  bits per colour channel (1 or 2, chosen as the minimum that fits),
-  row-major, MSB-first within each byte. Sections in order: the Opus
-  audio, then each model in header order. A channel changes by at most
-  1/255 (depth 1) or 3/255 (depth 2): invisible to the eye.
+* **One LSB bitstream, no strip** — the ENTIRE payload lives in the
+  least-significant bits, starting at pixel (0, 0), row-major, MSB-first
+  within each byte, at `lsb_depth` bits per colour channel (1 or 2,
+  chosen as the minimum that fits). The bitstream opens with magic
+  `PSLM`, version byte (`4`), a big-endian uint32 header length, then
+  the header JSON, then the parts the header lists, in listed order. A
+  channel changes by at most 1/255 (depth 1) or 3/255 (depth 2):
+  invisible to the eye — and the cover survives intact, top rows
+  included. There is no visible strip: v3's strip (which erased the top
+  rows of the cover) is gone, and the encoder writes v4 only.
+* **Generic parts list** — the header is a self-describing table of
+  contents: `parts` is an array of `{name, len, sha256, encoding}`
+  entries, in bitstream order. The extractor reads whatever the header
+  lists, in order, and verifies each part's SHA-256 against its stored
+  bytes; it knows nothing about what any part IS. `len` is the stored
+  length, `sha256` is the SHA-256 of the stored bytes, `encoding` is
+  `"zlib"` (decompress after verifying) or `"raw"`. Roles (text, audio,
+  palace, skybox) are just names the renderer uses afterwards. The
+  header also carries `format`, `version` (4), `lsb_depth`, `strip_h`
+  (always 0 in v4), `cover_w`/`cover_h`, `chapter`, `languages`,
+  `fallback` and `audio_format` — metadata the extractor ignores.
+  A JSON Schema for the header lives in `tools/header-schema.json` and
+  as a copyable textbox on `decode.html`.
+* **The world part** — the cartridge carries its own scene recipe as a
+  part named `world` (29,612 bytes, stored raw, SHA-256 verified): a
+  standard glTF 2.0 scene document (the scroll geometry/materials, the
+  perspective camera, the sun as a `KHR_lights_punctual` directional
+  light, the palace reference) plus plain-data sections for the sky
+  (the skybox panorama as equirectangular background + image-based
+  lighting), the scroll-text layout, the scroll bob, the controls and
+  the audio. The decoder builds the whole working 3D world from this
+  part alone — the scene is in the cartridge, not in the decoder.
 * **Models** — the cartridge carries the FULL palace and skybox GLBs.
-  Each model entry records its original length, its SHA-256, how many
-  bytes it occupies in the LSB stream (`stored_len`), and whether those
-  bytes are zlib-compressed. A model is stored compressed **only when
+  Each model is a part in the list, stored compressed **only when
   that actually shrinks it** — and only losslessly, so the decoded bytes
   are byte-identical to the original GLB. Measured (2026-11-19, zlib 9):
   palace 795,224 → 291,028 (36.6%); skybox 2,697,556 → 2,622,191 (97.2%
@@ -79,6 +98,13 @@ exact original bytes — or reports damage.
   but is lossy (quantised geometry) and its decoder is a ~763 KB JS+WASM
   pair that would have to be bundled into the decoder — the decoder would
   grow by ~1 MB to save ~178 KB in the cartridge.
+* **The PNG teaches itself** — every v4 cartridge also carries a
+  plain-text PNG metadata chunk (`tEXt`, keyword `PSLM`) with the whole
+  bootstrap in one paragraph (bit order, depth fallback, stream layout,
+  JSON header, hashes, glTF for the scene). It touches no pixels and
+  nothing depends on it: the LSB stream is self-teaching on its own
+  (it opens with readable ASCII — magic `PSLM`, then the JSON header),
+  so stripping every ancillary chunk still decodes fully.
 
 **Full quality is the default.** The cartridge holds the complete,
 unmodified models, audio and text. Lossless zlib is the only compression
@@ -86,15 +112,16 @@ applied by default. Nothing lossy (Draco/meshopt, JPEG re-encode, lower
 Opus bitrate) is ever applied without an explicit opt-in from the person
 encoding.
 
-**Capacity** (Psalm 1: audio 192,766 + palace stored 291,028 + skybox
-stored 2,622,191 = 3,105,985 bytes in the LSB stream; strip 16 rows):
+**Capacity** — the whole image, no strip subtracted (Psalm 1 payload:
+header blob 3,815 + audio 192,766 + scene 29,612 + palace stored 291,028
++ skybox stored 2,622,191 = 3,139,412 bytes):
 
 | cover | depth 1 | depth 2 |
 |---|---|---|
-| 1024×1024 | 387,072 B | 774,144 B — cannot hold the models |
-| 2048×2048 | 1,560,576 B | 3,121,152 B — fits at depth 2 (99.5%, ~15 KB spare; tight) |
-| 3072×3072 | 3,520,512 B — fits at depth 1 (88%) | 7,041,024 B |
-| 4096×4096 | 6,266,880 B — fits at depth 1 (50%) | 12,533,760 B |
+| 1024×1024 | 393,216 B | 786,432 B — cannot hold the models |
+| 2048×2048 | 1,572,864 B | 3,145,728 B — fits at depth 2 (99.8%, ~6 KB spare; very tight) |
+| 3072×3072 | 3,538,944 B — fits at depth 1 (88.7%) | 7,077,888 B |
+| 4096×4096 | 6,291,456 B — fits at depth 1 (49.9%) | 12,582,912 B |
 
 The encoder chooses the minimum depth that fits and **refuses loudly
 with the numbers** when no depth fits — it never silently drops the
@@ -104,12 +131,13 @@ models, never truncates, and never falls back to fetching them.
 cannot hold the models even at 2 LSBs, the encoder first refuses loudly.
 The person encoding then has two explicit choices, neither automatic:
 (1) turn on **"allow remote models"** (off by default): the header
-records the models as remote — `{"name":"palace","remote":true,
-"url":"https://j0shuaisrael.github.io/bible-cartridges/assets/cloud-palace.glb",
-"len":795224,"sha256":"<hex>"}` — instead of their bytes; the decoder
+records the models as remote parts — `{"name":"palace","len":795224,
+"sha256":"<hex>","encoding":"raw","remote":true,
+"url":"https://j0shuaisrael.github.io/bible-cartridges/assets/cloud-palace.glb"}`
+— instead of their bytes; the decoder
 fetches them ONLY when the header says remote, verifies length + SHA-256
 against the header, and ALWAYS warns the cartridge is not fully offline;
-(2) encode **text + audio only** (`models: []`) — the resulting cartridge
+(2) encode **text + audio only** (no model parts) — the resulting cartridge
 is INCOMPLETE for the world, and the decoder reports it and never fetches
 models to fill the gap. Order of attempts: fit everything in the image
 first (with lossless compression); offer the toggle only when the models
@@ -119,10 +147,12 @@ do not fit.
 from the GLBs extracted from the image. It NEVER fetches models from the
 site or from `assets/` — except a remote model, and only when the header
 explicitly records it as remote. A cartridge with no models (PSLM v2, or
-v3 with `models: []`) is INCOMPLETE for the world: the decoder shows its
-text and audio, reports it incomplete, and never fetches models to fill
-the gap. v2 cartridges still read (text + audio verify), but are
-incomplete for the world.
+v3 with `models: []`, or v4 with no model parts) is INCOMPLETE for the
+world: the decoder shows its text and audio, reports it incomplete, and
+never fetches models to fill the gap. v2 and v3 cartridges still read
+(text + audio verify; v3 models verify too), but v2 has no models and v3
+has no world part — a v3 cartridge renders the world only from the
+decoder's built-in copy of the scene recipe, and says so.
 
 The text pack is the chapter data JSON: verses as indices into a lexicon,
 plus one entry per **unique** Hebrew word (49 for Psalm 1) — Hebrew token,
@@ -167,13 +197,13 @@ To make another psalm's page (e.g. Psalm 23):
    encoder's picker offers the new psalm.
 6. Change nothing in `index.html` or `decode.js`.
 
-Long chapters need a bigger cover: the LSB layer holds the audio AND the
-full models (3,105,985 bytes for Psalm 1) — a 1024×1024 cover cannot hold
-them at all, a 2048×2048 cover fits them at 2 LSBs (tight, ~15 KB spare),
-and 3072×3072 fits them at 1 LSB. Psalm 119 (~10 min of audio, ~1.8 MB
-at 24 kbps) will need a large cover too. The encoder fails loudly at
-build time if a payload doesn't fit; it never silently truncates or
-silently drops the models.
+Long chapters need a bigger cover: the LSB layer holds the header blob,
+the audio, the scene and the full models (3,139,412 bytes for Psalm 1) —
+a 1024×1024 cover cannot hold them at all, a 2048×2048 cover fits them
+at 2 LSBs (very tight, ~6 KB spare), and 3072×3072 fits them at 1 LSB.
+Psalm 119 (~10 min of audio) needs a 4096×4096 cover at 2 LSBs. The
+encoder fails loudly at build time if a payload doesn't fit; it never
+silently truncates or silently drops the models.
 
 ## Encoder + decoder pages — the "pregnant twin" maker (2026-11-20)
 
@@ -188,8 +218,9 @@ silently drops the models.
   console line per psalm not built yet). The rest are shown as "not built
   yet"; `?psalm=NNN` links straight to one. Drop a PNG, JPEG, WebP, GIF,
   BMP, AVIF or HEIC image; it builds that psalm's cartridge as a
-  download, in PSLM v3: text pack + audio + the full palace and skybox
-  GLBs, all in the image, at the minimum LSB depth that fits (1, then 2).
+  download, in PSLM v4: text pack + audio + the scene recipe + the full
+  palace and skybox GLBs, all in the image, at the minimum LSB depth that
+  fits (1, then 2).
   The picked psalm's chapter data is fetched from
   `tools/psalmNNN_data.json`, the audio decoded out of that psalm's own
   cartridge (`psalms/NNN/cartridge.png`), and the models from `assets/` — the same files the viewer uses, fetched
@@ -396,7 +427,7 @@ ffmpeg -i t2601.mp3 -c:a libopus -b:a 24k audio.webm
 #    tools/build_psalm001_data.py)
 python3 tools/build_psalm001_data.py
 
-# 3. Cartridge: cover + text pack + audio + full models (PSLM v3).
+# 3. Cartridge: cover + text pack + audio + scene + full models (PSLM v4).
 #    The cover must be at least 3072x3072 to hold the models at 1 LSB
 #    (2048x2048 fits them at 2 LSBs, tight; 1024x1024 cannot hold them
 #    at all — the encoder refuses loudly). Use the COMPLETE skybox GLB.

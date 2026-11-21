@@ -7,7 +7,7 @@
   out of that psalm's own cartridge, NNN/cartridge.png), and packs it
   with YOUR image (PNG, JPEG, WebP, GIF, BMP, AVIF or HEIC) into the
   cartridge — the image's "pregnant twin": it looks identical and carries
-  this chapter inside, in PSLM v3 format, byte-compatible with
+  this chapter inside, in PSLM v4 format, byte-compatible with
   tools/encode.py (the Python encoder) and readable by tools/decode.py
   and by decode.html.
 
@@ -53,10 +53,11 @@
       XMP. BMP carries no standard metadata. Anything that cannot be
       carried is warned about before encoding, never silently dropped).
   The only pixel changes are the ones the format itself requires: the
-  visible code strip added on top (extra rows — the art is never resized)
-  and the payload hidden in the lowest bits of each colour channel below
-  the strip (1 or 2 bits per channel: at most 1/255 or 3/255 per channel,
-  invisible to the eye, Pol's choice). The models are zlib-compressed
+  entire payload (header, text pack, audio, scene recipe, models) hidden
+  in the lowest bits of each colour channel (1 or 2 bits per channel:
+  at most 1/255 or 3/255 per channel, invisible to the eye, Pol's choice).
+  No rows are added, no rows are replaced — the cover survives intact,
+  top rows included. The models are zlib-compressed
   only where that actually shrinks them (palace ~37%, skybox ~97% — its
   2.58 MB is an already-compressed JPEG). If the payload does not fit,
   the page refuses LOUDLY with the numbers — it never silently truncates
@@ -848,8 +849,13 @@ const EMBEDDED_AUDIO_B64 = "GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQRChYECGFOA
 // =========================================================================
 
 const MAGIC = new TextEncoder().encode('PSLM');
-const VERSION = 3;
-const MIN_STRIP_H = 16;
+const VERSION = 4;
+
+// The bootstrap chunk: the PNG teaches itself. Plain-text
+// instructions in a tEXt chunk (keyword "PSLM") — a bonus for
+// understanding, never a dependency: the LSB stream is
+// self-teaching on its own. Exact text, same as tools/encode.py.
+const BOOTSTRAP_TEXT = "PSLM cartridge. Read the least-significant bit of each R, G, B channel, row by row from the top-left, most-significant bit first (8 bits = 1 byte). If the first 4 bytes are not PSLM, try the lowest 2 bits per channel instead. The stream starts: PSLM, 1 version byte, 4-byte big-endian header length, then that many bytes of JSON. The JSON lists every part with its length and SHA-256. Read each part, check its hash. The scene is standard glTF 2.0.";
 
 // Stable GitHub Pages URLs for the models. Used ONLY when a cartridge is
 // encoded with "allow remote models" (explicit opt-in, default off) because
@@ -956,21 +962,6 @@ async function inflateZlib(bytes) {
   throw new Error('Failed to Decode Data');
 }
 
-// Deterministic filler PRNG (mulberry32), seeded from the pack hash.
-// The Python encoder uses Mersenne Twister for the same role; the filler
-// bytes are ignored by every decoder, so the PRNG only has to be
-// deterministic — it does not have to match Python's.
-function fillerPRNG(seedBytes) {
-  let s = new DataView(seedBytes.buffer, seedBytes.byteOffset, 4).getUint32(0, false) >>> 0;
-  return function () {
-    s = (s + 0x6D2B79F5) >>> 0;
-    let t = s;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) % 256;
-  };
-}
-
 function b64ToBytes(b64) {
   const bin = atob(b64);
   const out = new Uint8Array(bin.length);
@@ -990,7 +981,20 @@ function b64ToBytes(b64) {
 // cartridge.png when encoding (there is no separate audio file any more).
 // If decode.js changes, mirror the change here.
 const DEC_MAGIC = [0x50, 0x53, 0x4c, 0x4d]; // "PSLM" (renamed: this page already has its own MAGIC const)
-const VERSIONS = [2, 3];
+// A header longer than this is not a PSLM header (real ones are ~500 B);
+// the bound stops a corrupt length field from causing a huge read.
+const MAX_HEADER_LEN = 1000000;
+function notThisFormat() {
+  const e = new Error('no PSLM magic in this layout');
+  e.notThisFormat = true;
+  return e;
+}
+function checkHeaderLen(hlen) {
+  if (!hlen || hlen > MAX_HEADER_LEN) {
+    throw new Error('header length ' + hlen + ' out of bounds — cartridge damaged');
+  }
+  return hlen;
+}
 function hexSha256(bytes) {
   // SHA-256 via the browser's built-in crypto (async).
   return crypto.subtle.digest('SHA-256', bytes).then((buf) =>
@@ -998,6 +1002,7 @@ function hexSha256(bytes) {
 }
 function stripBytes(data, w, n) {
   // First n bytes of the visible strip, row-major, RGB order (skip alpha).
+  // v3 legacy path only: v4 cartridges have no strip.
   const out = new Uint8Array(n);
   const rows = Math.ceil(n / (w * 3));
   let p = 0;
@@ -1014,12 +1019,12 @@ function stripBytes(data, w, n) {
   }
   return out;
 }
-function lsbBytes(data, w, h, stripH, n, depth) {
+function lsbBytes(data, w, h, startRow, n, depth) {
   const out = new Uint8Array(n);
   let bit = 0;
   const total = n * 8;
   const mask = (1 << depth) - 1;
-  for (let y = stripH; y < h; y++) {
+  for (let y = startRow; y < h; y++) {
     for (let x = 0; x < w; x++) {
       if (bit >= total) return out;
       const i = (y * w + x) * 4;
@@ -1037,6 +1042,179 @@ function lsbBytes(data, w, h, stripH, n, depth) {
   if (bit < total) throw new Error('cartridge truncated: LSB layer ended before the payload did');
   return out;
 }
+async function finishDecodeV3(header, comp, stream) {
+  // Verify the text pack, audio and models from the already-read bytes.
+  // Legacy v3 field names (pack_len, pack_sha256, audio_len, audio_sha256,
+  // models[] with stored_len/compressed) — the v3 reader keeps them.
+  const packBytes = await inflateZlib(comp);
+  if (packBytes.length !== header.pack_len) {
+    throw new Error('pack length mismatch — cartridge damaged');
+  }
+  if ((await hexSha256(packBytes)) !== header.pack_sha256) {
+    throw new Error('pack SHA-256 mismatch — text damaged');
+  }
+  const pack = JSON.parse(new TextDecoder().decode(packBytes));
+  let off = 0;
+  let audio = null;
+  if (header.audio_len) {
+    audio = stream.slice(off, off + header.audio_len); off += header.audio_len;
+    if (audio.length !== header.audio_len) {
+      throw new Error('cartridge truncated: audio runs past the bitstream');
+    }
+    if ((await hexSha256(audio)) !== header.audio_sha256) {
+      throw new Error('audio SHA-256 mismatch — audio damaged');
+    }
+  }
+  const models = Array.isArray(header.models) ? header.models : [];
+  const decodedModels = {};
+  const remoteModels = {};
+  for (const m of models) {
+    if (m.remote) { remoteModels[m.name] = m; continue; } // remote models occupy NO bytes in the stream
+    const stored = stream.slice(off, off + m.stored_len); off += m.stored_len;
+    if (stored.length !== m.stored_len) {
+      throw new Error('cartridge truncated: model ' + m.name + ' runs past the bitstream');
+    }
+    const bytes = m.compressed ? await inflateZlib(stored) : stored;
+    if (bytes.length !== m.len) {
+      throw new Error(`model ${m.name} length mismatch: ${bytes.length} != ${m.len}`);
+    }
+    if ((await hexSha256(bytes)) !== m.sha256) {
+      throw new Error(`model ${m.name} SHA-256 mismatch — model damaged`);
+    }
+    decodedModels[m.name] = bytes;
+  }
+  if (off !== stream.length) {
+    throw new Error('bitstream length mismatch — cartridge damaged');
+  }
+  return { header, pack, audio, models: decodedModels, remoteModels, packTextLen: packBytes.length, world: null };
+}
+
+// v2/v3 layout: header blob in the visible strip, audio + models in the
+// LSB layer below the strip.
+async function decodeV3(data, w, h) {
+  const head = stripBytes(data, w, 9);
+  if (!DEC_MAGIC.every((b, i) => b === head[i])) throw notThisFormat();
+  const version = head[4];
+  if (version !== 2 && version !== 3) {
+    throw new Error(`unsupported PSLM version ${version} (this layout reads v2 and v3)`);
+  }
+  const hlen = checkHeaderLen(new DataView(head.buffer, head.byteOffset + 5, 4).getUint32(0, false));
+  const headerRaw = stripBytes(data, w, 9 + hlen).subarray(9);
+  const header = JSON.parse(new TextDecoder().decode(headerRaw));
+  if (header.format !== 'PSLM' || header.version !== version) {
+    throw new Error('header/version mismatch');
+  }
+  const stripH = header.strip_h;
+  const blobLen = 9 + hlen + header.pack_comp_len;
+  const blob = stripBytes(data, w, blobLen);
+  const comp = blob.subarray(9 + hlen);
+  // LSB stream: audio first, then the v3 model sections, in header order.
+  const depth = header.lsb_depth || 1;
+  const models = version === 3 && Array.isArray(header.models) ? header.models : [];
+  const totalLsb = header.audio_len + models.reduce((s, m) => s + (m.remote ? 0 : m.stored_len), 0);
+  const stream = totalLsb ? lsbBytes(data, w, h, stripH, totalLsb, depth) : new Uint8Array(0);
+  const out = await finishDecodeV3(header, comp, stream);
+  if (version === 2) out.models = null; // v2 has no models
+  return out;
+}
+
+function extractParts(header, data) {
+  // Role-blind extraction: split the bytes after the header JSON into
+  // the parts the header lists, in listed order, and verify each part's
+  // SHA-256 against its stored bytes. Knows nothing about what any part
+  // IS — only its name, length, hash and encoding. Remote parts occupy
+  // no bytes here; they are recorded for the caller.
+  const parts = {};
+  const remoteParts = {};
+  let off = 0;
+  for (const p of header.parts) {
+    if (p.remote) { remoteParts[p.name] = p; continue; }
+    const chunk = data.slice(off, off + p.len);
+    if (chunk.length !== p.len) {
+      throw new Error(`cartridge truncated: part '${p.name}' runs past the bitstream`);
+    }
+    parts[p.name] = chunk;
+    off += p.len;
+  }
+  if (off !== data.length) {
+    throw new Error('bitstream length mismatch — cartridge damaged');
+  }
+  return { parts, remoteParts };
+}
+
+async function verifyParts(parts, header) {
+  // Verify every extracted part's SHA-256 (stored bytes). Kept separate
+  // from extraction so the order is explicit: read, then verify, then
+  // resolve.
+  for (const p of header.parts) {
+    if (p.remote || !(p.name in parts)) continue;
+    if ((await hexSha256(parts[p.name])) !== p.sha256) {
+      throw new Error(`part '${p.name}' SHA-256 mismatch — part damaged`);
+    }
+  }
+}
+
+async function resolveParts(header, parts) {
+  // Renderer-side role resolution, AFTER extraction: look the parts up
+  // by name and turn them into the chapter's text, audio and models.
+  // Each part's SHA-256 was already verified against its stored bytes;
+  // a zlib part's decompression is verified by the stream's own
+  // Adler-32. The names are the only thing this step knows.
+  if (!parts.text) {
+    throw new Error(`v4 cartridge has no part named 'text' — cartridge damaged`);
+  }
+  const packBytes = await inflateZlib(parts.text);
+  const pack = JSON.parse(new TextDecoder().decode(packBytes));
+  const audio = parts.audio || null;
+  let world = null;
+  if (parts.world) {
+    try {
+      world = JSON.parse(new TextDecoder().decode(parts.world));
+    } catch (e) {
+      throw new Error('world part is not valid JSON — cartridge damaged');
+    }
+  }
+  const models = {};
+  for (const p of header.parts) {
+    const name = p.name;
+    if (name === 'text' || name === 'audio' || name === 'world' || !(name in parts)) continue;
+    models[name] = p.encoding === 'zlib' ? await inflateZlib(parts[name]) : parts[name];
+  }
+  return { pack, audio, models, packTextLen: packBytes.length, world };
+}
+
+// v4 layout: the whole bitstream (header blob, then the parts the header
+// lists, in listed order) in the LSB layer from pixel (0, 0). The depth
+// is found by trying 1, then 2.
+async function decodeV4(data, w, h) {
+  for (const depth of [1, 2]) {
+    const head = lsbBytes(data, w, h, 0, 9, depth);
+    if (!DEC_MAGIC.every((b, i) => b === head[i])) continue;
+    // The magic matched at this depth: this IS the layout — any failure
+    // from here on is damage, not the wrong layout.
+    const version = head[4];
+    if (version !== 4) {
+      throw new Error(`unsupported PSLM version ${version} (this layout reads v4)`);
+    }
+    const hlen = checkHeaderLen(new DataView(head.buffer, head.byteOffset + 5, 4).getUint32(0, false));
+    const header = JSON.parse(new TextDecoder().decode(lsbBytes(data, w, h, 0, 9 + hlen, depth).subarray(9)));
+    if (header.format !== 'PSLM' || header.version !== 4) {
+      throw new Error('header/version mismatch');
+    }
+    if (!Array.isArray(header.parts) || !header.parts.length) {
+      throw new Error('v4 header has no parts list — cartridge damaged');
+    }
+    // The whole bitstream: header blob + the parts, in listed order.
+    const total = 9 + hlen + header.parts.reduce((s, p) => s + (p.remote ? 0 : p.len), 0);
+    const buf = lsbBytes(data, w, h, 0, total, depth);
+    const { parts, remoteParts } = extractParts(header, buf.subarray(9 + hlen));
+    await verifyParts(parts, header);
+    const { pack, audio, models, packTextLen, world } = await resolveParts(header, parts);
+    return { header, pack, audio, models, remoteModels: remoteParts, packTextLen, world };
+  }
+  throw notThisFormat();
+}
+
 async function decodeCartridge(url) {
   const img = new Image();
   img.src = url;
@@ -1049,60 +1227,23 @@ async function decodeCartridge(url) {
   const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const w = canvas.width, h = canvas.height;
 
-  const head = stripBytes(data, w, 9);
-  if (!DEC_MAGIC.every((b, i) => b === head[i])) {
-    throw new Error('not a PSLM cartridge (bad magic)');
+  // v3 first (the live cartridges are v3 until rebuilt), then v4. A layout
+  // whose magic matched but whose validation failed is reported as damage;
+  // a layout whose magic never matched is simply not this cartridge's.
+  let v3Err = null;
+  try {
+    return await decodeV3(data, w, h);
+  } catch (e) {
+    if (e.notThisFormat) { /* fall through to v4 */ }
+    else v3Err = e;
   }
-  const version = head[4];
-  if (!VERSIONS.includes(version)) {
-    throw new Error(`unsupported PSLM version ${version} (this decoder reads v2 and v3)`);
+  try {
+    return await decodeV4(data, w, h);
+  } catch (e) {
+    if (!e.notThisFormat) throw e; // v4 magic matched: damaged v4
   }
-  const hlen = new DataView(head.buffer, head.byteOffset + 5, 4).getUint32(0, false);
-  const headerRaw = stripBytes(data, w, 9 + hlen).subarray(9);
-  const header = JSON.parse(new TextDecoder().decode(headerRaw));
-  if (header.format !== 'PSLM' || header.version !== version) {
-    throw new Error('header/version mismatch');
-  }
-
-  const stripH = header.strip_h;
-  const blobLen = 9 + hlen + header.pack_comp_len;
-  const blob = stripBytes(data, w, blobLen);
-  const comp = blob.subarray(9 + hlen);
-  const packBytes = await inflateZlib(comp);
-  if (packBytes.length !== header.pack_len) {
-    throw new Error('pack length mismatch — cartridge damaged');
-  }
-  if ((await hexSha256(packBytes)) !== header.pack_sha256) {
-    throw new Error('pack SHA-256 mismatch — text damaged');
-  }
-  const pack = JSON.parse(new TextDecoder().decode(packBytes));
-
-  // LSB stream: audio first, then the v3 model sections, in header order.
-  const depth = header.lsb_depth || 1;
-  const models = version === 3 && Array.isArray(header.models) ? header.models : [];
-  const totalLsb = header.audio_len + models.reduce((s, m) => s + m.stored_len, 0);
-  const stream = totalLsb ? lsbBytes(data, w, h, stripH, totalLsb, depth) : new Uint8Array(0);
-  let off = 0;
-  let audio = null;
-  if (header.audio_len) {
-    audio = stream.slice(off, off + header.audio_len); off += header.audio_len;
-    if ((await hexSha256(audio)) !== header.audio_sha256) {
-      throw new Error('audio SHA-256 mismatch — audio damaged');
-    }
-  }
-  const decodedModels = {};
-  for (const m of models) {
-    const stored = stream.slice(off, off + m.stored_len); off += m.stored_len;
-    const bytes = m.compressed ? await inflateZlib(stored) : stored;
-    if (bytes.length !== m.len) {
-      throw new Error(`model ${m.name} length mismatch: ${bytes.length} != ${m.len}`);
-    }
-    if ((await hexSha256(bytes)) !== m.sha256) {
-      throw new Error(`model ${m.name} SHA-256 mismatch — model damaged`);
-    }
-    decodedModels[m.name] = bytes;
-  }
-  return { header, pack, audio, models: version === 3 ? decodedModels : null };
+  if (v3Err) throw v3Err;
+  throw new Error('not a PSLM cartridge (bad magic)');
 }
 
 // ---- PNG parsing / building ----------------------------------------------
@@ -1746,8 +1887,32 @@ async function loadImagePixels(file) {
   return { img, url, width: canvas.width, height: canvas.height, pixels: imageData.data };
 }
 
-// ---- PSLM v2 cartridge build (mirrors tools/encode.py) -------------------
-// ---- PSLM v3 cartridge building ------------------------------------------
+// The scene recipe (the "world" part): tools/scene.json — a standard
+// glTF 2.0 scene document plus the plain-data sky / scroll-text /
+// animation / controls / audio / renderer sections. The same bytes
+// go into every psalm's cartridge (the scroll TEXT is generated from
+// the text part at render time). Fetched over HTTP when this page is
+// served; on file:// the embedded copy below is used instead.
+const EMBEDDED_SCENE_B64 = "ewogInZlcnNpb24iOiAxLAogImdsdGYiOiB7CiAgImFzc2V0IjogewogICAidmVyc2lvbiI6ICIyLjAiLAogICAiZ2VuZXJhdG9yIjogIlBTTE0gdjQgc2NlbmUgcGFydCAoYmlibGUtY2FydHJpZGdlcykiCiAgfSwKICAic2NlbmUiOiAwLAogICJzY2VuZXMiOiBbCiAgIHsKICAgICJuYW1lIjogInBzYWxtLXdvcmxkIiwKICAgICJub2RlcyI6IFsKICAgICAwLAogICAgIDEsCiAgICAgMiwKICAgICAzCiAgICBdCiAgIH0KICBdLAogICJub2RlcyI6IFsKICAgewogICAgIm5hbWUiOiAicGFsYWNlIiwKICAgICJleHRlbnNpb25zIjogewogICAgICJQU0xNX3BhcnQiOiB7CiAgICAgICJwYXJ0IjogInBhbGFjZSIsCiAgICAgICJyb2xlIjogInBhbGFjZSIsCiAgICAgICJyZWNlbnRlciI6ICJzdWJ0cmFjdCBib3VuZGluZy1ib3ggY2VudGVyIHgveiBhbmQgYm94IG1pbmltdW0gaGVpZ2h0IHNvIHRoZSBmbG9vciBzaXRzIGF0IGhlaWdodCAwIiwKICAgICAgImZsb29yIjogewogICAgICAgImRldGVjdCI6ICJmbGF0dGVzdCBtZXNoIGJ5IGhlaWdodCBvdmVyIG1heCh3aWR0aCwgZGVwdGgpIiwKICAgICAgICJhbGlnbiI6ICJzdWJ0cmFjdCBmbG9vciBjZW50ZXIgaGVpZ2h0IGZyb20gdGhlIHNjZW5lIGhlaWdodCIKICAgICAgfSwKICAgICAgIm1hdGVyaWFsIjogewogICAgICAgImJhc2VDb2xvckZhY3RvciI6IFsKICAgICAgICAwLjg4NzkyMywKICAgICAgICAwLjg5NjI2OSwKICAgICAgICAwLjkxMzA5OSwKICAgICAgICAxLjAKICAgICAgIF0sCiAgICAgICAibWV0YWxsaWNGYWN0b3IiOiAxLjAsCiAgICAgICAicm91Z2huZXNzRmFjdG9yIjogMC4wNSwKICAgICAgICJkb3VibGVTaWRlZCI6IHRydWUsCiAgICAgICAiZW52aXJvbm1lbnRJbnRlbnNpdHkiOiAxLjI1CiAgICAgIH0sCiAgICAgICJtYXRlcmlhbF9hcHBsaWVzX3RvIjogImV2ZXJ5IG1lc2ggZXhjZXB0IHRoZSBmbG9vciBtZXNoIgogICAgIH0KICAgIH0KICAgfSwKICAgewogICAgIm5hbWUiOiAic2Nyb2xsIiwKICAgICJ0cmFuc2xhdGlvbiI6IFsKICAgICAwLjAsCiAgICAgMy42LAogICAgIDAuMAogICAgXSwKICAgICJjaGlsZHJlbiI6IFsKICAgICA0LAogICAgIDUsCiAgICAgNiwKICAgICA3LAogICAgIDgsCiAgICAgOSwKICAgICAxMCwKICAgICAxMSwKICAgICAxMgogICAgXQogICB9LAogICB7CiAgICAibmFtZSI6ICJjYW1lcmEiLAogICAgImNhbWVyYSI6IDAsCiAgICAidHJhbnNsYXRpb24iOiBbCiAgICAgMC4wLAogICAgIDIuMCwKICAgICAxMS4wCiAgICBdLAogICAgInJvdGF0aW9uIjogWwogICAgIC0wLjAyOTk5NTUsCiAgICAgLTAuMCwKICAgICAtMC4wLAogICAgIDAuOTk5NTUwMDM0CiAgICBdCiAgIH0sCiAgIHsKICAgICJuYW1lIjogInN1biIsCiAgICAiZXh0ZW5zaW9ucyI6IHsKICAgICAiS0hSX2xpZ2h0c19wdW5jdHVhbCI6IHsKICAgICAgImxpZ2h0IjogMAogICAgIH0KICAgIH0sCiAgICAidHJhbnNsYXRpb24iOiBbCiAgICAgMjAuMCwKICAgICAzMC4wLAogICAgIDEwLjAKICAgIF0sCiAgICAicm90YXRpb24iOiBbCiAgICAgLTAuMzgxNTU1Mzg2LAogICAgIDAuNDY5ODc3NTAyLAogICAgIDAuMjM1ODE0MTk3LAogICAgIDAuNzYwMjc3NzY5CiAgICBdCiAgIH0sCiAgIHsKICAgICJuYW1lIjogInNjcm9sbC1zaGVldCIsCiAgICAibWVzaCI6IDAsCiAgICAidHJhbnNsYXRpb24iOiBbCiAgICAgMC4wLAogICAgIDAuMCwKICAgICAtMC4zCiAgICBdCiAgIH0sCiAgIHsKICAgICJuYW1lIjogInNjcm9sbC1yb2xsLWxlZnQiLAogICAgIm1lc2giOiAxLAogICAgInRyYW5zbGF0aW9uIjogWwogICAgIC0zLjgsCiAgICAgMC4wLAogICAgIDAuMAogICAgXQogICB9LAogICB7CiAgICAibmFtZSI6ICJzY3JvbGwtcm9sbC1yaWdodCIsCiAgICAibWVzaCI6IDEsCiAgICAidHJhbnNsYXRpb24iOiBbCiAgICAgMy44LAogICAgIDAuMCwKICAgICAwLjAKICAgIF0KICAgfSwKICAgewogICAgIm5hbWUiOiAic2Nyb2xsLXJvZC1sZWZ0IiwKICAgICJtZXNoIjogMiwKICAgICJ0cmFuc2xhdGlvbiI6IFsKICAgICAtMy44LAogICAgIDAuMCwKICAgICAwLjAKICAgIF0KICAgfSwKICAgewogICAgIm5hbWUiOiAic2Nyb2xsLXJvZC1yaWdodCIsCiAgICAibWVzaCI6IDIsCiAgICAidHJhbnNsYXRpb24iOiBbCiAgICAgMy44LAogICAgIDAuMCwKICAgICAwLjAKICAgIF0KICAgfSwKICAgewogICAgIm5hbWUiOiAic2Nyb2xsLWNhcC10b3AtbGVmdCIsCiAgICAibWVzaCI6IDMsCiAgICAidHJhbnNsYXRpb24iOiBbCiAgICAgLTMuOCwKICAgICAxLjgxLAogICAgIDAuMAogICAgXQogICB9LAogICB7CiAgICAibmFtZSI6ICJzY3JvbGwtY2FwLXRvcC1yaWdodCIsCiAgICAibWVzaCI6IDMsCiAgICAidHJhbnNsYXRpb24iOiBbCiAgICAgMy44LAogICAgIDEuODEsCiAgICAgMC4wCiAgICBdCiAgIH0sCiAgIHsKICAgICJuYW1lIjogInNjcm9sbC1jYXAtYm90dG9tLWxlZnQiLAogICAgIm1lc2giOiAzLAogICAgInRyYW5zbGF0aW9uIjogWwogICAgIC0zLjgsCiAgICAgLTEuODEsCiAgICAgMC4wCiAgICBdCiAgIH0sCiAgIHsKICAgICJuYW1lIjogInNjcm9sbC1jYXAtYm90dG9tLXJpZ2h0IiwKICAgICJtZXNoIjogMywKICAgICJ0cmFuc2xhdGlvbiI6IFsKICAgICAzLjgsCiAgICAgLTEuODEsCiAgICAgMC4wCiAgICBdCiAgIH0KICBdLAogICJtZXNoZXMiOiBbCiAgIHsKICAgICJuYW1lIjogInNjcm9sbC1zaGVldCIsCiAgICAicHJpbWl0aXZlcyI6IFsKICAgICB7CiAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgIlBPU0lUSU9OIjogMCwKICAgICAgICJOT1JNQUwiOiAxLAogICAgICAgIlRFWENPT1JEXzAiOiAyCiAgICAgIH0sCiAgICAgICJpbmRpY2VzIjogMywKICAgICAgIm1hdGVyaWFsIjogMAogICAgIH0sCiAgICAgewogICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICJQT1NJVElPTiI6IDAsCiAgICAgICAiTk9STUFMIjogMSwKICAgICAgICJURVhDT09SRF8wIjogMgogICAgICB9LAogICAgICAiaW5kaWNlcyI6IDQsCiAgICAgICJtYXRlcmlhbCI6IDAKICAgICB9LAogICAgIHsKICAgICAgImF0dHJpYnV0ZXMiOiB7CiAgICAgICAiUE9TSVRJT04iOiAwLAogICAgICAgIk5PUk1BTCI6IDEsCiAgICAgICAiVEVYQ09PUkRfMCI6IDIKICAgICAgfSwKICAgICAgImluZGljZXMiOiA1LAogICAgICAibWF0ZXJpYWwiOiAwCiAgICAgfSwKICAgICB7CiAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgIlBPU0lUSU9OIjogMCwKICAgICAgICJOT1JNQUwiOiAxLAogICAgICAgIlRFWENPT1JEXzAiOiAyCiAgICAgIH0sCiAgICAgICJpbmRpY2VzIjogNiwKICAgICAgIm1hdGVyaWFsIjogMAogICAgIH0sCiAgICAgewogICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICJQT1NJVElPTiI6IDAsCiAgICAgICAiTk9STUFMIjogMSwKICAgICAgICJURVhDT09SRF8wIjogMgogICAgICB9LAogICAgICAiaW5kaWNlcyI6IDcsCiAgICAgICJtYXRlcmlhbCI6IDEKICAgICB9LAogICAgIHsKICAgICAgImF0dHJpYnV0ZXMiOiB7CiAgICAgICAiUE9TSVRJT04iOiAwLAogICAgICAgIk5PUk1BTCI6IDEsCiAgICAgICAiVEVYQ09PUkRfMCI6IDIKICAgICAgfSwKICAgICAgImluZGljZXMiOiA4LAogICAgICAibWF0ZXJpYWwiOiAwCiAgICAgfQogICAgXQogICB9LAogICB7CiAgICAibmFtZSI6ICJzY3JvbGwtcm9sbCIsCiAgICAicHJpbWl0aXZlcyI6IFsKICAgICB7CiAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgIlBPU0lUSU9OIjogOSwKICAgICAgICJOT1JNQUwiOiAxMCwKICAgICAgICJURVhDT09SRF8wIjogMTEKICAgICAgfSwKICAgICAgImluZGljZXMiOiAxMiwKICAgICAgIm1hdGVyaWFsIjogMgogICAgIH0KICAgIF0KICAgfSwKICAgewogICAgIm5hbWUiOiAic2Nyb2xsLXJvZCIsCiAgICAicHJpbWl0aXZlcyI6IFsKICAgICB7CiAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgIlBPU0lUSU9OIjogMTMsCiAgICAgICAiTk9STUFMIjogMTQsCiAgICAgICAiVEVYQ09PUkRfMCI6IDE1CiAgICAgIH0sCiAgICAgICJpbmRpY2VzIjogMTYsCiAgICAgICJtYXRlcmlhbCI6IDMKICAgICB9CiAgICBdCiAgIH0sCiAgIHsKICAgICJuYW1lIjogInNjcm9sbC1jYXAiLAogICAgInByaW1pdGl2ZXMiOiBbCiAgICAgewogICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICJQT1NJVElPTiI6IDE3LAogICAgICAgIk5PUk1BTCI6IDE4LAogICAgICAgIlRFWENPT1JEXzAiOiAxOQogICAgICB9LAogICAgICAiaW5kaWNlcyI6IDIwLAogICAgICAibWF0ZXJpYWwiOiAzCiAgICAgfQogICAgXQogICB9CiAgXSwKICAibWF0ZXJpYWxzIjogWwogICB7CiAgICAibmFtZSI6ICJzaGVldC1lZGdlIiwKICAgICJwYnJNZXRhbGxpY1JvdWdobmVzcyI6IHsKICAgICAiYmFzZUNvbG9yRmFjdG9yIjogWwogICAgICAwLjQzNDE1NCwKICAgICAgMC4yNjYzNTYsCiAgICAgIDAuMDkwODQyLAogICAgICAxLjAKICAgICBdLAogICAgICJtZXRhbGxpY0ZhY3RvciI6IDAuMCwKICAgICAicm91Z2huZXNzRmFjdG9yIjogMC45CiAgICB9CiAgIH0sCiAgIHsKICAgICJuYW1lIjogInNjcm9sbC10ZXh0IiwKICAgICJwYnJNZXRhbGxpY1JvdWdobmVzcyI6IHsKICAgICAiYmFzZUNvbG9yVGV4dHVyZSI6IHsKICAgICAgImluZGV4IjogMAogICAgIH0sCiAgICAgImJhc2VDb2xvckZhY3RvciI6IFsKICAgICAgMS4wLAogICAgICAxLjAsCiAgICAgIDEuMCwKICAgICAgMS4wCiAgICAgXSwKICAgICAibWV0YWxsaWNGYWN0b3IiOiAwLjAsCiAgICAgInJvdWdobmVzc0ZhY3RvciI6IDAuOQogICAgfQogICB9LAogICB7CiAgICAibmFtZSI6ICJyb2xsIiwKICAgICJwYnJNZXRhbGxpY1JvdWdobmVzcyI6IHsKICAgICAiYmFzZUNvbG9yRmFjdG9yIjogWwogICAgICAwLjU3NzU4LAogICAgICAwLjM1MTUzMywKICAgICAgMC4xNDQxMjgsCiAgICAgIDEuMAogICAgIF0sCiAgICAgIm1ldGFsbGljRmFjdG9yIjogMC4wLAogICAgICJyb3VnaG5lc3NGYWN0b3IiOiAwLjg1CiAgICB9CiAgIH0sCiAgIHsKICAgICJuYW1lIjogIndvb2QiLAogICAgInBick1ldGFsbGljUm91Z2huZXNzIjogewogICAgICJiYXNlQ29sb3JGYWN0b3IiOiBbCiAgICAgIDAuMTk0NjE4LAogICAgICAwLjA4NDM3NiwKICAgICAgMC4wMjk1NTcsCiAgICAgIDEuMAogICAgIF0sCiAgICAgIm1ldGFsbGljRmFjdG9yIjogMC4wLAogICAgICJyb3VnaG5lc3NGYWN0b3IiOiAwLjgKICAgIH0KICAgfQogIF0sCiAgInRleHR1cmVzIjogWwogICB7CiAgICAic291cmNlIjogMCwKICAgICJzYW1wbGVyIjogMAogICB9CiAgXSwKICAiaW1hZ2VzIjogWwogICB7CiAgICAibmFtZSI6ICJzY3JvbGwtdGV4dCIsCiAgICAidXJpIjogInNjcm9sbC10ZXh0IgogICB9CiAgXSwKICAic2FtcGxlcnMiOiBbCiAgIHsKICAgICJtYWdGaWx0ZXIiOiA5NzI5LAogICAgIm1pbkZpbHRlciI6IDk3MjksCiAgICAid3JhcFMiOiAzMzA3MSwKICAgICJ3cmFwVCI6IDEwNDk3CiAgIH0KICBdLAogICJjYW1lcmFzIjogWwogICB7CiAgICAibmFtZSI6ICJjYW1lcmEiLAogICAgInR5cGUiOiAicGVyc3BlY3RpdmUiLAogICAgInBlcnNwZWN0aXZlIjogewogICAgICJ5Zm92IjogMS4wNDcxOTc1NTExOTY1OTc2LAogICAgICJ6bmVhciI6IDAuMSwKICAgICAiemZhciI6IDUwMC4wCiAgICB9CiAgIH0KICBdLAogICJleHRlbnNpb25zVXNlZCI6IFsKICAgIktIUl9saWdodHNfcHVuY3R1YWwiLAogICAiUFNMTV9wYXJ0IgogIF0sCiAgImV4dGVuc2lvbnNSZXF1aXJlZCI6IFsKICAgIktIUl9saWdodHNfcHVuY3R1YWwiLAogICAiUFNMTV9wYXJ0IgogIF0sCiAgImV4dGVuc2lvbnMiOiB7CiAgICJLSFJfbGlnaHRzX3B1bmN0dWFsIjogewogICAgImxpZ2h0cyI6IFsKICAgICB7CiAgICAgICJuYW1lIjogInN1biIsCiAgICAgICJ0eXBlIjogImRpcmVjdGlvbmFsIiwKICAgICAgImNvbG9yIjogWwogICAgICAgMS4wLAogICAgICAgMC44ODc5MjMsCiAgICAgICAwLjcyMzA1NQogICAgICBdLAogICAgICAiaW50ZW5zaXR5IjogMS42CiAgICAgfQogICAgXQogICB9CiAgfSwKICAiYnVmZmVycyI6IFsKICAgewogICAgImJ5dGVMZW5ndGgiOiAxMjA0OCwKICAgICJ1cmkiOiAiZGF0YTphcHBsaWNhdGlvbi9vY3RldC1zdHJlYW07YmFzZTY0LEFBQmdRQUFBNEwrUHd2VThBQUJnUUFBQTRMK1B3dlc4QUFCZ1FBQUE0RCtQd3ZXOEFBQmdRQUFBNEQrUHd2VThBQUJnd0FBQTRMK1B3dlc4QUFCZ3dBQUE0TCtQd3ZVOEFBQmd3QUFBNEQrUHd2VThBQUJnd0FBQTREK1B3dlc4QUFCZ3dBQUE0RCtQd3ZVOEFBQmdRQUFBNEQrUHd2VThBQUJnUUFBQTREK1B3dlc4QUFCZ3dBQUE0RCtQd3ZXOEFBQmd3QUFBNEwrUHd2VzhBQUJnUUFBQTRMK1B3dlc4QUFCZ1FBQUE0TCtQd3ZVOEFBQmd3QUFBNEwrUHd2VThBQUJnd0FBQTRMK1B3dlU4QUFCZ1FBQUE0TCtQd3ZVOEFBQmdRQUFBNEQrUHd2VThBQUJnd0FBQTREK1B3dlU4QUFCZ1FBQUE0TCtQd3ZXOEFBQmd3QUFBNEwrUHd2VzhBQUJnd0FBQTREK1B3dlc4QUFCZ1FBQUE0RCtQd3ZXOEFBQ0FQd0FBQUFBQUFBQUFBQUNBUHdBQUFBQUFBQUFBQUFDQVB3QUFBQUFBQUFBQUFBQ0FQd0FBQUFBQUFBQUFBQUNBdndBQUFBQUFBQUFBQUFDQXZ3QUFBQUFBQUFBQUFBQ0F2d0FBQUFBQUFBQUFBQUNBdndBQUFBQUFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQUFBQUFBSUEvQUFBQUFBQUFBQUFBQUlBL0FBQUFBQUFBQUFBQUFJQS9BQUFBQUFBQUFBQUFBSUEvQUFBQUFBQUFBQUFBQUlDL0FBQUFBQUFBQUFBQUFJQy9BQUFBQUFBQUFBQUFBSUMvQUFBQUFBQUFBQUFBQUlDL0FBQUFBQUFBZ0Q4QUFJQS9BQUNBUHdBQWdEOEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQ0FQd0FBZ0Q4QUFJQS9BQUNBUHdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUlBL0FBQ0FQd0FBZ0Q4QUFJQS9BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFnRDhBQUlBL0FBQ0FQd0FBZ0Q4QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFDQVB3QUFnRDhBQUlBL0FBQ0FQd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBSUEvQUFDQVB3QUFnRDhBQUlBL0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFFQUFBQUNBQUFBQUFBQUFBSUFBQUFEQUFBQUJBQUFBQVVBQUFBR0FBQUFCQUFBQUFZQUFBQUhBQUFBQ0FBQUFBa0FBQUFLQUFBQUNBQUFBQW9BQUFBTEFBQUFEQUFBQUEwQUFBQU9BQUFBREFBQUFBNEFBQUFQQUFBQUVBQUFBQkVBQUFBU0FBQUFFQUFBQUJJQUFBQVRBQUFBRkFBQUFCVUFBQUFXQUFBQUZBQUFBQllBQUFBWEFBQUFBQUFBQUFBQTREOEFBQUEvQUFBQUFBQUE0TDhBQUFBLzdvTUVQZ0FBNEQvcVJ2Yys3b01FUGdBQTRML3FSdmMrQUFDQVBnQUE0RC9YczkwK0FBQ0FQZ0FBNEwvWHM5MCs4d1MxUGdBQTREL3pCTFUrOHdTMVBnQUE0TC96QkxVKzE3UGRQZ0FBNEQ4QUFJQSsxN1BkUGdBQTRMOEFBSUErNmtiM1BnQUE0RC91Z3dRKzZrYjNQZ0FBNEwvdWd3UStBQUFBUHdBQTREOHlNUTBrQUFBQVB3QUE0TDh5TVEwazZrYjNQZ0FBNEQvdWd3Uys2a2IzUGdBQTRML3Vnd1MrMTdQZFBnQUE0RDhBQUlDKzE3UGRQZ0FBNEw4QUFJQys4d1MxUGdBQTREL3pCTFcrOHdTMVBnQUE0TC96QkxXK0FBQ0FQZ0FBNEQvWHM5MitBQUNBUGdBQTRML1hzOTIrN29NRVBnQUE0RC9xUnZlKzdvTUVQZ0FBNEwvcVJ2ZStNakdOSkFBQTREOEFBQUMvTWpHTkpBQUE0TDhBQUFDLzdvTUV2Z0FBNEQvcVJ2ZSs3b01FdmdBQTRML3FSdmUrQUFDQXZnQUE0RC9YczkyK0FBQ0F2Z0FBNEwvWHM5Mis4d1MxdmdBQTREL3pCTFcrOHdTMXZnQUE0TC96QkxXKzE3UGR2Z0FBNEQ4QUFJQysxN1BkdmdBQTRMOEFBSUMrNmtiM3ZnQUE0RC91Z3dTKzZrYjN2Z0FBNEwvdWd3UytBQUFBdndBQTREL0t5ZE9rQUFBQXZ3QUE0TC9LeWRPazZrYjN2Z0FBNEQvdWd3USs2a2IzdmdBQTRML3Vnd1ErMTdQZHZnQUE0RDhBQUlBKzE3UGR2Z0FBNEw4QUFJQSs4d1MxdmdBQTREL3pCTFUrOHdTMXZnQUE0TC96QkxVK0FBQ0F2Z0FBNEQvWHM5MCtBQUNBdmdBQTRML1hzOTArN29NRXZnQUE0RC9xUnZjKzdvTUV2Z0FBNEwvcVJ2YytNakVOcFFBQTREOEFBQUEvTWpFTnBRQUE0TDhBQUFBL0FBQUFBQUFBNEQ4QUFBQUFBQUFBQUFBQTREOEFBQUEvN29NRVBnQUE0RC9xUnZjK0FBQ0FQZ0FBNEQvWHM5MCs4d1MxUGdBQTREL3pCTFUrMTdQZFBnQUE0RDhBQUlBKzZrYjNQZ0FBNEQvdWd3UStBQUFBUHdBQTREOHlNUTBrNmtiM1BnQUE0RC91Z3dTKzE3UGRQZ0FBNEQ4QUFJQys4d1MxUGdBQTREL3pCTFcrQUFDQVBnQUE0RC9YczkyKzdvTUVQZ0FBNEQvcVJ2ZStNakdOSkFBQTREOEFBQUMvN29NRXZnQUE0RC9xUnZlK0FBQ0F2Z0FBNEQvWHM5Mis4d1MxdmdBQTREL3pCTFcrMTdQZHZnQUE0RDhBQUlDKzZrYjN2Z0FBNEQvdWd3UytBQUFBdndBQTREL0t5ZE9rNmtiM3ZnQUE0RC91Z3dRKzE3UGR2Z0FBNEQ4QUFJQSs4d1MxdmdBQTREL3pCTFUrQUFDQXZnQUE0RC9YczkwKzdvTUV2Z0FBNEQvcVJ2YytNakVOcFFBQTREOEFBQUEvQUFBQUFBQUE0TDhBQUFBQUFBQUFBQUFBNEw4QUFBQS83b01FUGdBQTRML3FSdmMrQUFDQVBnQUE0TC9YczkwKzh3UzFQZ0FBNEwvekJMVSsxN1BkUGdBQTRMOEFBSUErNmtiM1BnQUE0TC91Z3dRK0FBQUFQd0FBNEw4eU1RMGs2a2IzUGdBQTRML3Vnd1MrMTdQZFBnQUE0TDhBQUlDKzh3UzFQZ0FBNEwvekJMVytBQUNBUGdBQTRML1hzOTIrN29NRVBnQUE0TC9xUnZlK01qR05KQUFBNEw4QUFBQy83b01FdmdBQTRML3FSdmUrQUFDQXZnQUE0TC9YczkyKzh3UzF2Z0FBNEwvekJMVysxN1BkdmdBQTRMOEFBSUMrNmtiM3ZnQUE0TC91Z3dTK0FBQUF2d0FBNEwvS3lkT2s2a2IzdmdBQTRML3Vnd1ErMTdQZHZnQUE0TDhBQUlBKzh3UzF2Z0FBNEwvekJMVStBQUNBdmdBQTRML1hzOTArN29NRXZnQUE0TC9xUnZjK01qRU5wUUFBNEw4QUFBQS9BQUFBQUFBQUFBQUFBSUEvQUFBQUFBQUFBQUFBQUlBLzdvT0VQZ0FBQUFEcVJuYy83b09FUGdBQUFBRHFSbmMvQUFBQVB3QUFBQURYczEwL0FBQUFQd0FBQUFEWHMxMC84d1ExUHdBQUFBRHpCRFUvOHdRMVB3QUFBQUR6QkRVLzE3TmRQd0FBQUFBQUFBQS8xN05kUHdBQUFBQUFBQUEvNmtaM1B3QUFBQUR1ZzRRKzZrWjNQd0FBQUFEdWc0UStBQUNBUHdBQUFBQXlNWTBrQUFDQVB3QUFBQUF5TVkwazZrWjNQd0FBQUFEdWc0Uys2a1ozUHdBQUFBRHVnNFMrMTdOZFB3QUFBQUFBQUFDLzE3TmRQd0FBQUFBQUFBQy84d1ExUHdBQUFBRHpCRFcvOHdRMVB3QUFBQUR6QkRXL0FBQUFQd0FBQUFEWHMxMi9BQUFBUHdBQUFBRFhzMTIvN29PRVBnQUFBQURxUm5lLzdvT0VQZ0FBQUFEcVJuZS9NakVOSlFBQUFBQUFBSUMvTWpFTkpRQUFBQUFBQUlDLzdvT0V2Z0FBQUFEcVJuZS83b09FdmdBQUFBRHFSbmUvQUFBQXZ3QUFBQURYczEyL0FBQUF2d0FBQUFEWHMxMi84d1ExdndBQUFBRHpCRFcvOHdRMXZ3QUFBQUR6QkRXLzE3TmR2d0FBQUFBQUFBQy8xN05kdndBQUFBQUFBQUMvNmtaM3Z3QUFBQUR1ZzRTKzZrWjN2d0FBQUFEdWc0UytBQUNBdndBQUFBREt5Vk9sQUFDQXZ3QUFBQURLeVZPbDZrWjN2d0FBQUFEdWc0USs2a1ozdndBQUFBRHVnNFErMTdOZHZ3QUFBQUFBQUFBLzE3TmR2d0FBQUFBQUFBQS84d1ExdndBQUFBRHpCRFUvOHdRMXZ3QUFBQUR6QkRVL0FBQUF2d0FBQUFEWHMxMC9BQUFBdndBQUFBRFhzMTAvN29PRXZnQUFBQURxUm5jLzdvT0V2Z0FBQUFEcVJuYy9NakdOcFFBQUFBQUFBSUEvTWpHTnBRQUFBQUFBQUlBL0FBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFDQVA2dXFLajBBQUFBQXE2b3FQUUFBZ0QrcnFxbzlBQUFBQUt1cXFqMEFBSUEvQUFBQVBnQUFBQUFBQUFBK0FBQ0FQNnVxS2o0QUFBQUFxNm9xUGdBQWdEOVZWVlUrQUFBQUFGVlZWVDRBQUlBL0FBQ0FQZ0FBQUFBQUFJQStBQUNBUDFWVmxUNEFBQUFBVlZXVlBnQUFnRCtycXFvK0FBQUFBS3VxcWo0QUFJQS9BQURBUGdBQUFBQUFBTUErQUFDQVAxVlYxVDRBQUFBQVZWWFZQZ0FBZ0QrcnF1bytBQUFBQUt1cTZqNEFBSUEvQUFBQVB3QUFBQUFBQUFBL0FBQ0FQNnVxQ2o4QUFBQUFxNm9LUHdBQWdEOVZWUlUvQUFBQUFGVlZGVDhBQUlBL0FBQWdQd0FBQUFBQUFDQS9BQUNBUDZ1cUtqOEFBQUFBcTZvcVB3QUFnRDlWVlRVL0FBQUFBRlZWTlQ4QUFJQS9BQUJBUHdBQUFBQUFBRUEvQUFDQVA2dXFTajhBQUFBQXE2cEtQd0FBZ0Q5VlZWVS9BQUFBQUZWVlZUOEFBSUEvQUFCZ1B3QUFBQUFBQUdBL0FBQ0FQNnVxYWo4QUFBQUFxNnBxUHdBQWdEOVZWWFUvQUFBQUFGVlZkVDhBQUlBL0FBQ0FQd0FBQUFBQUFJQS9BQUNBUHdBQUFEOEFBQUEvQUFBQVB3QUFBQUQ4SUNFL1hKR0xQQUFBUUQrak1Jazllb0phUHhyMkZUN3MyVzQvQUFDQVBuV2plejhKdnIwK0FBQ0FQd0FBQUQ5MW8zcy8vQ0FoUCt6WmJqOEFBRUEvZW9KYVAzcUNXajhBQUVBLzdObHVQL3dnSVQ5MW8zcy9BQUFBUHdBQWdEOEp2cjArZGFON1B3QUFnRDdzMlc0L0d2WVZQbnFDV2orak1JazlBQUJBUDF5Uml6ejhJQ0UvQUFBQUFBQUFBRDlja1lzOENiNjlQcU13aVQwQUFJQStHdllWUGhyMkZUNEFBSUErb3pDSlBRbSt2VDVja1lzOEFBQUFQd0FBQUFBQUFBQS9BQUFBUHdBQUFEOEFBQUFBL0NBaFAxeVJpendBQUVBL296Q0pQWHFDV2o4YTloVSs3Tmx1UHdBQWdENTFvM3MvQ2I2OVBnQUFnRDhBQUFBL2RhTjdQL3dnSVQvczJXNC9BQUJBUDNxQ1dqOTZnbG8vQUFCQVArelpiai84SUNFL2RhTjdQd0FBQUQ4QUFJQS9DYjY5UG5XamV6OEFBSUErN05sdVB4cjJGVDU2Z2xvL296Q0pQUUFBUUQ5Y2tZczgvQ0FoUHdBQUFBQUFBQUEvWEpHTFBBbSt2VDZqTUlrOUFBQ0FQaHIyRlQ0YTloVStBQUNBUHFNd2lUMEp2cjArWEpHTFBBQUFBRDhBQUFBQUFBQUFBQUVBQUFBQ0FBQUFBZ0FBQUFFQUFBQURBQUFBQWdBQUFBTUFBQUFFQUFBQUJBQUFBQU1BQUFBRkFBQUFCQUFBQUFVQUFBQUdBQUFBQmdBQUFBVUFBQUFIQUFBQUJnQUFBQWNBQUFBSUFBQUFDQUFBQUFjQUFBQUpBQUFBQ0FBQUFBa0FBQUFLQUFBQUNnQUFBQWtBQUFBTEFBQUFDZ0FBQUFzQUFBQU1BQUFBREFBQUFBc0FBQUFOQUFBQURBQUFBQTBBQUFBT0FBQUFEZ0FBQUEwQUFBQVBBQUFBRGdBQUFBOEFBQUFRQUFBQUVBQUFBQThBQUFBUkFBQUFFQUFBQUJFQUFBQVNBQUFBRWdBQUFCRUFBQUFUQUFBQUVnQUFBQk1BQUFBVUFBQUFGQUFBQUJNQUFBQVZBQUFBRkFBQUFCVUFBQUFXQUFBQUZnQUFBQlVBQUFBWEFBQUFGZ0FBQUJjQUFBQVlBQUFBR0FBQUFCY0FBQUFaQUFBQUdBQUFBQmtBQUFBYUFBQUFHZ0FBQUJrQUFBQWJBQUFBR2dBQUFCc0FBQUFjQUFBQUhBQUFBQnNBQUFBZEFBQUFIQUFBQUIwQUFBQWVBQUFBSGdBQUFCMEFBQUFmQUFBQUhnQUFBQjhBQUFBZ0FBQUFJQUFBQUI4QUFBQWhBQUFBSUFBQUFDRUFBQUFpQUFBQUlnQUFBQ0VBQUFBakFBQUFJZ0FBQUNNQUFBQWtBQUFBSkFBQUFDTUFBQUFsQUFBQUpBQUFBQ1VBQUFBbUFBQUFKZ0FBQUNVQUFBQW5BQUFBSmdBQUFDY0FBQUFvQUFBQUtBQUFBQ2NBQUFBcEFBQUFLQUFBQUNrQUFBQXFBQUFBS2dBQUFDa0FBQUFyQUFBQUtnQUFBQ3NBQUFBc0FBQUFMQUFBQUNzQUFBQXRBQUFBTEFBQUFDMEFBQUF1QUFBQUxnQUFBQzBBQUFBdkFBQUFMZ0FBQUM4QUFBQXdBQUFBTUFBQUFDOEFBQUF4QUFBQU1nQUFBRE1BQUFBMEFBQUFNZ0FBQURRQUFBQTFBQUFBTWdBQUFEVUFBQUEyQUFBQU1nQUFBRFlBQUFBM0FBQUFNZ0FBQURjQUFBQTRBQUFBTWdBQUFEZ0FBQUE1QUFBQU1nQUFBRGtBQUFBNkFBQUFNZ0FBQURvQUFBQTdBQUFBTWdBQUFEc0FBQUE4QUFBQU1nQUFBRHdBQUFBOUFBQUFNZ0FBQUQwQUFBQStBQUFBTWdBQUFENEFBQUEvQUFBQU1nQUFBRDhBQUFCQUFBQUFNZ0FBQUVBQUFBQkJBQUFBTWdBQUFFRUFBQUJDQUFBQU1nQUFBRUlBQUFCREFBQUFNZ0FBQUVNQUFBQkVBQUFBTWdBQUFFUUFBQUJGQUFBQU1nQUFBRVVBQUFCR0FBQUFNZ0FBQUVZQUFBQkhBQUFBTWdBQUFFY0FBQUJJQUFBQU1nQUFBRWdBQUFCSkFBQUFNZ0FBQUVrQUFBQktBQUFBTWdBQUFFb0FBQUJMQUFBQVRBQUFBRTRBQUFCTkFBQUFUQUFBQUU4QUFBQk9BQUFBVEFBQUFGQUFBQUJQQUFBQVRBQUFBRkVBQUFCUUFBQUFUQUFBQUZJQUFBQlJBQUFBVEFBQUFGTUFBQUJTQUFBQVRBQUFBRlFBQUFCVEFBQUFUQUFBQUZVQUFBQlVBQUFBVEFBQUFGWUFBQUJWQUFBQVRBQUFBRmNBQUFCV0FBQUFUQUFBQUZnQUFBQlhBQUFBVEFBQUFGa0FBQUJZQUFBQVRBQUFBRm9BQUFCWkFBQUFUQUFBQUZzQUFBQmFBQUFBVEFBQUFGd0FBQUJiQUFBQVRBQUFBRjBBQUFCY0FBQUFUQUFBQUY0QUFBQmRBQUFBVEFBQUFGOEFBQUJlQUFBQVRBQUFBR0FBQUFCZkFBQUFUQUFBQUdFQUFBQmdBQUFBVEFBQUFHSUFBQUJoQUFBQVRBQUFBR01BQUFCaUFBQUFUQUFBQUdRQUFBQmpBQUFBVEFBQUFHVUFBQUJrQUFBQUFBQUFBSnFaQ1VBcFhJODlBQUFBQUpxWkNjQXBYSTg5S1Z3UFBacVpDVUNMVG5nOUtWd1BQWnFaQ2NDTFRuZzlpMDU0UFpxWkNVQXBYQTg5aTA1NFBacVpDY0FwWEE4OUtWeVBQWnFaQ1VDZUlwNGlLVnlQUFpxWkNjQ2VJcDRpaTA1NFBacVpDVUFwWEErOWkwNTRQWnFaQ2NBcFhBKzlLVndQUFpxWkNVQ0xUbmk5S1Z3UFBacVpDY0NMVG5pOW5pSWVJNXFaQ1VBcFhJKzluaUllSTVxWkNjQXBYSSs5S1Z3UHZacVpDVUNMVG5pOUtWd1B2WnFaQ2NDTFRuaTlpMDU0dlpxWkNVQXBYQSs5aTA1NHZacVpDY0FwWEErOUtWeVB2WnFaQ1VEdE0yMmpLVnlQdlpxWkNjRHRNMjJqaTA1NHZacVpDVUFwWEE4OWkwNTR2WnFaQ2NBcFhBODlLVndQdlpxWkNVQ0xUbmc5S1Z3UHZacVpDY0NMVG5nOW5pS2VvNXFaQ1VBcFhJODluaUtlbzVxWkNjQXBYSTg5QUFBQUFKcVpDVUFBQUFBQUFBQUFBSnFaQ1VBcFhJODlLVndQUFpxWkNVQ0xUbmc5aTA1NFBacVpDVUFwWEE4OUtWeVBQWnFaQ1VDZUlwNGlpMDU0UFpxWkNVQXBYQSs5S1Z3UFBacVpDVUNMVG5pOW5pSWVJNXFaQ1VBcFhJKzlLVndQdlpxWkNVQ0xUbmk5aTA1NHZacVpDVUFwWEErOUtWeVB2WnFaQ1VEdE0yMmppMDU0dlpxWkNVQXBYQTg5S1Z3UHZacVpDVUNMVG5nOW5pS2VvNXFaQ1VBcFhJODlBQUFBQUpxWkNjQUFBQUFBQUFBQUFKcVpDY0FwWEk4OUtWd1BQWnFaQ2NDTFRuZzlpMDU0UFpxWkNjQXBYQTg5S1Z5UFBacVpDY0NlSXA0aWkwNTRQWnFaQ2NBcFhBKzlLVndQUFpxWkNjQ0xUbmk5bmlJZUk1cVpDY0FwWEkrOUtWd1B2WnFaQ2NDTFRuaTlpMDU0dlpxWkNjQXBYQSs5S1Z5UHZacVpDY0R0TTIyamkwNTR2WnFaQ2NBcFhBODlLVndQdlpxWkNjQ0xUbmc5bmlLZW81cVpDY0FwWEk4OUFBQUFBQUFBQUFBQUFJQS9BQUFBQUFBQUFBQUFBSUEvQUFBQVB3QUFBQURYczEwL0FBQUFQd0FBQUFEWHMxMC8xN05kUHdBQUFBQUFBQUEvMTdOZFB3QUFBQUFBQUFBL0FBQ0FQd0FBQUFBeU1ZMGtBQUNBUHdBQUFBQXlNWTBrMTdOZFB3QUFBQUFBQUFDLzE3TmRQd0FBQUFBQUFBQy9BQUFBUHdBQUFBRFhzMTIvQUFBQVB3QUFBQURYczEyL01qRU5KUUFBQUFBQUFJQy9NakVOSlFBQUFBQUFBSUMvQUFBQXZ3QUFBQURYczEyL0FBQUF2d0FBQUFEWHMxMi8xN05kdndBQUFBQUFBQUMvMTdOZHZ3QUFBQUFBQUFDL0FBQ0F2d0FBQUFES3lWT2xBQUNBdndBQUFBREt5Vk9sMTdOZHZ3QUFBQUFBQUFBLzE3TmR2d0FBQUFBQUFBQS9BQUFBdndBQUFBRFhzMTAvQUFBQXZ3QUFBQURYczEwL01qR05wUUFBQUFBQUFJQS9NakdOcFFBQUFBQUFBSUEvQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUNBUDZ1cXFqMEFBQUFBcTZxcVBRQUFnRCtycWlvK0FBQUFBS3VxS2o0QUFJQS9BQUNBUGdBQUFBQUFBSUErQUFDQVA2dXFxajRBQUFBQXE2cXFQZ0FBZ0Q5VlZkVStBQUFBQUZWVjFUNEFBSUEvQUFBQVB3QUFBQUFBQUFBL0FBQ0FQMVZWRlQ4QUFBQUFWVlVWUHdBQWdEK3JxaW8vQUFBQUFLdXFLajhBQUlBL0FBQkFQd0FBQUFBQUFFQS9BQUNBUDFWVlZUOEFBQUFBVlZWVlB3QUFnRCtycW1vL0FBQUFBS3VxYWo4QUFJQS9BQUNBUHdBQUFBQUFBSUEvQUFDQVB3QUFBRDhBQUFBL0FBQUFQd0FBQUFBQUFFQS9vekNKUGV6WmJqOEFBSUErQUFDQVB3QUFBRC9zMlc0L0FBQkFQd0FBUUQvczJXNC9BQUFBUHdBQWdEOEFBSUErN05sdVA2TXdpVDBBQUVBL0FBQUFBQUFBQUQrak1JazlBQUNBUGdBQWdENmpNSWs5QUFBQVB3QUFBQUFBQUFBL0FBQUFQd0FBQUQ4QUFBQUFBQUJBUDZNd2lUM3MyVzQvQUFDQVBnQUFnRDhBQUFBLzdObHVQd0FBUUQ4QUFFQS83Tmx1UHdBQUFEOEFBSUEvQUFDQVB1elpiaitqTUlrOUFBQkFQd0FBQUFBQUFBQS9vekNKUFFBQWdENEFBSUErb3pDSlBRQUFBRDhBQUFBQUFBQUFBQUVBQUFBQ0FBQUFBZ0FBQUFFQUFBQURBQUFBQWdBQUFBTUFBQUFFQUFBQUJBQUFBQU1BQUFBRkFBQUFCQUFBQUFVQUFBQUdBQUFBQmdBQUFBVUFBQUFIQUFBQUJnQUFBQWNBQUFBSUFBQUFDQUFBQUFjQUFBQUpBQUFBQ0FBQUFBa0FBQUFLQUFBQUNnQUFBQWtBQUFBTEFBQUFDZ0FBQUFzQUFBQU1BQUFBREFBQUFBc0FBQUFOQUFBQURBQUFBQTBBQUFBT0FBQUFEZ0FBQUEwQUFBQVBBQUFBRGdBQUFBOEFBQUFRQUFBQUVBQUFBQThBQUFBUkFBQUFFQUFBQUJFQUFBQVNBQUFBRWdBQUFCRUFBQUFUQUFBQUVnQUFBQk1BQUFBVUFBQUFGQUFBQUJNQUFBQVZBQUFBRkFBQUFCVUFBQUFXQUFBQUZnQUFBQlVBQUFBWEFBQUFGZ0FBQUJjQUFBQVlBQUFBR0FBQUFCY0FBQUFaQUFBQUdnQUFBQnNBQUFBY0FBQUFHZ0FBQUJ3QUFBQWRBQUFBR2dBQUFCMEFBQUFlQUFBQUdnQUFBQjRBQUFBZkFBQUFHZ0FBQUI4QUFBQWdBQUFBR2dBQUFDQUFBQUFoQUFBQUdnQUFBQ0VBQUFBaUFBQUFHZ0FBQUNJQUFBQWpBQUFBR2dBQUFDTUFBQUFrQUFBQUdnQUFBQ1FBQUFBbEFBQUFHZ0FBQUNVQUFBQW1BQUFBR2dBQUFDWUFBQUFuQUFBQUtBQUFBQ29BQUFBcEFBQUFLQUFBQUNzQUFBQXFBQUFBS0FBQUFDd0FBQUFyQUFBQUtBQUFBQzBBQUFBc0FBQUFLQUFBQUM0QUFBQXRBQUFBS0FBQUFDOEFBQUF1QUFBQUtBQUFBREFBQUFBdkFBQUFLQUFBQURFQUFBQXdBQUFBS0FBQUFESUFBQUF4QUFBQUtBQUFBRE1BQUFBeUFBQUFLQUFBQURRQUFBQXpBQUFBS0FBQUFEVUFBQUEwQUFBQUFBQUFBSS9DZFQwcFhBOC9BQUFBQUkvQ2RiMHBYQTgveldvVVBvL0NkVDJpZVFvL3pXb1VQby9DZGIyaWVRby9LVnlQUG8vQ2RUMkxUdmcrS1Z5UFBvL0NkYjJMVHZnKzNiM0tQby9DZFQzZHZjbyszYjNLUG8vQ2RiM2R2Y28raTA3NFBvL0NkVDBwWEk4K2kwNzRQby9DZGIwcFhJOCtvbmtLUDQvQ2RUM05haFErb25rS1A0L0NkYjNOYWhRK0tWd1BQNC9DZFQyZUloNGtLVndQUDQvQ2RiMmVJaDRrb25rS1A0L0NkVDNOYWhTK29ua0tQNC9DZGIzTmFoUytpMDc0UG8vQ2RUMHBYSSsraTA3NFBvL0NkYjBwWEkrKzNiM0tQby9DZFQzZHZjcSszYjNLUG8vQ2RiM2R2Y3ErS1Z5UFBvL0NkVDJMVHZpK0tWeVBQby9DZGIyTFR2aSt6V29VUG8vQ2RUMmllUXEveldvVVBvL0NkYjJpZVFxL25pS2VKSS9DZFQwcFhBKy9uaUtlSkkvQ2RiMHBYQSsveldvVXZvL0NkVDJpZVFxL3pXb1V2by9DZGIyaWVRcS9LVnlQdm8vQ2RUMkxUdmkrS1Z5UHZvL0NkYjJMVHZpKzNiM0t2by9DZFQzZHZjcSszYjNLdm8vQ2RiM2R2Y3EraTA3NHZvL0NkVDBwWEkrK2kwNzR2by9DZGIwcFhJKytvbmtLdjQvQ2RUM05haFMrb25rS3Y0L0NkYjNOYWhTK0tWd1B2NC9DZFQzdE0rMmtLVndQdjQvQ2RiM3RNKzJrb25rS3Y0L0NkVDNOYWhRK29ua0t2NC9DZGIzTmFoUStpMDc0dm8vQ2RUMHBYSTgraTA3NHZvL0NkYjBwWEk4KzNiM0t2by9DZFQzZHZjbyszYjNLdm8vQ2RiM2R2Y28rS1Z5UHZvL0NkVDJMVHZnK0tWeVB2by9DZGIyTFR2Zyt6V29Vdm8vQ2RUMmllUW8veldvVXZvL0NkYjJpZVFvL25pSWVwWS9DZFQwcFhBOC9uaUllcFkvQ2RiMHBYQTgvQUFBQUFJL0NkVDBBQUFBQUFBQUFBSS9DZFQwcFhBOC96V29VUG8vQ2RUMmllUW8vS1Z5UFBvL0NkVDJMVHZnKzNiM0tQby9DZFQzZHZjbytpMDc0UG8vQ2RUMHBYSTgrb25rS1A0L0NkVDNOYWhRK0tWd1BQNC9DZFQyZUloNGtvbmtLUDQvQ2RUM05haFMraTA3NFBvL0NkVDBwWEkrKzNiM0tQby9DZFQzZHZjcStLVnlQUG8vQ2RUMkxUdmkreldvVVBvL0NkVDJpZVFxL25pS2VKSS9DZFQwcFhBKy96V29Vdm8vQ2RUMmllUXEvS1Z5UHZvL0NkVDJMVHZpKzNiM0t2by9DZFQzZHZjcStpMDc0dm8vQ2RUMHBYSSsrb25rS3Y0L0NkVDNOYWhTK0tWd1B2NC9DZFQzdE0rMmtvbmtLdjQvQ2RUM05haFEraTA3NHZvL0NkVDBwWEk4KzNiM0t2by9DZFQzZHZjbytLVnlQdm8vQ2RUMkxUdmcreldvVXZvL0NkVDJpZVFvL25pSWVwWS9DZFQwcFhBOC9BQUFBQUkvQ2RiMEFBQUFBQUFBQUFJL0NkYjBwWEE4L3pXb1VQby9DZGIyaWVRby9LVnlQUG8vQ2RiMkxUdmcrM2IzS1BvL0NkYjNkdmNvK2kwNzRQby9DZGIwcFhJOCtvbmtLUDQvQ2RiM05haFErS1Z3UFA0L0NkYjJlSWg0a29ua0tQNC9DZGIzTmFoUytpMDc0UG8vQ2RiMHBYSSsrM2IzS1BvL0NkYjNkdmNxK0tWeVBQby9DZGIyTFR2aSt6V29VUG8vQ2RiMmllUXEvbmlLZUpJL0NkYjBwWEErL3pXb1V2by9DZGIyaWVRcS9LVnlQdm8vQ2RiMkxUdmkrM2IzS3ZvL0NkYjNkdmNxK2kwNzR2by9DZGIwcFhJKytvbmtLdjQvQ2RiM05haFMrS1Z3UHY0L0NkYjN0TSsya29ua0t2NC9DZGIzTmFoUStpMDc0dm8vQ2RiMHBYSTgrM2IzS3ZvL0NkYjNkdmNvK0tWeVB2by9DZGIyTFR2Zyt6V29Vdm8vQ2RiMmllUW8vbmlJZXBZL0NkYjBwWEE4L0FBQUFBQUFBQUFBQUFJQS9BQUFBQUFBQUFBQUFBSUEvN29PRVBnQUFBQURxUm5jLzdvT0VQZ0FBQUFEcVJuYy9BQUFBUHdBQUFBRFhzMTAvQUFBQVB3QUFBQURYczEwLzh3UTFQd0FBQUFEekJEVS84d1ExUHdBQUFBRHpCRFUvMTdOZFB3QUFBQUFBQUFBLzE3TmRQd0FBQUFBQUFBQS82a1ozUHdBQUFBRHVnNFErNmtaM1B3QUFBQUR1ZzRRK0FBQ0FQd0FBQUFBeU1ZMGtBQUNBUHdBQUFBQXlNWTBrNmtaM1B3QUFBQUR1ZzRTKzZrWjNQd0FBQUFEdWc0UysxN05kUHdBQUFBQUFBQUMvMTdOZFB3QUFBQUFBQUFDLzh3UTFQd0FBQUFEekJEVy84d1ExUHdBQUFBRHpCRFcvQUFBQVB3QUFBQURYczEyL0FBQUFQd0FBQUFEWHMxMi83b09FUGdBQUFBRHFSbmUvN29PRVBnQUFBQURxUm5lL01qRU5KUUFBQUFBQUFJQy9NakVOSlFBQUFBQUFBSUMvN29PRXZnQUFBQURxUm5lLzdvT0V2Z0FBQUFEcVJuZS9BQUFBdndBQUFBRFhzMTIvQUFBQXZ3QUFBQURYczEyLzh3UTF2d0FBQUFEekJEVy84d1ExdndBQUFBRHpCRFcvMTdOZHZ3QUFBQUFBQUFDLzE3TmR2d0FBQUFBQUFBQy82a1ozdndBQUFBRHVnNFMrNmtaM3Z3QUFBQUR1ZzRTK0FBQ0F2d0FBQUFES3lWT2xBQUNBdndBQUFBREt5Vk9sNmtaM3Z3QUFBQUR1ZzRRKzZrWjN2d0FBQUFEdWc0USsxN05kdndBQUFBQUFBQUEvMTdOZHZ3QUFBQUFBQUFBLzh3UTF2d0FBQUFEekJEVS84d1ExdndBQUFBRHpCRFUvQUFBQXZ3QUFBQURYczEwL0FBQUF2d0FBQUFEWHMxMC83b09FdmdBQUFBRHFSbmMvN29PRXZnQUFBQURxUm5jL01qR05wUUFBQUFBQUFJQS9NakdOcFFBQUFBQUFBSUEvQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdEOEFBQUFBQUFBQUFBQUFnRDhBQUFBQUFBQUFBQUFBZ0Q4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBZ0w4QUFBQUFBQUFBQUFBQWdMOEFBQUFBQUFBQUFBQUFnTDhBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUNBUDZ1cUtqMEFBQUFBcTZvcVBRQUFnRCtycXFvOUFBQUFBS3VxcWowQUFJQS9BQUFBUGdBQUFBQUFBQUErQUFDQVA2dXFLajRBQUFBQXE2b3FQZ0FBZ0Q5VlZWVStBQUFBQUZWVlZUNEFBSUEvQUFDQVBnQUFBQUFBQUlBK0FBQ0FQMVZWbFQ0QUFBQUFWVldWUGdBQWdEK3JxcW8rQUFBQUFLdXFxajRBQUlBL0FBREFQZ0FBQUFBQUFNQStBQUNBUDFWVjFUNEFBQUFBVlZYVlBnQUFnRCtycXVvK0FBQUFBS3VxNmo0QUFJQS9BQUFBUHdBQUFBQUFBQUEvQUFDQVA2dXFDajhBQUFBQXE2b0tQd0FBZ0Q5VlZSVS9BQUFBQUZWVkZUOEFBSUEvQUFBZ1B3QUFBQUFBQUNBL0FBQ0FQNnVxS2o4QUFBQUFxNm9xUHdBQWdEOVZWVFUvQUFBQUFGVlZOVDhBQUlBL0FBQkFQd0FBQUFBQUFFQS9BQUNBUDZ1cVNqOEFBQUFBcTZwS1B3QUFnRDlWVlZVL0FBQUFBRlZWVlQ4QUFJQS9BQUJnUHdBQUFBQUFBR0EvQUFDQVA2dXFhajhBQUFBQXE2cHFQd0FBZ0Q5VlZYVS9BQUFBQUZWVmRUOEFBSUEvQUFDQVB3QUFBQUFBQUlBL0FBQ0FQd0FBQUQ4QUFBQS9BQUFBUHdBQUFBRDhJQ0UvWEpHTFBBQUFRRCtqTUlrOWVvSmFQeHIyRlQ3czJXNC9BQUNBUG5XamV6OEp2cjArQUFDQVB3QUFBRDkxbzNzLy9DQWhQK3paYmo4QUFFQS9lb0phUDNxQ1dqOEFBRUEvN05sdVAvd2dJVDkxbzNzL0FBQUFQd0FBZ0Q4SnZyMCtkYU43UHdBQWdEN3MyVzQvR3ZZVlBucUNXaitqTUlrOUFBQkFQMXlSaXp6OElDRS9BQUFBQUFBQUFEOWNrWXM4Q2I2OVBxTXdpVDBBQUlBK0d2WVZQaHIyRlQ0QUFJQStvekNKUFFtK3ZUNWNrWXM4QUFBQVB3QUFBQUFBQUFBL0FBQUFQd0FBQUQ4QUFBQUEvQ0FoUDF5Uml6d0FBRUEvb3pDSlBYcUNXajhhOWhVKzdObHVQd0FBZ0Q1MW8zcy9DYjY5UGdBQWdEOEFBQUEvZGFON1Avd2dJVC9zMlc0L0FBQkFQM3FDV2o5Nmdsby9BQUJBUCt6WmJqLzhJQ0UvZGFON1B3QUFBRDhBQUlBL0NiNjlQbldqZXo4QUFJQSs3Tmx1UHhyMkZUNTZnbG8vb3pDSlBRQUFRRDlja1lzOC9DQWhQd0FBQUFBQUFBQS9YSkdMUEFtK3ZUNmpNSWs5QUFDQVBocjJGVDRhOWhVK0FBQ0FQcU13aVQwSnZyMCtYSkdMUEFBQUFEOEFBQUFBQUFBQUFBRUFBQUFDQUFBQUFnQUFBQUVBQUFBREFBQUFBZ0FBQUFNQUFBQUVBQUFBQkFBQUFBTUFBQUFGQUFBQUJBQUFBQVVBQUFBR0FBQUFCZ0FBQUFVQUFBQUhBQUFBQmdBQUFBY0FBQUFJQUFBQUNBQUFBQWNBQUFBSkFBQUFDQUFBQUFrQUFBQUtBQUFBQ2dBQUFBa0FBQUFMQUFBQUNnQUFBQXNBQUFBTUFBQUFEQUFBQUFzQUFBQU5BQUFBREFBQUFBMEFBQUFPQUFBQURnQUFBQTBBQUFBUEFBQUFEZ0FBQUE4QUFBQVFBQUFBRUFBQUFBOEFBQUFSQUFBQUVBQUFBQkVBQUFBU0FBQUFFZ0FBQUJFQUFBQVRBQUFBRWdBQUFCTUFBQUFVQUFBQUZBQUFBQk1BQUFBVkFBQUFGQUFBQUJVQUFBQVdBQUFBRmdBQUFCVUFBQUFYQUFBQUZnQUFBQmNBQUFBWUFBQUFHQUFBQUJjQUFBQVpBQUFBR0FBQUFCa0FBQUFhQUFBQUdnQUFBQmtBQUFBYkFBQUFHZ0FBQUJzQUFBQWNBQUFBSEFBQUFCc0FBQUFkQUFBQUhBQUFBQjBBQUFBZUFBQUFIZ0FBQUIwQUFBQWZBQUFBSGdBQUFCOEFBQUFnQUFBQUlBQUFBQjhBQUFBaEFBQUFJQUFBQUNFQUFBQWlBQUFBSWdBQUFDRUFBQUFqQUFBQUlnQUFBQ01BQUFBa0FBQUFKQUFBQUNNQUFBQWxBQUFBSkFBQUFDVUFBQUFtQUFBQUpnQUFBQ1VBQUFBbkFBQUFKZ0FBQUNjQUFBQW9BQUFBS0FBQUFDY0FBQUFwQUFBQUtBQUFBQ2tBQUFBcUFBQUFLZ0FBQUNrQUFBQXJBQUFBS2dBQUFDc0FBQUFzQUFBQUxBQUFBQ3NBQUFBdEFBQUFMQUFBQUMwQUFBQXVBQUFBTGdBQUFDMEFBQUF2QUFBQUxnQUFBQzhBQUFBd0FBQUFNQUFBQUM4QUFBQXhBQUFBTWdBQUFETUFBQUEwQUFBQU1nQUFBRFFBQUFBMUFBQUFNZ0FBQURVQUFBQTJBQUFBTWdBQUFEWUFBQUEzQUFBQU1nQUFBRGNBQUFBNEFBQUFNZ0FBQURnQUFBQTVBQUFBTWdBQUFEa0FBQUE2QUFBQU1nQUFBRG9BQUFBN0FBQUFNZ0FBQURzQUFBQThBQUFBTWdBQUFEd0FBQUE5QUFBQU1nQUFBRDBBQUFBK0FBQUFNZ0FBQUQ0QUFBQS9BQUFBTWdBQUFEOEFBQUJBQUFBQU1nQUFBRUFBQUFCQkFBQUFNZ0FBQUVFQUFBQkNBQUFBTWdBQUFFSUFBQUJEQUFBQU1nQUFBRU1BQUFCRUFBQUFNZ0FBQUVRQUFBQkZBQUFBTWdBQUFFVUFBQUJHQUFBQU1nQUFBRVlBQUFCSEFBQUFNZ0FBQUVjQUFBQklBQUFBTWdBQUFFZ0FBQUJKQUFBQU1nQUFBRWtBQUFCS0FBQUFNZ0FBQUVvQUFBQkxBQUFBVEFBQUFFNEFBQUJOQUFBQVRBQUFBRThBQUFCT0FBQUFUQUFBQUZBQUFBQlBBQUFBVEFBQUFGRUFBQUJRQUFBQVRBQUFBRklBQUFCUkFBQUFUQUFBQUZNQUFBQlNBQUFBVEFBQUFGUUFBQUJUQUFBQVRBQUFBRlVBQUFCVUFBQUFUQUFBQUZZQUFBQlZBQUFBVEFBQUFGY0FBQUJXQUFBQVRBQUFBRmdBQUFCWEFBQUFUQUFBQUZrQUFBQllBQUFBVEFBQUFGb0FBQUJaQUFBQVRBQUFBRnNBQUFCYUFBQUFUQUFBQUZ3QUFBQmJBQUFBVEFBQUFGMEFBQUJjQUFBQVRBQUFBRjRBQUFCZEFBQUFUQUFBQUY4QUFBQmVBQUFBVEFBQUFHQUFBQUJmQUFBQVRBQUFBR0VBQUFCZ0FBQUFUQUFBQUdJQUFBQmhBQUFBVEFBQUFHTUFBQUJpQUFBQVRBQUFBR1FBQUFCakFBQUFUQUFBQUdVQUFBQmtBQUFBIgogICB9CiAgXSwKICAiYnVmZmVyVmlld3MiOiBbCiAgIHsKICAgICJidWZmZXIiOiAwLAogICAgImJ5dGVPZmZzZXQiOiAwLAogICAgImJ5dGVMZW5ndGgiOiAyODgKICAgfSwKICAgewogICAgImJ1ZmZlciI6IDAsCiAgICAiYnl0ZU9mZnNldCI6IDI4OCwKICAgICJieXRlTGVuZ3RoIjogMjg4CiAgIH0sCiAgIHsKICAgICJidWZmZXIiOiAwLAogICAgImJ5dGVPZmZzZXQiOiA1NzYsCiAgICAiYnl0ZUxlbmd0aCI6IDE5MgogICB9LAogICB7CiAgICAiYnVmZmVyIjogMCwKICAgICJieXRlT2Zmc2V0IjogNzY4LAogICAgImJ5dGVMZW5ndGgiOiAyNAogICB9LAogICB7CiAgICAiYnVmZmVyIjogMCwKICAgICJieXRlT2Zmc2V0IjogNzkyLAogICAgImJ5dGVMZW5ndGgiOiAyNAogICB9LAogICB7CiAgICAiYnVmZmVyIjogMCwKICAgICJieXRlT2Zmc2V0IjogODE2LAogICAgImJ5dGVMZW5ndGgiOiAyNAogICB9LAogICB7CiAgICAiYnVmZmVyIjogMCwKICAgICJieXRlT2Zmc2V0IjogODQwLAogICAgImJ5dGVMZW5ndGgiOiAyNAogICB9LAogICB7CiAgICAiYnVmZmVyIjogMCwKICAgICJieXRlT2Zmc2V0IjogODY0LAogICAgImJ5dGVMZW5ndGgiOiAyNAogICB9LAogICB7CiAgICAiYnVmZmVyIjogMCwKICAgICJieXRlT2Zmc2V0IjogODg4LAogICAgImJ5dGVMZW5ndGgiOiAyNAogICB9LAogICB7CiAgICAiYnVmZmVyIjogMCwKICAgICJieXRlT2Zmc2V0IjogOTEyLAogICAgImJ5dGVMZW5ndGgiOiAxMjI0CiAgIH0sCiAgIHsKICAgICJidWZmZXIiOiAwLAogICAgImJ5dGVPZmZzZXQiOiAyMTM2LAogICAgImJ5dGVMZW5ndGgiOiAxMjI0CiAgIH0sCiAgIHsKICAgICJidWZmZXIiOiAwLAogICAgImJ5dGVPZmZzZXQiOiAzMzYwLAogICAgImJ5dGVMZW5ndGgiOiA4MTYKICAgfSwKICAgewogICAgImJ1ZmZlciI6IDAsCiAgICAiYnl0ZU9mZnNldCI6IDQxNzYsCiAgICAiYnl0ZUxlbmd0aCI6IDExNTIKICAgfSwKICAgewogICAgImJ1ZmZlciI6IDAsCiAgICAiYnl0ZU9mZnNldCI6IDUzMjgsCiAgICAiYnl0ZUxlbmd0aCI6IDY0OAogICB9LAogICB7CiAgICAiYnVmZmVyIjogMCwKICAgICJieXRlT2Zmc2V0IjogNTk3NiwKICAgICJieXRlTGVuZ3RoIjogNjQ4CiAgIH0sCiAgIHsKICAgICJidWZmZXIiOiAwLAogICAgImJ5dGVPZmZzZXQiOiA2NjI0LAogICAgImJ5dGVMZW5ndGgiOiA0MzIKICAgfSwKICAgewogICAgImJ1ZmZlciI6IDAsCiAgICAiYnl0ZU9mZnNldCI6IDcwNTYsCiAgICAiYnl0ZUxlbmd0aCI6IDU3NgogICB9LAogICB7CiAgICAiYnVmZmVyIjogMCwKICAgICJieXRlT2Zmc2V0IjogNzYzMiwKICAgICJieXRlTGVuZ3RoIjogMTIyNAogICB9LAogICB7CiAgICAiYnVmZmVyIjogMCwKICAgICJieXRlT2Zmc2V0IjogODg1NiwKICAgICJieXRlTGVuZ3RoIjogMTIyNAogICB9LAogICB7CiAgICAiYnVmZmVyIjogMCwKICAgICJieXRlT2Zmc2V0IjogMTAwODAsCiAgICAiYnl0ZUxlbmd0aCI6IDgxNgogICB9LAogICB7CiAgICAiYnVmZmVyIjogMCwKICAgICJieXRlT2Zmc2V0IjogMTA4OTYsCiAgICAiYnl0ZUxlbmd0aCI6IDExNTIKICAgfQogIF0sCiAgImFjY2Vzc29ycyI6IFsKICAgewogICAgImJ1ZmZlclZpZXciOiAwLAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI2LAogICAgImNvdW50IjogMjQsCiAgICAidHlwZSI6ICJWRUMzIiwKICAgICJtaW4iOiBbCiAgICAgLTMuNSwKICAgICAtMS43NSwKICAgICAtMC4wMwogICAgXSwKICAgICJtYXgiOiBbCiAgICAgMy41LAogICAgIDEuNzUsCiAgICAgMC4wMwogICAgXQogICB9LAogICB7CiAgICAiYnVmZmVyVmlldyI6IDEsCiAgICAiY29tcG9uZW50VHlwZSI6IDUxMjYsCiAgICAiY291bnQiOiAyNCwKICAgICJ0eXBlIjogIlZFQzMiCiAgIH0sCiAgIHsKICAgICJidWZmZXJWaWV3IjogMiwKICAgICJjb21wb25lbnRUeXBlIjogNTEyNiwKICAgICJjb3VudCI6IDI0LAogICAgInR5cGUiOiAiVkVDMiIKICAgfSwKICAgewogICAgImJ1ZmZlclZpZXciOiAzLAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI1LAogICAgImNvdW50IjogNiwKICAgICJ0eXBlIjogIlNDQUxBUiIKICAgfSwKICAgewogICAgImJ1ZmZlclZpZXciOiA0LAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI1LAogICAgImNvdW50IjogNiwKICAgICJ0eXBlIjogIlNDQUxBUiIKICAgfSwKICAgewogICAgImJ1ZmZlclZpZXciOiA1LAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI1LAogICAgImNvdW50IjogNiwKICAgICJ0eXBlIjogIlNDQUxBUiIKICAgfSwKICAgewogICAgImJ1ZmZlclZpZXciOiA2LAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI1LAogICAgImNvdW50IjogNiwKICAgICJ0eXBlIjogIlNDQUxBUiIKICAgfSwKICAgewogICAgImJ1ZmZlclZpZXciOiA3LAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI1LAogICAgImNvdW50IjogNiwKICAgICJ0eXBlIjogIlNDQUxBUiIKICAgfSwKICAgewogICAgImJ1ZmZlclZpZXciOiA4LAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI1LAogICAgImNvdW50IjogNiwKICAgICJ0eXBlIjogIlNDQUxBUiIKICAgfSwKICAgewogICAgImJ1ZmZlclZpZXciOiA5LAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI2LAogICAgImNvdW50IjogMTAyLAogICAgInR5cGUiOiAiVkVDMyIsCiAgICAibWluIjogWwogICAgIC0wLjUsCiAgICAgLTEuNzUsCiAgICAgLTAuNQogICAgXSwKICAgICJtYXgiOiBbCiAgICAgMC41LAogICAgIDEuNzUsCiAgICAgMC41CiAgICBdCiAgIH0sCiAgIHsKICAgICJidWZmZXJWaWV3IjogMTAsCiAgICAiY29tcG9uZW50VHlwZSI6IDUxMjYsCiAgICAiY291bnQiOiAxMDIsCiAgICAidHlwZSI6ICJWRUMzIgogICB9LAogICB7CiAgICAiYnVmZmVyVmlldyI6IDExLAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI2LAogICAgImNvdW50IjogMTAyLAogICAgInR5cGUiOiAiVkVDMiIKICAgfSwKICAgewogICAgImJ1ZmZlclZpZXciOiAxMiwKICAgICJjb21wb25lbnRUeXBlIjogNTEyNSwKICAgICJjb3VudCI6IDI4OCwKICAgICJ0eXBlIjogIlNDQUxBUiIKICAgfSwKICAgewogICAgImJ1ZmZlclZpZXciOiAxMywKICAgICJjb21wb25lbnRUeXBlIjogNTEyNiwKICAgICJjb3VudCI6IDU0LAogICAgInR5cGUiOiAiVkVDMyIsCiAgICAibWluIjogWwogICAgIC0wLjA3LAogICAgIC0yLjE1LAogICAgIC0wLjA3CiAgICBdLAogICAgIm1heCI6IFsKICAgICAwLjA3LAogICAgIDIuMTUsCiAgICAgMC4wNwogICAgXQogICB9LAogICB7CiAgICAiYnVmZmVyVmlldyI6IDE0LAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI2LAogICAgImNvdW50IjogNTQsCiAgICAidHlwZSI6ICJWRUMzIgogICB9LAogICB7CiAgICAiYnVmZmVyVmlldyI6IDE1LAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI2LAogICAgImNvdW50IjogNTQsCiAgICAidHlwZSI6ICJWRUMyIgogICB9LAogICB7CiAgICAiYnVmZmVyVmlldyI6IDE2LAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI1LAogICAgImNvdW50IjogMTQ0LAogICAgInR5cGUiOiAiU0NBTEFSIgogICB9LAogICB7CiAgICAiYnVmZmVyVmlldyI6IDE3LAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI2LAogICAgImNvdW50IjogMTAyLAogICAgInR5cGUiOiAiVkVDMyIsCiAgICAibWluIjogWwogICAgIC0wLjU2LAogICAgIC0wLjA2LAogICAgIC0wLjU2CiAgICBdLAogICAgIm1heCI6IFsKICAgICAwLjU2LAogICAgIDAuMDYsCiAgICAgMC41NgogICAgXQogICB9LAogICB7CiAgICAiYnVmZmVyVmlldyI6IDE4LAogICAgImNvbXBvbmVudFR5cGUiOiA1MTI2LAogICAgImNvdW50IjogMTAyLAogICAgInR5cGUiOiAiVkVDMyIKICAgfSwKICAgewogICAgImJ1ZmZlclZpZXciOiAxOSwKICAgICJjb21wb25lbnRUeXBlIjogNTEyNiwKICAgICJjb3VudCI6IDEwMiwKICAgICJ0eXBlIjogIlZFQzIiCiAgIH0sCiAgIHsKICAgICJidWZmZXJWaWV3IjogMjAsCiAgICAiY29tcG9uZW50VHlwZSI6IDUxMjUsCiAgICAiY291bnQiOiAyODgsCiAgICAidHlwZSI6ICJTQ0FMQVIiCiAgIH0KICBdCiB9LAogInJlbmRlcmVyIjogewogICJhbnRpYWxpYXMiOiB0cnVlLAogICJiYWNrZ3JvdW5kX2ZhbGxiYWNrIjogIiMwYjEwMjAiLAogICJleHBvc3VyZSI6IDEuMCwKICAib3V0cHV0X2NvbG9yX3NwYWNlIjogInNSR0IiLAogICJwaXhlbF9yYXRpb19jYXAiOiAyLAogICJ0b25lX21hcHBpbmciOiAiQUNFUyBmaWxtaWMiCiB9LAogInNreSI6IHsKICAic291cmNlX3BhcnQiOiAic2t5Ym94IiwKICAic291cmNlIjogInRoZSBwYW5vcmFtYSBpbWFnZSBlbWJlZGRlZCBpbiB0aGUgc2t5Ym94IGdsVEYgcGFydCAodGhlIGZpcnN0IG1hdGVyaWFsJ3MgZW1pc3NpdmUgdGV4dHVyZSwgZWxzZSB0aGUgc3BlY3VsYXItZ2xvc3NpbmVzcyBkaWZmdXNlIHRleHR1cmUpIiwKICAibWFwcGluZyI6ICJlcXVpcmVjdGFuZ3VsYXIiLAogICJmbGlwX2hvcml6b250YWwiOiB0cnVlLAogICJzaGlmdF9yb3dzIjogODAsCiAgInBvbGVfYmFuZF9oZWFsIjogewogICAiZW5hYmxlZCI6IHRydWUsCiAgICJmYWRlX3Jvd3MiOiAxMDAsCiAgICJwb2xlX2JhbmRfdG9wIjogMC45MiwKICAgInJlZmVyZW5jZV9iYW5kIjogWwogICAgMC42NSwKICAgIDAuOAogICBdLAogICAic2VhbV9ibHVyX3B4IjogMgogIH0sCiAgInRleHR1cmUiOiB7CiAgICJjb2xvcl9zcGFjZSI6ICJzUkdCIiwKICAgImZsaXBfdmVydGljYWwiOiBmYWxzZSwKICAgImdlbmVyYXRlX21pcG1hcHMiOiBmYWxzZSwKICAgIm1hZ19maWx0ZXIiOiAibGluZWFyIiwKICAgIm1pbl9maWx0ZXIiOiAibGluZWFyIiwKICAgIndyYXBfcyI6ICJyZXBlYXQiLAogICAid3JhcF90IjogInJlcGVhdCIKICB9LAogICJiYWNrZ3JvdW5kIjogInVzZSB0aGUgcHJlcGFyZWQgcGFub3JhbWEgYXMgdGhlIHNjZW5lIGJhY2tncm91bmQiLAogICJlbnZpcm9ubWVudCI6ICJ1c2UgdGhlIHByZXBhcmVkIHBhbm9yYW1hIGFzIHRoZSBpbWFnZS1iYXNlZCBsaWdodGluZyBlbnZpcm9ubWVudCAoYW1iaWVudCBsaWdodCBhbmQgcmVmbGVjdGlvbnMgZm9yIHRoZSB3aG9sZSBzY2VuZSkiCiB9LAogInNjcm9sbF90ZXh0IjogewogICJ0ZXh0dXJlX25hbWUiOiAic2Nyb2xsLXRleHQiLAogICJiYWNrZ3JvdW5kIjogIiNlZmUzYzAiLAogICJjYW52YXNfd2lkdGgiOiAxNDAwLAogICJjb2xvcl9zcGFjZSI6ICJzUkdCIiwKICAiZm9udCI6IHsKICAgImZhbWlsaWVzIjogWwogICAgIk5vdG8gU2VyaWYgSGVicmV3IiwKICAgICJOb3RvIFNlcmlmIiwKICAgICJUaW1lcyBOZXcgUm9tYW4iLAogICAgInNlcmlmIgogICBdLAogICAic2l6ZV9weCI6IDQ2LAogICAid2VpZ2h0IjogIm5vcm1hbCIKICB9LAogICJmb250X2JvbGQiOiB7CiAgICJmYW1pbGllcyI6IFsKICAgICJOb3RvIFNlcmlmIEhlYnJldyIsCiAgICAiTm90byBTZXJpZiIsCiAgICAiVGltZXMgTmV3IFJvbWFuIiwKICAgICJzZXJpZiIKICAgXSwKICAgInNpemVfcHgiOiA1OCwKICAgIndlaWdodCI6ICJib2xkIgogIH0sCiAgImZvbnRfc2VwYXJhdG9yIjogewogICAiZmFtaWxpZXMiOiBbCiAgICAiTm90byBTZXJpZiBIZWJyZXciLAogICAgIk5vdG8gU2VyaWYiLAogICAgIlRpbWVzIE5ldyBSb21hbiIsCiAgICAic2VyaWYiCiAgIF0sCiAgICJzaXplX3B4IjogMzQsCiAgICJ3ZWlnaHQiOiAibm9ybWFsIgogIH0sCiAgImxheW91dCI6IHsKICAgImhlYWQiOiB7CiAgICAiYWxpZ24iOiAiY2VudGVyIiwKICAgICJkaXJlY3Rpb24iOiAibHRyIiwKICAgICJmb250IjogImZvbnRfYm9sZCIKICAgfSwKICAgInNlcGFyYXRvciI6IHsKICAgICJhbGlnbiI6ICJjZW50ZXIiLAogICAgImRpcmVjdGlvbiI6ICJsdHIiLAogICAgImZvbnQiOiAiZm9udF9zZXBhcmF0b3IiCiAgIH0sCiAgICJ0ZXh0IjogewogICAgImFsaWduIjogInJpZ2h0IiwKICAgICJkaXJlY3Rpb24iOiAicnRsIiwKICAgICJmb250IjogImZvbnQiCiAgIH0sCiAgICJ3cmFwIjogIm1lYXN1cmUgdGV4dCwgbWF4IHdpZHRoIGNhbnZhc193aWR0aCAtIDIqcGFkZGluZyIKICB9LAogICJsaW5lX2hlaWdodCI6IDc4LAogICJtaW5faGVpZ2h0IjogNzAwLAogICJwYWRkaW5nIjogODAsCiAgInNlcGFyYXRvcl9mb3JtYXQiOiAi4oCUIE4g4oCUIiwKICAidGV4dF9jb2xvciI6ICIjMmEyMTE4IiwKICAidGV4dHVyZSI6IHsKICAgIndyYXBfcyI6ICJjbGFtcF90b19lZGdlIiwKICAgIndyYXBfdCI6ICJyZXBlYXQiCiAgfSwKICAid29yZF9mb3JtYXQiOiAiSGVicmV3ICh0cmFuc2xpdGVyYXRpb24sIGdsb3NzKSIKIH0sCiAiYW5pbWF0aW9uIjogewogICJzY3JvbGxfYm9iIjogewogICAibm9kZSI6ICJzY3JvbGwiLAogICAicHJvcGVydHkiOiAidHJhbnNsYXRpb24ueSIsCiAgICJhbXBsaXR1ZGUiOiAwLjEyLAogICAiZnJlcXVlbmN5IjogMC44LAogICAiZm9ybXVsYSI6ICJ0cmFuc2xhdGlvbi55ID0gZ2xURiB0cmFuc2xhdGlvbi55ICsgYW1wbGl0dWRlICogc2luKHRpbWUgKiBmcmVxdWVuY3kpIgogIH0KIH0sCiAiY29udHJvbHMiOiB7CiAgImRyYWdfbG9vayI6IHsKICAgInBpdGNoX2NsYW1wIjogWwogICAgLTEuMiwKICAgIDEuMgogICBdLAogICAic2Vuc2l0aXZpdHkiOiAwLjAwNAogIH0sCiAgImRyYWdfc2Nyb2xsIjogewogICAic2Vuc2l0aXZpdHkiOiAwLjAwMgogIH0sCiAgImpveXN0aWNrIjogewogICAiZGVhZF96b25lIjogMC4xMiwKICAgIm5vdGUiOiAiYSBjaXJjdWxhciBvbi1zY3JlZW4gcGFkIGF0IHRoZSBib3R0b20gbGVmdDsgdGhlIHBvaW50ZXIgb2Zmc2V0IGZyb20gdGhlIHBhZCBjZW50ZXIsIGRpdmlkZWQgYnkgdGhlIHBhZCByYWRpdXMgYW5kIGNsYW1wZWQgdG8gbGVuZ3RoIDEsIGlzIHRoZSBtb3ZlbWVudCB2ZWN0b3I7IHRoZSBrbm9iIGluZGljYXRvciBmb2xsb3dzIHRoYXQgbm9ybWFsaXplZCBvZmZzZXQiCiAgfSwKICAibW92ZSI6IHsKICAgImtleXMiOiB7CiAgICAiZG93biI6IFsKICAgICAicyIsCiAgICAgImFycm93ZG93biIKICAgIF0sCiAgICAibGVmdCI6IFsKICAgICAiYSIsCiAgICAgImFycm93bGVmdCIKICAgIF0sCiAgICAicmlnaHQiOiBbCiAgICAgImQiLAogICAgICJhcnJvd3JpZ2h0IgogICAgXSwKICAgICJ1cCI6IFsKICAgICAidyIsCiAgICAgImFycm93dXAiCiAgICBdCiAgIH0sCiAgICJyYWRpdXNfY2xhbXAiOiAxMSwKICAgInNwZWVkIjogNAogIH0sCiAgInRhcF9hdWRpbyI6IHsKICAgIm1heF9tb3ZlX3B4IjogOCwKICAgIm1heF90aW1lX21zIjogNTAwCiAgfSwKICAid2hlZWxfc2Nyb2xsIjogewogICAic2Vuc2l0aXZpdHkiOiAwLjAwMDgKICB9CiB9LAogImF1ZGlvIjogewogICJtaW1lIjogImF1ZGlvL3dlYm0iLAogICJzb3VyY2VfcGFydCI6ICJhdWRpbyIKIH0KfQo=";
+let sceneBytesCache = null;
+async function loadSceneBytes() {
+  if (sceneBytesCache) return sceneBytesCache;
+  try {
+    const r = await fetch('../tools/scene.json');
+    if (r.ok) {
+      const t = await r.text();
+      sceneBytesCache = new TextEncoder().encode(t);
+      return sceneBytesCache;
+    }
+  } catch (e) { /* file:// or offline — fall through to the embedded copy */ }
+  sceneBytesCache = b64ToBytes(EMBEDDED_SCENE_B64);
+  return sceneBytesCache;
+}
+
+// ---- PSLM v4 cartridge building (mirrors tools/encode.py) ----------------
+// The whole payload — header blob, then the parts the header lists, in
+// listed order — lives in ONE LSB bitstream from pixel (0, 0). No
+// visible strip: the encoder must not alter any pixel beyond its LSBs.
 // models: an array of model entries, in header order. An embedded entry is
 // {name, len, sha256, stored_len, compressed, stored} (stored = the bytes
 // to write into the LSB stream, zlib-compressed only where that shrinks).
@@ -1781,95 +1946,81 @@ async function modelEntries(embeddedModels, remote) {
   return out;
 }
 
-function headerModelEntry(m) {
-  if (m.remote) return { name: m.name, len: m.len, sha256: m.sha256, remote: true, url: m.url };
-  return { name: m.name, len: m.len, sha256: m.sha256, stored_len: m.stored_len, compressed: m.compressed };
+// A v4 parts-list entry for one model. len is the STORED length and
+// sha256 is the SHA-256 of the STORED bytes (the extractor verifies
+// the stored bytes, then decompresses per the encoding marker).
+// A remote model occupies no bitstream bytes: len/sha256 describe the
+// original file, and the entry carries remote: true + url.
+async function partEntry(m) {
+  if (m.remote) return { name: m.name, len: m.len, sha256: m.sha256, encoding: 'raw', remote: true, url: m.url };
+  return { name: m.name, len: m.stored.length, sha256: await sha256hex(m.stored), encoding: m.compressed ? 'zlib' : 'raw' };
 }
 
-function lsbCapacityFor(w, h, stripH, depth) {
-  return Math.floor((h - stripH) * w * 3 * depth / 8);
+function lsbCapacityFor(w, h, depth) {
+  return Math.floor(w * h * 3 * depth / 8);
 }
 
-async function planEncode(w, h, packBytes, compBytes, audioBytes, data, models) {
-  // Decide strip height (fixed point: the header contains strip_h) and the
-  // minimum LSB depth that fits (1, then 2). Returns depth null when no
-  // depth fits. Does not write any pixels.
+async function planEncode(w, h, packBytes, compBytes, audioBytes, data, models, sceneBytes) {
+  // Decide the minimum LSB depth that fits (1, then 2). Returns depth
+  // null when no depth fits. Does not write any pixels. The header is a
+  // generic parts list: text, audio (when present), world (the scene
+  // recipe), then the models in header order. The payload is the header
+  // blob followed by the parts, in listed order; remote models occupy no
+  // bytes. The header length does not depend on the depth (one digit),
+  // so there is no fixed point to solve — unlike the old v3 strip.
   const packSha = await sha256hex(packBytes);
   const audioSha = audioBytes.length ? await sha256hex(audioBytes) : null;
-  const streamLen = audioBytes.length + models.reduce((s, m) => s + (m.stored ? m.stored.length : 0), 0);
-  let stripH = MIN_STRIP_H;
-  let header, blob;
-  for (let i = 0; i < 5; i++) {
-    header = {
-      format: 'PSLM', version: VERSION, chapter: data.chapter,
-      languages: data.languages, fallback: data.fallback || 'en',
-      pack_len: packBytes.length, pack_comp_len: compBytes.length,
-      pack_sha256: packSha,
-      audio_len: audioBytes.length, audio_sha256: audioSha,
-      audio_format: audioBytes.length ? 'opus-webm' : null,
-      strip_h: stripH, cover_w: w, cover_h: h, lsb_depth: 1,
-      models: models.map(headerModelEntry),
-    };
-    const hj = new TextEncoder().encode(JSON.stringify(header));
-    blob = concat(MAGIC, new Uint8Array([VERSION]), u32be(hj.length), hj, compBytes);
-    const need = Math.ceil(blob.length / (w * 3));
-    const next = Math.max(MIN_STRIP_H, need);
-    if (next === stripH) break;
-    stripH = next;
-    if (i === 4) throw new Error('strip height did not converge');
-  }
-  const cap1 = lsbCapacityFor(w, h, stripH, 1);
-  const cap2 = lsbCapacityFor(w, h, stripH, 2);
+  const worldSha = await sha256hex(sceneBytes);
+  const parts = [{ name: 'text', len: compBytes.length, sha256: await sha256hex(compBytes), encoding: 'zlib' }];
+  if (audioBytes.length) parts.push({ name: 'audio', len: audioBytes.length, sha256: audioSha, encoding: 'raw' });
+  parts.push({ name: 'world', len: sceneBytes.length, sha256: worldSha, encoding: 'raw' });
+  for (const m of models) parts.push(await partEntry(m));
+  const header = {
+    format: 'PSLM', version: VERSION, chapter: data.chapter,
+    languages: data.languages, fallback: data.fallback || 'en',
+    lsb_depth: 1, parts,
+    strip_h: 0, cover_w: w, cover_h: h,
+    audio_format: audioBytes.length ? 'opus-webm' : null,
+  };
+  const hj = new TextEncoder().encode(JSON.stringify(header));
+  const blob = concat(MAGIC, new Uint8Array([VERSION]), u32be(hj.length), hj, compBytes);
+  // The payload is the whole bitstream: blob + audio + scene + models.
+  const streamLen = blob.length + audioBytes.length + sceneBytes.length +
+    models.reduce((s, m) => s + (m.stored ? m.stored.length : 0), 0);
+  const cap1 = lsbCapacityFor(w, h, 1);
+  const cap2 = lsbCapacityFor(w, h, 2);
   let depth = null;
   if (streamLen <= cap1) depth = 1;
   else if (streamLen <= cap2) depth = 2;
-  return { stripH, depth, payload: streamLen, cap1, cap2, header, blob, packSha, audioSha };
+  return { depth, payload: streamLen, cap1, cap2, header, blob, packSha, audioSha, worldSha, sceneBytes };
 }
 
-async function buildCartridge(pixels, w, h, packBytes, compBytes, audioBytes, data, models) {
-  const plan = await planEncode(w, h, packBytes, compBytes, audioBytes, data, models);
+async function buildCartridge(pixels, w, h, packBytes, compBytes, audioBytes, data, models, sceneBytes) {
+  const plan = await planEncode(w, h, packBytes, compBytes, audioBytes, data, models, sceneBytes);
   if (plan.depth === null) {
     const err = new Error('payload does not fit the LSB layer');
-    err.numbers = { payload: plan.payload, cap1: plan.cap1, cap2: plan.cap2, stripH: plan.stripH, w, h };
+    err.numbers = { payload: plan.payload, cap1: plan.cap1, cap2: plan.cap2, w, h };
     throw err;
   }
-  const { stripH, depth, header, blob } = plan;
-  if (stripH >= h) {
-    throw new Error('cover is too small: the text strip alone needs ' + stripH + ' rows of ' + h);
-  }
+  const { depth, header, blob } = plan;
   // Rebuild the header with the chosen depth (same length — one digit).
   header.lsb_depth = depth;
   const hj = new TextEncoder().encode(JSON.stringify(header));
   const finalBlob = concat(MAGIC, new Uint8Array([VERSION]), u32be(hj.length), hj, compBytes);
 
-  // 1. Visible strip: blob bytes as RGB pixels, row-major; the rest of the
-  // strip is deterministic filler (ignored by every decoder).
-  const seed = new Uint8Array((await crypto.subtle.digest('SHA-256', packBytes)).slice(0, 4));
-  const nextFiller = fillerPRNG(seed);
-  const stripBytesTotal = stripH * w * 3;
-  const strip = new Uint8Array(stripBytesTotal);
-  strip.set(finalBlob);
-  for (let i = finalBlob.length; i < stripBytesTotal; i++) strip[i] = nextFiller();
-
-  let p = 0;
-  for (let y = 0; y < stripH; y++) {
-    for (let x = 0; x < w; x++) {
-      const i = (y * w + x) * 4;
-      pixels[i] = strip[p++]; pixels[i + 1] = strip[p++]; pixels[i + 2] = strip[p++];
-      pixels[i + 3] = 255; // the code band is opaque
-    }
-  }
-
-  // 2. LSB stream: audio, then each embedded model in header order,
-  // `depth` bits per channel, rows below the strip, MSB first within each
-  // byte. Each channel takes the next `depth` stream bits, first bit into
-  // the highest of them. Remote models occupy no bytes here.
-  const stream = concat(audioBytes, ...models.filter((m) => m.stored).map((m) => m.stored));
+  // One LSB bitstream from pixel (0, 0): the header blob, then the audio,
+  // then the scene bytes, then each embedded model in header order.
+  // `depth` bits per channel, MSB first within each byte. Each channel
+  // takes the next `depth` stream bits, first bit into the highest of
+  // them. Remote models occupy no bytes here. No pixel is touched beyond
+  // its lowest `depth` bits; alpha is never touched.
+  const stream = concat(finalBlob, audioBytes, sceneBytes,
+    ...models.filter((m) => m.stored).map((m) => m.stored));
   const mask = (1 << depth) - 1;
   let bit = 0;
   const totalBits = stream.length * 8;
   outer:
-  for (let y = stripH; y < h; y++) {
+  for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       if (bit >= totalBits) break outer;
       const i = (y * w + x) * 4;
@@ -1889,73 +2040,29 @@ async function buildCartridge(pixels, w, h, packBytes, compBytes, audioBytes, da
     }
   }
 
-  return { header, stripH, depth, lsbCapacity: lsbCapacityFor(w, h, stripH, depth), blobLen: finalBlob.length };
+  return { header, depth, lsbCapacity: lsbCapacityFor(w, h, depth), blobLen: finalBlob.length,
+    packSha: plan.packSha, audioSha: plan.audioSha, worldSha: plan.worldSha };
 }
 
-// Self-check on the built pixel buffer: re-read the strip header, inflate
-// the pack, verify its SHA-256, then read the LSB stream at the header's
-// depth and verify the audio and every embedded model SHA-256. (A light
-// in-page proof; the real proof is tools/decode.py or decode.html on the
-// downloaded file.) Remote models occupy no LSB bytes and are skipped.
+// Self-check on the built pixel buffer: re-read it with the real v4
+// decoder (decodeV4 — the same code path decode.html uses), which reads
+// the LSB stream from row 0, verifies every part's SHA-256, and resolves
+// the text/audio/world/models. Then check the version, strip_h and the
+// world part, and that the header parts match the ones we planned.
+// (A light in-page proof; the real proof is tools/decode.py or
+// decode.html on the downloaded file.) Remote models occupy no LSB bytes
+// and are verified by the decoder only when fetched.
 async function selfCheck(pixels, w, h, header) {
-  const readStrip = (n) => {
-    const out = new Uint8Array(n);
-    const rows = Math.ceil(n / (w * 3));
-    let p = 0;
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < w; x++) {
-        if (p >= n) return out;
-        const i = (y * w + x) * 4;
-        out[p++] = pixels[i]; if (p >= n) return out;
-        out[p++] = pixels[i + 1]; if (p >= n) return out;
-        out[p++] = pixels[i + 2];
-      }
-    }
-    return out;
-  };
-  const head = readStrip(9);
-  if (!MAGIC.every((b, i) => b === head[i])) throw new Error('self-check: bad magic in built strip');
-  const hlen = new DataView(head.buffer, head.byteOffset + 5, 4).getUint32(0, false);
-  const hdr = JSON.parse(new TextDecoder().decode(readStrip(9 + hlen).subarray(9)));
-  if (hdr.pack_sha256 !== header.pack_sha256) throw new Error('self-check: header mismatch');
-  const comp = readStrip(9 + hlen + hdr.pack_comp_len).subarray(9 + hlen);
-  const pack = await inflateZlib(comp);
-  if (pack.length !== hdr.pack_len) throw new Error('self-check: pack length mismatch');
-  if ((await sha256hex(pack)) !== hdr.pack_sha256) throw new Error('self-check: pack SHA-256 mismatch');
-  const depth = hdr.lsb_depth || 1;
-  const mask = (1 << depth) - 1;
-  const embedded = (hdr.models || []).filter((m) => !m.remote);
-  const totalLsb = hdr.audio_len + embedded.reduce((s, m) => s + m.stored_len, 0);
-  if (totalLsb) {
-    const out = new Uint8Array(totalLsb);
-    let bit = 0;
-    const total = totalLsb * 8;
-    outer:
-    for (let y = hdr.strip_h; y < h; y++) {
-      for (let x = 0; x < w; x++) {
-        if (bit >= total) break outer;
-        const i = (y * w + x) * 4;
-        for (let c = 0; c < 3; c++) {
-          if (bit >= total) break;
-          const chunk = pixels[i + c] & mask;
-          for (let b = depth - 1; b >= 0; b--) {
-            if (bit >= total) break;
-            if ((chunk >> b) & 1) out[bit >> 3] |= 1 << (7 - (bit % 8));
-            bit++;
-          }
-        }
-      }
-    }
-    let off = 0;
-    if (hdr.audio_len) {
-      const audio = out.slice(off, off + hdr.audio_len); off += hdr.audio_len;
-      if ((await sha256hex(audio)) !== hdr.audio_sha256) throw new Error('self-check: audio SHA-256 mismatch');
-    }
-    for (const m of embedded) {
-      const stored = out.slice(off, off + m.stored_len); off += m.stored_len;
-      const raw = m.compressed ? await inflateZlib(stored) : stored;
-      if (raw.length !== m.len) throw new Error('self-check: model ' + m.name + ' length mismatch');
-      if ((await sha256hex(raw)) !== m.sha256) throw new Error('self-check: model ' + m.name + ' SHA-256 mismatch');
+  const out = await decodeV4(pixels, w, h);
+  if (out.header.version !== 4) throw new Error('self-check: version is not 4');
+  if (out.header.strip_h !== 0) throw new Error('self-check: strip_h is not 0');
+  if (!out.world) throw new Error('self-check: no world part in the built cartridge');
+  const hp = out.header.parts, ep = header.parts;
+  if (hp.length !== ep.length) throw new Error('self-check: parts count mismatch');
+  for (let i = 0; i < hp.length; i++) {
+    if (hp[i].name !== ep[i].name || hp[i].len !== ep[i].len ||
+        hp[i].sha256 !== ep[i].sha256 || hp[i].encoding !== ep[i].encoding) {
+      throw new Error('self-check: header parts mismatch at ' + ep[i].name);
     }
   }
   return true;
@@ -2279,10 +2386,37 @@ async function handleFile(file) {
   // through the browser's own decoder + canvas (exactly like JPEG today).
   // Warn, don't block: an input that already carries PSLM magic.
   let alreadyNote = '';
+  const lsbMagic = (px, depth) => {
+    // The first 4 bytes of the LSB bitstream, read R/G/B per pixel
+    // (alpha skipped), `depth` bits per channel, most-significant first.
+    const want = [0x50, 0x53, 0x4C, 0x4D];
+    const mask = (1 << depth) - 1;
+    let byte = 0, bits = 0, bi = 0;
+    for (let p = 0; p < px.length / 4 && bi < 4; p++) {
+      for (let c = 0; c < 3; c++) {
+        const chunk = px[p * 4 + c] & mask;
+        for (let b = depth - 1; b >= 0; b--) {
+          byte = (byte << 1) | ((chunk >> b) & 1);
+          if (++bits === 8) {
+            if (byte !== want[bi]) return false;
+            bi++; byte = 0; bits = 0;
+            if (bi === 4) return true;
+          }
+        }
+      }
+    }
+    return false;
+  };
   const pslmNote = (px) => {
+    // v3: the top rows' pixel values spell PSLM (the visible strip).
     if (px[0] === 0x50 && px[1] === 0x53 && px[2] === 0x4C && px[3] === 0x4D) {
-      return '<p><strong>Note:</strong> this image already looks like a cartridge ' +
+      return '<p><strong>Note:</strong> this image already looks like a v3 cartridge ' +
         '(its top rows spell “PSLM”). Encoding it again would overwrite its code strip.</p>';
+    }
+    // v4: the least-significant bits of the first pixels spell PSLM.
+    if (lsbMagic(px, 1) || lsbMagic(px, 2)) {
+      return '<p><strong>Note:</strong> this image already looks like a v4 cartridge ' +
+        '(its least-significant bits spell “PSLM”). Encoding it again would overwrite its code.</p>';
     }
     return '';
   };
@@ -2434,11 +2568,12 @@ async function handleFile(file) {
   // only then the explicit opt-ins (remote models, text+audio-only).
   const embeddedModels = CHAPTER_MODELS ? await modelEntries(CHAPTER_MODELS, false) : null;
   const remoteModels = await modelEntries(CHAPTER_MODELS, true);
+  const sceneBytes = await loadSceneBytes();
   const planEmbedded = embeddedModels
-    ? await planEncode(w, h, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, embeddedModels)
+    ? await planEncode(w, h, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, embeddedModels, sceneBytes)
     : null;
-  const planRemote = await planEncode(w, h, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, remoteModels);
-  const planTao = await planEncode(w, h, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, []);
+  const planRemote = await planEncode(w, h, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, remoteModels, sceneBytes);
+  const planTao = await planEncode(w, h, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, [], sceneBytes);
 
   // Upscale option: only when the payload that could be packed here does
   // not fit at any LSB depth. Never automatic, off by default (the box
@@ -2455,7 +2590,7 @@ async function handleFile(file) {
       const targetModels = embeddedModels || [];
       const options = [];
       for (const f of [2, 3, 4]) {
-        const p = await planEncode(w * f, h * f, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, targetModels);
+        const p = await planEncode(w * f, h * f, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, targetModels, sceneBytes);
         if (p.depth !== null) options.push({ factor: f, plan: p });
       }
       if (options.length) {
@@ -2474,7 +2609,7 @@ async function handleFile(file) {
   current = {
     file, kind, bytes, pixels, w, h,
     pngInfo, meta, gifComments, outColorType, preserved, packBytes, compBytes,
-    embeddedModels, remoteModels, planEmbedded, planRemote, planTao, upscale,
+    embeddedModels, remoteModels, planEmbedded, planRemote, planTao, upscale, sceneBytes,
   };
 
   const modelsRow = embeddedModels
@@ -2521,13 +2656,11 @@ function refreshFitUI() {
   let nums = `Cover <strong>${w} × ${h}</strong> · output colour type <strong>${outColorType === 6 ? 'RGBA' : 'RGB'}</strong><br>`;
   if (modelsFit) {
     const cap = planEmbedded.depth === 1 ? planEmbedded.cap1 : planEmbedded.cap2;
-    nums += `Full payload <strong>${fmtBytes(planEmbedded.payload)}</strong> (audio ${fmtBytes(audioLen)} + ` +
-      `models ${fmtBytes(planEmbedded.payload - audioLen)}) of <strong>${fmtBytes(cap)}</strong> LSB capacity ` +
-      `— <strong>${planEmbedded.depth} LSB, ${(100 * planEmbedded.payload / cap).toFixed(1)}%</strong>, strip ${planEmbedded.stripH} rows.`;
+    nums += `Full payload <strong>${fmtBytes(planEmbedded.payload)}</strong> (text pack + audio + scene + models) of <strong>${fmtBytes(cap)}</strong> LSB capacity ` +
+      `— <strong>${planEmbedded.depth} LSB, ${(100 * planEmbedded.payload / cap).toFixed(1)}%</strong>, no strip (the code lives in the lowest bits only).`;
   } else if (modelsAvailable) {
-    nums += `Full payload <strong>${fmtBytes(planEmbedded.payload)}</strong> (audio ${fmtBytes(audioLen)} + ` +
-      `models ${fmtBytes(planEmbedded.payload - audioLen)}) — does NOT fit: ` +
-      `<strong>${fmtBytes(planEmbedded.cap1)}</strong> at 1 LSB, <strong>${fmtBytes(planEmbedded.cap2)}</strong> at 2 LSBs, strip ${planEmbedded.stripH} rows.`;
+    nums += `Full payload <strong>${fmtBytes(planEmbedded.payload)}</strong> (text pack + audio + scene + models) — does NOT fit: ` +
+      `<strong>${fmtBytes(planEmbedded.cap1)}</strong> at 1 LSB, <strong>${fmtBytes(planEmbedded.cap2)}</strong> at 2 LSBs.`;
   } else {
     nums += `Audio <strong>${fmtBytes(audioLen)}</strong> of <strong>${fmtBytes(planTao.depth === 1 ? planTao.cap1 : planTao.cap2)}</strong> LSB capacity (text + audio only — the models are unavailable here).`;
   }
@@ -2541,7 +2674,7 @@ function refreshFitUI() {
       `<strong>${nw} × ${nh}</strong> · output colour type <strong>${outColorType === 6 ? 'RGBA' : 'RGB'}</strong><br>` +
       `${up.target === 'embedded' ? 'Full payload' : 'Text + audio payload'} <strong>${fmtBytes(upOpt.plan.payload)}</strong> of ` +
       `<strong>${fmtBytes(cap)}</strong> LSB capacity — <strong>${upOpt.plan.depth} LSB, ${(100 * upOpt.plan.payload / cap).toFixed(1)}%</strong>, ` +
-      `strip ${upOpt.plan.stripH} rows. The output PNG is bigger than your original image — the picture is the same, just larger.`;
+      `The output PNG is bigger than your original image — the picture is the same, just larger.`;
   }
   numbersEl.innerHTML = nums;
 
@@ -2590,7 +2723,7 @@ function refreshFitUI() {
       `<p>Scale factor (the smallest that fits is pre-selected):</p>${opts}` +
       `<p>Method: <label><input type="radio" name="upMethod" value="smooth"${up.method === 'smooth' ? ' checked' : ''}> Smooth (best for photos)</label> ` +
       `<label><input type="radio" name="upMethod" value="exact"${up.method === 'exact' ? ' checked' : ''}> Exact (nearest-neighbour — keeps every original pixel value, best for pixel art)</label></p>` +
-      `<p class="small">When this is on, the Encode button below scales the image first, then encodes exactly as usual — same PSLM v3 format, same depth rules, same self-check. Turn it off any time to go back to the original size.</p></div>`;
+      `<p class="small">When this is on, the Encode button below scales the image first, then encodes exactly as usual — same PSLM v4 format, same depth rules, same self-check. Turn it off any time to go back to the original size.</p></div>`;
     upscaleBoxEl.querySelector('#upscaleToggle').addEventListener('change', (e) => { up.enabled = e.target.checked; refreshFitUI(); });
     upscaleBoxEl.querySelectorAll('input[name="upFactor"]').forEach((r) => r.addEventListener('change', () => { up.selected = parseInt(r.value, 10); refreshFitUI(); }));
     upscaleBoxEl.querySelectorAll('input[name="upMethod"]').forEach((r) => r.addEventListener('change', () => { up.method = r.value; refreshFitUI(); }));
@@ -2622,7 +2755,7 @@ function refreshFitUI() {
 
 async function encodeCurrent(mode) {
   if (!current || !mode) return;
-  const { pixels, w, h, packBytes, compBytes, embeddedModels, remoteModels, planEmbedded, planRemote, planTao } = current;
+  const { pixels, w, h, packBytes, compBytes, embeddedModels, remoteModels, planEmbedded, planRemote, planTao, sceneBytes } = current;
   const models = mode === 'embedded' ? embeddedModels : mode === 'remote' ? remoteModels : [];
   const plan = mode === 'embedded' ? planEmbedded : mode === 'remote' ? planRemote : planTao;
   // Upscale path: only from the main Encode button, only when the user
@@ -2658,12 +2791,17 @@ async function encodeCurrent(mode) {
     ePixels = sctx.getImageData(0, 0, ew, eh).data;
   }
   const work = new Uint8Array(ePixels); // never mutate the preview buffer in place twice
-  const { header, stripH, depth, lsbCapacity } = await buildCartridge(work, ew, eh, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, models);
+  const { header, depth, lsbCapacity, packSha, audioSha, worldSha } = await buildCartridge(work, ew, eh, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, models, sceneBytes);
 
   // Assemble the output PNG, carrying the input's metadata. PNG inputs
   // carry their chunks verbatim (in `preserved`); every other input
   // carries its unified EXIF / XMP / IPTC / ICC the same way.
-  let extraChunks = [...current.preserved];
+  // The bootstrap chunk first (right after IHDR, like tools/encode.py):
+  // the PNG teaches itself. Any PSLM tEXt chunk the input already
+  // carried is dropped, so there is never a duplicate.
+  const preserved = current.preserved.filter((c) =>
+    !(c.type === 'tEXt' && new TextDecoder().decode(c.data.subarray(0, 4)) === 'PSLM'));
+  let extraChunks = [{ type: 'tEXt', data: textChunk('PSLM', BOOTSTRAP_TEXT) }, ...preserved];
   const m = current.meta || {};
   if (m.exif) extraChunks.push({ type: 'eXIf', data: m.exif });
   if (m.icc) {
@@ -2684,9 +2822,12 @@ async function encodeCurrent(mode) {
   let checkMsg = '';
   try {
     await selfCheck(work, ew, eh, header);
-    checkMsg = 'Self-check passed: the strip header parses, the text pack SHA-256 matches, ' +
-      (header.audio_len ? 'the audio SHA-256 matches' : 'no audio was packed') +
-      (header.models.some((m) => !m.remote) ? ', and every packed model SHA-256 matches.' : '.');
+    const partByName = (n) => header.parts.find((p) => p.name === n);
+    checkMsg = 'Self-check passed: the LSB header parses, the text pack SHA-256 matches, ' +
+      (partByName('audio') ? 'the audio SHA-256 matches' : 'no audio was packed') +
+      (header.parts.some((p) => p.name !== 'text' && p.name !== 'audio' && p.name !== 'world' && !p.remote)
+        ? ', every packed model SHA-256 matches, and the world part is present (SHA-256 ' + worldSha.slice(0, 12) + '…).'
+        : ', and the world part is present (SHA-256 ' + worldSha.slice(0, 12) + '…).');
   } catch (e) {
     checkMsg = 'Self-check FAILED — do not trust this file: ' + e.message;
   }
@@ -2697,10 +2838,11 @@ async function encodeCurrent(mode) {
   const url = URL.createObjectURL(blob);
   downloadEl.href = url;
   downloadEl.download = `psalm${nnn}-cartridge.png`;
-  const modelsRow = header.models.length
-    ? header.models.map((m) => m.remote
+  const modelParts = header.parts.filter((p) => p.name !== 'text' && p.name !== 'audio' && p.name !== 'world');
+  const modelsRow = modelParts.length
+    ? modelParts.map((m) => m.remote
         ? `<tr><td>Model ${m.name}</td><td>REMOTE — <code>${m.url}</code> (${fmtBytes(m.len)}, SHA-256 <code>${m.sha256.slice(0, 12)}…</code>)</td></tr>`
-        : `<tr><td>Model ${m.name}</td><td>packed in image — ${fmtBytes(m.len)} → ${fmtBytes(m.stored_len)} stored (${m.compressed ? 'zlib' : 'raw'}), SHA-256 <code>${m.sha256.slice(0, 12)}…</code></td></tr>`).join('')
+        : `<tr><td>Model ${m.name}</td><td>packed in image — ${fmtBytes(m.len)} stored (${m.encoding}), SHA-256 <code>${m.sha256.slice(0, 12)}…</code></td></tr>`).join('')
     : `<tr><td>Models</td><td><strong>None packed — this cartridge is incomplete for the world.</strong></td></tr>`;
   const modeNote = mode === 'remote'
     ? `<p><strong>Not fully offline:</strong> this cartridge's world is fetched from the site when opened, and the decoder will always warn that it needs the network. A bigger cover image is the fully-offline option.</p>`
@@ -2714,9 +2856,9 @@ async function encodeCurrent(mode) {
     `<table class="nums">` +
     `<tr><td>Output</td><td><code>psalm${nnn}-cartridge.png</code> — ${ew} × ${eh}, ` +
     `${pngBytes.length.toLocaleString()} bytes, colour type ${current.outColorType === 6 ? 'RGBA' : 'RGB'}</td></tr>` +
-    `<tr><td>Strip</td><td>${stripH} rows · LSB payload ${header.audio_len.toLocaleString()} audio + models of ${lsbCapacity.toLocaleString()} bytes at ${depth} LSB</td></tr>` +
-    `<tr><td>Text pack</td><td>SHA-256 <code>${header.pack_sha256}</code></td></tr>` +
-    `<tr><td>Audio</td><td>SHA-256 <code>${header.audio_sha256 || '—'}</code></td></tr>` +
+    `<tr><td>Code</td><td>all-LSB, no strip · ${header.parts.length} parts (${header.parts.map((p) => p.name).join(', ')}) of ${lsbCapacity.toLocaleString()} bytes capacity at ${depth} LSB</td></tr>` +
+    `<tr><td>Text pack</td><td>SHA-256 <code>${packSha}</code></td></tr>` +
+    `<tr><td>Audio</td><td>SHA-256 <code>${audioSha || '—'}</code></td></tr>` +
     modelsRow +
     `</table><p>${checkMsg}</p>` + modeNote + upNote;
   donePanel.hidden = false;

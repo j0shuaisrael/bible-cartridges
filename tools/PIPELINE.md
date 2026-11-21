@@ -1,6 +1,6 @@
 # Bible Cartridges — Psalms 2–150 Pipeline
 
-How Psalms 2–150 get built from Mechon Mamre sources into PSLM v3
+How Psalms 2–150 get built from Mechon Mamre sources into PSLM v4
 cartridges. Psalm 1 is the reference build (`psalms/001/`,
 `tools/psalm001_data.json`); everything here reproduces its pipeline,
 parameterized by psalm number.
@@ -171,7 +171,7 @@ All wired by the driver (next section); the individual tools:
 - **Encode**: `python3 tools/encode.py --cover psalms/NNN/cover.png
   --data tools/psalmNNN_data.json --audio psalms/NNN/audio.webm
   --palace assets/cloud-palace.glb --skybox assets/skybox.glb
-  --out psalms/NNN/cartridge.png` (PSLM v3, full models embedded).
+  --out psalms/NNN/cartridge.png` (PSLM v4, full models + scene embedded).
 - **Verify**: `python3 tools/decode.py psalms/NNN/cartridge.png
   --out-text … --out-audio … --out-model-palace … --out-model-skybox …`
   — every SHA-256 checked; extracted text/audio/models compared
@@ -180,13 +180,13 @@ All wired by the driver (next section); the individual tools:
 ### Cover-size rule
 
 Minimum that fits, depth 1 preferred. The driver computes the exact
-payload (Opus audio + zlib-stored models + text pack, same arithmetic
-as `encode.py`) and picks **3072×3072 when the payload fits its
-depth-1 LSB layer (3,520,512 B), else 4096×4096**; the encoder then
+payload (header blob + Opus audio + scene + zlib-stored models, same
+arithmetic as `encode.py`) and picks **3072×3072 when the payload fits
+its depth-1 LSB layer (3,538,944 B), else 4096×4096**; the encoder then
 picks the minimum depth (1, else 2) that fits and refuses loudly if
-nothing fits. Psalm 119's ~19-minute reading (~3.4 MB Opus) plus the
+nothing fits. Psalm 119's ~19-minute reading (~3.9 MB Opus) plus the
 ~2.9 MB stored models exceeds depth-1 capacity even at 4096
-(6,266,880 B), so its cartridge is expected to be **4096 depth 2**.
+(6,291,456 B), so its cartridge is expected to be **4096 depth 2**.
 
 ## 7. Driver
 

@@ -4,11 +4,12 @@
 
   Anyone can drag any cartridge PNG onto this page (or pick a file) and
   read the chapter — nothing to install, no account, no network, no cost.
-  It parses the PSLM v3 header, verifies the SHA-256 of the text pack, the
-  audio, and each 3D model, and only then renders the chapter and offers
-  the audio. On any mismatch it reports DAMAGE and shows nothing unverified.
+  It parses the PSLM v4 header (and v3/v2 headers, for old cartridges),
+  verifies the SHA-256 of every part, and only then renders the chapter
+  and offers the audio. On any mismatch it reports DAMAGE and shows
+  nothing unverified.
 
-  A valid PSLM v3 cartridge takes over the display with the chapter's 3D
+  A valid cartridge (v4, or v3 with models) takes over the display with the chapter's 3D
   world: the same floating scroll in the palace-and-sky world as the
   psalm's own viewer page, built from the GLBs extracted from the image
   itself — the world is NEVER fetched from the site. A v2 cartridge (no
@@ -23,7 +24,7 @@
   file, which is itself the portable decoder.
 
   The decoder below is a standalone copy of psalms/001/decode.js (same
-  PSLM v3 logic, same version). It is inlined here on purpose: this page
+  PSLM v4 + v3 logic, same version). It is inlined here on purpose: this page
   must work from file:// as well as from GitHub Pages, and an ES-module
   import of ../psalms/001/decode.js would be blocked by CORS on file://.
   If decode.js changes, mirror the change here.
@@ -204,6 +205,14 @@ right here, built from the models inside the image itself.</p>
   <textarea id="readspec" readonly></textarea>
   <p><button id="copyReadSpec" class="secondary">Copy the reading spec</button>
   <span class="small" id="copyReadNote"></span></p>
+  <h2>The header, as a schema</h2>
+  <p>The header JSON, defined machine-readably (JSON Schema, draft
+  2020-12) instead of in prose. A decoder can validate the header
+  against it; the extractor still needs only version, lsb_depth and
+  parts.</p>
+  <textarea id="headerschema" readonly></textarea>
+  <p><button id="copyHeaderSchema" class="secondary">Copy the header schema</button>
+  <span class="small" id="copyHeaderNote"></span></p>
 </section>
 
 <script type="module">
@@ -211,16 +220,40 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-// ---- PSLM v3 decoder (standalone copy of psalms/001/decode.js) ----------
-// Format: PNG pixels, row-major. Top strip rows hold the text pack (zlib)
-// as a visible RGB strip (3 bytes/px): magic "PSLM", 1 version byte,
-// 4-byte BE header length, header JSON, then the compressed text pack.
-// Below the strip, ONE LSB bitstream at lsb_depth bits per channel,
-// MSB-first, sections in order: audio, then each model in header order.
-// Every payload is SHA-256-verified; any mismatch throws (DAMAGE).
-// The decoder never fetches language data or models.
+// ---- PSLM v4 decoder (standalone copy of psalms/001/decode.js) ----------
+// Format: ONE LSB bitstream from pixel (0, 0), row-major, at lsb_depth
+// bits per channel, MSB-first. Sections: the header blob (magic "PSLM",
+// 1 version byte = 4, 4-byte BE header length, header JSON), then the
+// parts the header lists, in listed order. The header is a generic,
+// self-describing parts list: each part has a name, a length, a SHA-256
+// of its stored bytes, and an encoding ("zlib" or "raw"). The extractor
+// reads whatever the header lists, verifies each hash, and knows nothing
+// about what any part IS — roles (text/audio/models) are just names the
+// renderer looks up afterwards. v2/v3 cartridges still read (legacy
+// path): their header blob sits in a visible strip at the top, with the
+// audio + models in an LSB layer below the strip. Every payload is
+// SHA-256-verified; any mismatch throws (DAMAGE). The decoder never
+// fetches language data or models.
 const MAGIC = [0x50, 0x53, 0x4c, 0x4d]; // "PSLM"
-const VERSIONS = [2, 3];
+// A header longer than this is not a PSLM header (real ones are ~500 B);
+// the bound stops a corrupt length field from causing a huge read.
+const MAX_HEADER_LEN = 1000000;
+
+// Thrown when a layout's magic did not match — the caller tries the
+// other layout. Any other throw means the magic matched and the file
+// is damaged.
+function notThisFormat() {
+  const e = new Error('no PSLM magic in this layout');
+  e.notThisFormat = true;
+  return e;
+}
+
+function checkHeaderLen(hlen) {
+  if (!hlen || hlen > MAX_HEADER_LEN) {
+    throw new Error('header length ' + hlen + ' out of bounds — cartridge damaged');
+  }
+  return hlen;
+}
 
 function hexSha256(bytes) {
   return crypto.subtle.digest('SHA-256', bytes).then((buf) =>
@@ -257,12 +290,15 @@ function stripBytes(data, w, n) {
   return out;
 }
 
-function lsbBytes(data, w, h, stripH, n, depth) {
+// Read `n` bytes from the LSB bitstream starting at row `startRow`, at
+// `depth` bits per channel (1 or 2), MSB-first within each byte,
+// row-major, RGB order.
+function lsbBytes(data, w, h, startRow, n, depth) {
   const out = new Uint8Array(n);
   let bit = 0;
   const total = n * 8;
   const mask = (1 << depth) - 1;
-  for (let y = stripH; y < h; y++) {
+  for (let y = startRow; y < h; y++) {
     for (let x = 0; x < w; x++) {
       if (bit >= total) return out;
       const i = (y * w + x) * 4;
@@ -281,34 +317,10 @@ function lsbBytes(data, w, h, stripH, n, depth) {
   return out;
 }
 
-async function decodeCartridgeImage(img) {
-  const canvas = document.createElement('canvas');
-  canvas.width = img.naturalWidth;
-  canvas.height = img.naturalHeight;
-  const ctx = canvas.getContext('2d', { willReadFrequently: true });
-  ctx.drawImage(img, 0, 0);
-  const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const w = canvas.width, h = canvas.height;
-
-  const head = stripBytes(data, w, 9);
-  if (!MAGIC.every((b, i) => b === head[i])) {
-    throw new Error('not a PSLM cartridge (bad magic)');
-  }
-  const version = head[4];
-  if (!VERSIONS.includes(version)) {
-    throw new Error(`unsupported PSLM version ${version} (this decoder reads v2 and v3)`);
-  }
-  const hlen = new DataView(head.buffer, head.byteOffset + 5, 4).getUint32(0, false);
-  const headerRaw = stripBytes(data, w, 9 + hlen).subarray(9);
-  const header = JSON.parse(new TextDecoder().decode(headerRaw));
-  if (header.format !== 'PSLM' || header.version !== version) {
-    throw new Error('header/version mismatch');
-  }
-
-  const stripH = header.strip_h;
-  const blobLen = 9 + hlen + header.pack_comp_len;
-  const blob = stripBytes(data, w, blobLen);
-  const comp = blob.subarray(9 + hlen);
+async function finishDecodeV3(header, comp, stream) {
+  // Verify the text pack, audio and models from the already-read bytes.
+  // Legacy v3 field names (pack_len, pack_sha256, audio_len, audio_sha256,
+  // models[] with stored_len/compressed) — the v3 reader keeps them.
   const packBytes = await inflateZlib(comp);
   if (packBytes.length !== header.pack_len) {
     throw new Error('pack length mismatch — cartridge damaged');
@@ -317,32 +329,26 @@ async function decodeCartridgeImage(img) {
     throw new Error('pack SHA-256 mismatch — text damaged');
   }
   const pack = JSON.parse(new TextDecoder().decode(packBytes));
-
-  const depth = header.lsb_depth || 1;
-  const models = version === 3 && Array.isArray(header.models) ? header.models : [];
-  // Embedded models occupy stored_len bytes each in the LSB stream, in
-  // header order. Remote models (remote:true) occupy NO bytes — they are
-  // fetched from their recorded URL only when the world starts, and only
-  // because the header says remote. They are never fetched by default.
-  const embedded = models.filter((m) => !m.remote);
-  const totalLsb = header.audio_len + embedded.reduce((s, m) => s + m.stored_len, 0);
-  const stream = totalLsb ? lsbBytes(data, w, h, stripH, totalLsb, depth) : new Uint8Array(0);
   let off = 0;
   let audio = null;
   if (header.audio_len) {
     audio = stream.slice(off, off + header.audio_len); off += header.audio_len;
+    if (audio.length !== header.audio_len) {
+      throw new Error('cartridge truncated: audio runs past the bitstream');
+    }
     if ((await hexSha256(audio)) !== header.audio_sha256) {
       throw new Error('audio SHA-256 mismatch — audio damaged');
     }
   }
+  const models = Array.isArray(header.models) ? header.models : [];
   const decodedModels = {};
   const remoteModels = {};
   for (const m of models) {
-    if (m.remote) {
-      remoteModels[m.name] = m;
-      continue;
-    }
+    if (m.remote) { remoteModels[m.name] = m; continue; } // remote models occupy NO bytes in the stream
     const stored = stream.slice(off, off + m.stored_len); off += m.stored_len;
+    if (stored.length !== m.stored_len) {
+      throw new Error('cartridge truncated: model ' + m.name + ' runs past the bitstream');
+    }
     const bytes = m.compressed ? await inflateZlib(stored) : stored;
     if (bytes.length !== m.len) {
       throw new Error(`model ${m.name} length mismatch: ${bytes.length} != ${m.len}`);
@@ -352,7 +358,166 @@ async function decodeCartridgeImage(img) {
     }
     decodedModels[m.name] = bytes;
   }
-  return { header, pack, audio, models: version === 3 ? decodedModels : null, remoteModels, w, h };
+  if (off !== stream.length) {
+    throw new Error('bitstream length mismatch — cartridge damaged');
+  }
+  return { header, pack, audio, models: decodedModels, remoteModels, packTextLen: packBytes.length, world: null };
+}
+
+// v2/v3 layout: header blob in the visible strip, audio + models in the
+// LSB layer below the strip.
+async function decodeV3(data, w, h) {
+  const head = stripBytes(data, w, 9);
+  if (!MAGIC.every((b, i) => b === head[i])) throw notThisFormat();
+  const version = head[4];
+  if (version !== 2 && version !== 3) {
+    throw new Error(`unsupported PSLM version ${version} (this layout reads v2 and v3)`);
+  }
+  const hlen = checkHeaderLen(new DataView(head.buffer, head.byteOffset + 5, 4).getUint32(0, false));
+  const headerRaw = stripBytes(data, w, 9 + hlen).subarray(9);
+  const header = JSON.parse(new TextDecoder().decode(headerRaw));
+  if (header.format !== 'PSLM' || header.version !== version) {
+    throw new Error('header/version mismatch');
+  }
+  const stripH = header.strip_h;
+  const blobLen = 9 + hlen + header.pack_comp_len;
+  const blob = stripBytes(data, w, blobLen);
+  const comp = blob.subarray(9 + hlen);
+  // LSB stream: audio first, then the v3 model sections, in header order.
+  const depth = header.lsb_depth || 1;
+  const models = version === 3 && Array.isArray(header.models) ? header.models : [];
+  const totalLsb = header.audio_len + models.reduce((s, m) => s + (m.remote ? 0 : m.stored_len), 0);
+  const stream = totalLsb ? lsbBytes(data, w, h, stripH, totalLsb, depth) : new Uint8Array(0);
+  const out = await finishDecodeV3(header, comp, stream);
+  if (version === 2) out.models = null; // v2 has no models
+  return out;
+}
+
+function extractParts(header, data) {
+  // Role-blind extraction: split the bytes after the header JSON into
+  // the parts the header lists, in listed order, and verify each part's
+  // SHA-256 against its stored bytes. Knows nothing about what any part
+  // IS — only its name, length, hash and encoding. Remote parts occupy
+  // no bytes here; they are recorded for the caller.
+  const parts = {};
+  const remoteParts = {};
+  let off = 0;
+  for (const p of header.parts) {
+    if (p.remote) { remoteParts[p.name] = p; continue; }
+    const chunk = data.slice(off, off + p.len);
+    if (chunk.length !== p.len) {
+      throw new Error(`cartridge truncated: part '${p.name}' runs past the bitstream`);
+    }
+    parts[p.name] = chunk;
+    off += p.len;
+  }
+  if (off !== data.length) {
+    throw new Error('bitstream length mismatch — cartridge damaged');
+  }
+  return { parts, remoteParts };
+}
+
+async function verifyParts(parts, header) {
+  // Verify every extracted part's SHA-256 (stored bytes). Kept separate
+  // from extraction so the order is explicit: read, then verify, then
+  // resolve.
+  for (const p of header.parts) {
+    if (p.remote || !(p.name in parts)) continue;
+    if ((await hexSha256(parts[p.name])) !== p.sha256) {
+      throw new Error(`part '${p.name}' SHA-256 mismatch — part damaged`);
+    }
+  }
+}
+
+async function resolveParts(header, parts) {
+  // Renderer-side role resolution, AFTER extraction: look the parts up
+  // by name and turn them into the chapter's text, audio and models.
+  // Each part's SHA-256 was already verified against its stored bytes;
+  // a zlib part's decompression is verified by the stream's own
+  // Adler-32. The names are the only thing this step knows.
+  if (!parts.text) {
+    throw new Error(`v4 cartridge has no part named 'text' — cartridge damaged`);
+  }
+  const packBytes = await inflateZlib(parts.text);
+  const pack = JSON.parse(new TextDecoder().decode(packBytes));
+  const audio = parts.audio || null;
+  let world = null;
+  if (parts.world) {
+    try {
+      world = JSON.parse(new TextDecoder().decode(parts.world));
+    } catch (e) {
+      throw new Error('world part is not valid JSON — cartridge damaged');
+    }
+  }
+  const models = {};
+  for (const p of header.parts) {
+    const name = p.name;
+    if (name === 'text' || name === 'audio' || name === 'world' || !(name in parts)) continue;
+    models[name] = p.encoding === 'zlib' ? await inflateZlib(parts[name]) : parts[name];
+  }
+  return { pack, audio, models, packTextLen: packBytes.length, world };
+}
+
+// v4 layout: the whole bitstream (header blob, then the parts the header
+// lists, in listed order) in the LSB layer from pixel (0, 0). The depth
+// is found by trying 1, then 2.
+async function decodeV4(data, w, h) {
+  for (const depth of [1, 2]) {
+    const head = lsbBytes(data, w, h, 0, 9, depth);
+    if (!MAGIC.every((b, i) => b === head[i])) continue;
+    // The magic matched at this depth: this IS the layout — any failure
+    // from here on is damage, not the wrong layout.
+    const version = head[4];
+    if (version !== 4) {
+      throw new Error(`unsupported PSLM version ${version} (this layout reads v4)`);
+    }
+    const hlen = checkHeaderLen(new DataView(head.buffer, head.byteOffset + 5, 4).getUint32(0, false));
+    const header = JSON.parse(new TextDecoder().decode(lsbBytes(data, w, h, 0, 9 + hlen, depth).subarray(9)));
+    if (header.format !== 'PSLM' || header.version !== 4) {
+      throw new Error('header/version mismatch');
+    }
+    if (!Array.isArray(header.parts) || !header.parts.length) {
+      throw new Error('v4 header has no parts list — cartridge damaged');
+    }
+    // The whole bitstream: header blob + the parts, in listed order.
+    const total = 9 + hlen + header.parts.reduce((s, p) => s + (p.remote ? 0 : p.len), 0);
+    const buf = lsbBytes(data, w, h, 0, total, depth);
+    const { parts, remoteParts } = extractParts(header, buf.subarray(9 + hlen));
+    await verifyParts(parts, header);
+    const { pack, audio, models, packTextLen, world } = await resolveParts(header, parts);
+    return { header, pack, audio, models, remoteModels: remoteParts, packTextLen, world };
+  }
+  throw notThisFormat();
+}
+
+async function decodeCartridgeImage(img) {
+  const canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(img, 0, 0);
+  const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const w = canvas.width, h = canvas.height;
+
+  // v3 first (the live cartridges are v3 until rebuilt), then v4. A layout
+  // whose magic matched but whose validation failed is reported as damage;
+  // a layout whose magic never matched is simply not this cartridge's.
+  let v3Err = null;
+  try {
+    const out = await decodeV3(data, w, h);
+    return { ...out, w, h };
+  } catch (e) {
+    if (e.notThisFormat) { /* fall through to v4 */ }
+    else v3Err = e;
+  }
+  try {
+    const out = await decodeV4(data, w, h);
+    return { ...out, w, h };
+  } catch (e) {
+    if (!e.notThisFormat) throw e; // v4 magic matched: damaged v4
+  }
+  if (v3Err) throw v3Err;
+  throw new Error('not a PSLM cartridge (bad magic)');
 }
 
 function pickLanguage(header, deviceLanguage) {
@@ -571,8 +736,32 @@ function toArrayBuffer(u8) {
   return u8.buffer.slice(u8.byteOffset, u8.byteOffset + u8.byteLength);
 }
 
+// Legacy scene fallback for cartridges without a world part (v2/v3).
+// The v4 world part IS this document (tools/scene.json); a v4 cartridge
+// carries it, SHA-256-verified, and the decoder builds the world from
+// the cartridge's own copy. This const exists only so old cartridges
+// still render their world — it must stay byte-identical to
+// tools/scene.json (checked by the build: parsed LEGACY_SCENE == scene.json).
+const LEGACY_SCENE = {"animation":{"scroll_bob":{"amplitude":0.12,"formula":"translation.y = glTF translation.y + amplitude * sin(time * frequency)","frequency":0.8,"node":"scroll","property":"translation.y"}},"audio":{"mime":"audio/webm","source_part":"audio"},"controls":{"drag_look":{"pitch_clamp":[-1.2,1.2],"sensitivity":0.004},"drag_scroll":{"sensitivity":0.002},"joystick":{"dead_zone":0.12,"note":"a circular on-screen pad at the bottom left; the pointer offset from the pad center, divided by the pad radius and clamped to length 1, is the movement vector; the knob indicator follows that normalized offset"},"move":{"keys":{"down":["s","arrowdown"],"left":["a","arrowleft"],"right":["d","arrowright"],"up":["w","arrowup"]},"radius_clamp":11,"speed":4},"tap_audio":{"max_move_px":8,"max_time_ms":500},"wheel_scroll":{"sensitivity":0.0008}},"gltf":{"accessors":[{"bufferView":0,"componentType":5126,"count":24,"max":[3.5,1.75,0.03],"min":[-3.5,-1.75,-0.03],"type":"VEC3"},{"bufferView":1,"componentType":5126,"count":24,"type":"VEC3"},{"bufferView":2,"componentType":5126,"count":24,"type":"VEC2"},{"bufferView":3,"componentType":5125,"count":6,"type":"SCALAR"},{"bufferView":4,"componentType":5125,"count":6,"type":"SCALAR"},{"bufferView":5,"componentType":5125,"count":6,"type":"SCALAR"},{"bufferView":6,"componentType":5125,"count":6,"type":"SCALAR"},{"bufferView":7,"componentType":5125,"count":6,"type":"SCALAR"},{"bufferView":8,"componentType":5125,"count":6,"type":"SCALAR"},{"bufferView":9,"componentType":5126,"count":102,"max":[0.5,1.75,0.5],"min":[-0.5,-1.75,-0.5],"type":"VEC3"},{"bufferView":10,"componentType":5126,"count":102,"type":"VEC3"},{"bufferView":11,"componentType":5126,"count":102,"type":"VEC2"},{"bufferView":12,"componentType":5125,"count":288,"type":"SCALAR"},{"bufferView":13,"componentType":5126,"count":54,"max":[0.07,2.15,0.07],"min":[-0.07,-2.15,-0.07],"type":"VEC3"},{"bufferView":14,"componentType":5126,"count":54,"type":"VEC3"},{"bufferView":15,"componentType":5126,"count":54,"type":"VEC2"},{"bufferView":16,"componentType":5125,"count":144,"type":"SCALAR"},{"bufferView":17,"componentType":5126,"count":102,"max":[0.56,0.06,0.56],"min":[-0.56,-0.06,-0.56],"type":"VEC3"},{"bufferView":18,"componentType":5126,"count":102,"type":"VEC3"},{"bufferView":19,"componentType":5126,"count":102,"type":"VEC2"},{"bufferView":20,"componentType":5125,"count":288,"type":"SCALAR"}],"asset":{"generator":"PSLM v4 scene part (bible-cartridges)","version":"2.0"},"bufferViews":[{"buffer":0,"byteLength":288,"byteOffset":0},{"buffer":0,"byteLength":288,"byteOffset":288},{"buffer":0,"byteLength":192,"byteOffset":576},{"buffer":0,"byteLength":24,"byteOffset":768},{"buffer":0,"byteLength":24,"byteOffset":792},{"buffer":0,"byteLength":24,"byteOffset":816},{"buffer":0,"byteLength":24,"byteOffset":840},{"buffer":0,"byteLength":24,"byteOffset":864},{"buffer":0,"byteLength":24,"byteOffset":888},{"buffer":0,"byteLength":1224,"byteOffset":912},{"buffer":0,"byteLength":1224,"byteOffset":2136},{"buffer":0,"byteLength":816,"byteOffset":3360},{"buffer":0,"byteLength":1152,"byteOffset":4176},{"buffer":0,"byteLength":648,"byteOffset":5328},{"buffer":0,"byteLength":648,"byteOffset":5976},{"buffer":0,"byteLength":432,"byteOffset":6624},{"buffer":0,"byteLength":576,"byteOffset":7056},{"buffer":0,"byteLength":1224,"byteOffset":7632},{"buffer":0,"byteLength":1224,"byteOffset":8856},{"buffer":0,"byteLength":816,"byteOffset":10080},{"buffer":0,"byteLength":1152,"byteOffset":10896}],"buffers":[{"byteLength":12048,"uri":"data:application/octet-stream;base64,AABgQAAA4L+PwvU8AABgQAAA4L+PwvW8AABgQAAA4D+PwvW8AABgQAAA4D+PwvU8AABgwAAA4L+PwvW8AABgwAAA4L+PwvU8AABgwAAA4D+PwvU8AABgwAAA4D+PwvW8AABgwAAA4D+PwvU8AABgQAAA4D+PwvU8AABgQAAA4D+PwvW8AABgwAAA4D+PwvW8AABgwAAA4L+PwvW8AABgQAAA4L+PwvW8AABgQAAA4L+PwvU8AABgwAAA4L+PwvU8AABgwAAA4L+PwvU8AABgQAAA4L+PwvU8AABgQAAA4D+PwvU8AABgwAAA4D+PwvU8AABgQAAA4L+PwvW8AABgwAAA4L+PwvW8AABgwAAA4D+PwvW8AABgQAAA4D+PwvW8AACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAgD8AAIA/AACAPwAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAAAAAAAAgD8AAIA/AACAPwAAgD8AAAAAAAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AACAPwAAAAAAAAAAAAAAAAAAAAAAAIA/AACAPwAAgD8AAIA/AAAAAAAAAAAAAAAAAAAAAAEAAAACAAAAAAAAAAIAAAADAAAABAAAAAUAAAAGAAAABAAAAAYAAAAHAAAACAAAAAkAAAAKAAAACAAAAAoAAAALAAAADAAAAA0AAAAOAAAADAAAAA4AAAAPAAAAEAAAABEAAAASAAAAEAAAABIAAAATAAAAFAAAABUAAAAWAAAA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KVyPPZqZCUCeIp4iKVyPPZqZCcCeIp4ii054PZqZCUApXA+9i054PZqZCcApXA+9KVwPPZqZCUCLTni9KVwPPZqZCcCLTni9niIeI5qZCUApXI+9niIeI5qZCcApXI+9KVwPvZqZCUCLTni9KVwPvZqZCcCLTni9i054vZqZCUApXA+9i054vZqZCcApXA+9KVyPvZqZCUDtM22jKVyPvZqZCcDtM22ji054vZqZCUApXA89i054vZqZCcApXA89KVwPvZqZCUCLTng9KVwPvZqZCcCLTng9niKeo5qZCUApXI89niKeo5qZCcApXI89AAAAAJqZCUAAAAAAAAAAAJqZCUApXI89KVwPPZqZCUCLTng9i054PZqZCUApXA89KVyPPZqZCUCeIp4ii054PZqZCUApXA+9KVwPPZqZCUCLTni9niIeI5qZCUApXI+9KVwPvZqZCUCLTni9i054vZqZCUApXA+9KVyPvZqZCUDtM22ji054vZqZCUApXA89KVwPvZqZCUCLTng9niKeo5qZCUApXI89AAAAAJqZCcAAAAAAAAAAAJqZCcApXI89KVwPPZqZCcCLTng9i054PZqZCcApXA89KVyPPZqZCcCeIp4ii054PZqZCcApXA+9KVwPPZqZCcCLTni9niIeI5qZCcApXI+9KVwPvZqZCcCLTni9i054vZqZCcApXA+9KVyPvZqZCcDtM22ji054vZqZCcApXA89KVwPvZqZCcCLTng9niKeo5qZCcApXI89AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAPwAAAADXs10/AAAAPwAAAADXs10/17NdPwAAAAAAAAA/17NdPwAAAAAAAAA/AACAPwAAAAAyMY0kAACAPwAAAAAyMY0k17NdPwAAAAAAAAC/17NdPwAAAAAAAAC/AAAAPwAAAADXs12/AAAAPwAAAADXs12/MjENJQAAAAAAAIC/MjENJQAAAAAAAIC/AAAAvwAAAADXs12/AAAAvwAAAADXs12/17NdvwAAAAAAAAC/17NdvwAAAAAAAAC/AACAvwAAAADKyVOlAACAvwAAAADKyVOl17NdvwAAAAAAAAA/17NdvwAAAAAAAAA/AAAAvwAAAADXs10/AAAAvwAAAADXs10/MjGNpQAAAAAAAIA/MjGNpQAAAAAAAIA/AAAAAAAAgD8AAAAA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Cb69PnWjez8AAIA+7NluPxr2FT56glo/ozCJPQAAQD9ckYs8/CAhPwAAAAAAAAA/XJGLPAm+vT6jMIk9AACAPhr2FT4a9hU+AACAPqMwiT0Jvr0+XJGLPAAAAD8AAAAAAAAAAAEAAAACAAAAAgAAAAEAAAADAAAAAgAAAAMAAAAEAAAABAAAAAMAAAAFAAAABAAAAAUAAAAGAAAABgAAAAUAAAAHAAAABgAAAAcAAAAIAAAACAAAAAcAAAAJAAAACAAAAAkAAAAKAAAACgAAAAkAAAALAAAACgAAAAsAAAAMAAAADAAAAAsAAAANAAAADAAAAA0AAAAOAAAADgAAAA0AAAAPAAAADgAAAA8AAAAQAAAAEAAAAA8AAAARAAAAEAAAABEAAAASAAAAEgAAABEAAAATAAAAEgAAABMAAAAUAAAAFAAAABMAAAAVAAAAFAAAABUAAAAWAAAAFgAAABUAAAAXAAAAFgAAABcAAAAYAAAAGAAAABcAAAAZAAAAGAAAABkAAAAaAAAAGgAAABkAAAAbAAAAGgAAABsAAAAcAAAAHAAAABsAAAAdAAAAHAAAAB0AAAAeAAAAHgAAAB0AAAAfAAAAHgAAAB8AAAAgAAAAIAAAAB8AAAAhAAAAIAAAACEAAAAiAAAAIgAAACEAAAAjAAAAIgAAACMAAAAkAAAAJAAAACMAAAAlAAAAJAAAACUAAAAmAAAAJgAAACUAAAAnAAAAJgAAACcAAAAoAAAAKAAAACcAAAApAAAAKAAAACkAAAAqAAAAKgAAACkAAAArAAAAKgAAACsAAAAsAAAALAAAACsAAAAtAAAALAAAAC0AAAAuAAAALgAAAC0AAAAvAAAALgAAAC8AAAAwAAAAMAAAAC8AAAAxAAAAMgAAADMAAAA0AAAAMgAAADQAAAA1AAAAMgAAADUAAAA2AAAAMgAAADYAAAA3AAAAMgAAADcAAAA4AAAAMgAAADgAAAA5AAAAMgAAADkAAAA6AAAAMgAAADoAAAA7AAAAMgAAADsAAAA8AAAAMgAAADwAAAA9AAAAMgAAAD0AAAA+AAAAMgAAAD4AAAA/AAAAMgAAAD8AAABAAAAAMgAAAEAAAABBAAAAMgAAAEEAAABCAAAAMgAAAEIAAABDAAAAMgAAAEMAAABEAAAAMgAAAEQAAABFAAAAMgAAAEUAAABGAAAAMgAAAEYAAABHAAAAMgAAAEcAAABIAAAAMgAAAEgAAABJAAAAMgAAAEkAAABKAAAAMgAAAEoAAABLAAAATAAAAE4AAABNAAAATAAAAE8AAABOAAAATAAAAFAAAABPAAAATAAAAFEAAABQAAAATAAAAFIAAABRAAAATAAAAFMAAABSAAAATAAAAFQAAABTAAAATAAAAFUAAABUAAAATAAAAFYAAABVAAAATAAAAFcAAABWAAAATAAAAFgAAABXAAAATAAAAFkAAABYAAAATAAAAFoAAABZAAAATAAAAFsAAABaAAAATAAAAFwAAABbAAAATAAAAF0AAABcAAAATAAAAF4AAABdAAAATAAAAF8AAABeAAAATAAAAGAAAABfAAAATAAAAGEAAABgAAAATAAAAGIAAABhAAAATAAAAGMAAABiAAAATAAAAGQAAABjAAAATAAAAGUAAABkAAAA"}],"cameras":[{"name":"camera","perspective":{"yfov":1.0471975511965976,"zfar":500.0,"znear":0.1},"type":"perspective"}],"extensions":{"KHR_lights_punctual":{"lights":[{"color":[1.0,0.887923,0.723055],"intensity":1.6,"name":"sun","type":"directional"}]}},"extensionsRequired":["KHR_lights_punctual","PSLM_part"],"extensionsUsed":["KHR_lights_punctual","PSLM_part"],"images":[{"name":"scroll-text","uri":"scroll-text"}],"materials":[{"name":"sheet-edge","pbrMetallicRoughness":{"baseColorFactor":[0.434154,0.266356,0.090842,1.0],"metallicFactor":0.0,"roughnessFactor":0.9}},{"name":"scroll-text","pbrMetallicRoughness":{"baseColorFactor":[1.0,1.0,1.0,1.0],"baseColorTexture":{"index":0},"metallicFactor":0.0,"roughnessFactor":0.9}},{"name":"roll","pbrMetallicRoughness":{"baseColorFactor":[0.57758,0.351533,0.144128,1.0],"metallicFactor":0.0,"roughnessFactor":0.85}},{"name":"wood","pbrMetallicRoughness":{"baseColorFactor":[0.194618,0.084376,0.029557,1.0],"metallicFactor":0.0,"roughnessFactor":0.8}}],"meshes":[{"name":"scroll-sheet","primitives":[{"attributes":{"NORMAL":1,"POSITION":0,"TEXCOORD_0":2},"indices":3,"material":0},{"attributes":{"NORMAL":1,"POSITION":0,"TEXCOORD_0":2},"indices":4,"material":0},{"attributes":{"NORMAL":1,"POSITION":0,"TEXCOORD_0":2},"indices":5,"material":0},{"attributes":{"NORMAL":1,"POSITION":0,"TEXCOORD_0":2},"indices":6,"material":0},{"attributes":{"NORMAL":1,"POSITION":0,"TEXCOORD_0":2},"indices":7,"material":1},{"attributes":{"NORMAL":1,"POSITION":0,"TEXCOORD_0":2},"indices":8,"material":0}]},{"name":"scroll-roll","primitives":[{"attributes":{"NORMAL":10,"POSITION":9,"TEXCOORD_0":11},"indices":12,"material":2}]},{"name":"scroll-rod","primitives":[{"attributes":{"NORMAL":14,"POSITION":13,"TEXCOORD_0":15},"indices":16,"material":3}]},{"name":"scroll-cap","primitives":[{"attributes":{"NORMAL":18,"POSITION":17,"TEXCOORD_0":19},"indices":20,"material":3}]}],"nodes":[{"extensions":{"PSLM_part":{"floor":{"align":"subtract floor center height from the scene height","detect":"flattest mesh by height over max(width, depth)"},"material":{"baseColorFactor":[0.887923,0.896269,0.913099,1.0],"doubleSided":true,"environmentIntensity":1.25,"metallicFactor":1.0,"roughnessFactor":0.05},"material_applies_to":"every mesh except the floor mesh","part":"palace","recenter":"subtract bounding-box center x/z and box minimum height so the floor sits at height 0","role":"palace"}},"name":"palace"},{"children":[4,5,6,7,8,9,10,11,12],"name":"scroll","translation":[0.0,3.6,0.0]},{"camera":0,"name":"camera","rotation":[-0.0299955,-0.0,-0.0,0.999550034],"translation":[0.0,2.0,11.0]},{"extensions":{"KHR_lights_punctual":{"light":0}},"name":"sun","rotation":[-0.381555386,0.469877502,0.235814197,0.760277769],"translation":[20.0,30.0,10.0]},{"mesh":0,"name":"scroll-sheet","translation":[0.0,0.0,-0.3]},{"mesh":1,"name":"scroll-roll-left","translation":[-3.8,0.0,0.0]},{"mesh":1,"name":"scroll-roll-right","translation":[3.8,0.0,0.0]},{"mesh":2,"name":"scroll-rod-left","translation":[-3.8,0.0,0.0]},{"mesh":2,"name":"scroll-rod-right","translation":[3.8,0.0,0.0]},{"mesh":3,"name":"scroll-cap-top-left","translation":[-3.8,1.81,0.0]},{"mesh":3,"name":"scroll-cap-top-right","translation":[3.8,1.81,0.0]},{"mesh":3,"name":"scroll-cap-bottom-left","translation":[-3.8,-1.81,0.0]},{"mesh":3,"name":"scroll-cap-bottom-right","translation":[3.8,-1.81,0.0]}],"samplers":[{"magFilter":9729,"minFilter":9729,"wrapS":33071,"wrapT":10497}],"scene":0,"scenes":[{"name":"psalm-world","nodes":[0,1,2,3]}],"textures":[{"sampler":0,"source":0}]},"renderer":{"antialias":true,"background_fallback":"#0b1020","exposure":1.0,"output_color_space":"sRGB","pixel_ratio_cap":2,"tone_mapping":"ACES filmic"},"scroll_text":{"background":"#efe3c0","canvas_width":1400,"color_space":"sRGB","font":{"families":["Noto Serif Hebrew","Noto Serif","Times New Roman","serif"],"size_px":46,"weight":"normal"},"font_bold":{"families":["Noto Serif Hebrew","Noto Serif","Times New Roman","serif"],"size_px":58,"weight":"bold"},"font_separator":{"families":["Noto Serif Hebrew","Noto Serif","Times New Roman","serif"],"size_px":34,"weight":"normal"},"layout":{"head":{"align":"center","direction":"ltr","font":"font_bold"},"separator":{"align":"center","direction":"ltr","font":"font_separator"},"text":{"align":"right","direction":"rtl","font":"font"},"wrap":"measure text, max width canvas_width - 2*padding"},"line_height":78,"min_height":700,"padding":80,"separator_format":"— N —","text_color":"#2a2118","texture":{"wrap_s":"clamp_to_edge","wrap_t":"repeat"},"texture_name":"scroll-text","word_format":"Hebrew (transliteration, gloss)"},"sky":{"background":"use the prepared panorama as the scene background","environment":"use the prepared panorama as the image-based lighting environment (ambient light and reflections for the whole scene)","flip_horizontal":true,"mapping":"equirectangular","pole_band_heal":{"enabled":true,"fade_rows":100,"pole_band_top":0.92,"reference_band":[0.65,0.8],"seam_blur_px":2},"shift_rows":80,"source":"the panorama image embedded in the skybox glTF part (the first material's emissive texture, else the specular-glossiness diffuse texture)","source_part":"skybox","texture":{"color_space":"sRGB","flip_vertical":false,"generate_mipmaps":false,"mag_filter":"linear","min_filter":"linear","wrap_s":"repeat","wrap_t":"repeat"}},"version":1};
+
 function startWorld(decoded, lang) {
   const { header, pack, audio, models } = decoded;
+  // The scene recipe comes from the cartridge's own world part. A
+  // cartridge without one (v2/v3) uses the built-in legacy copy of the
+  // same document — the world still renders, but the recipe is not in
+  // the image.
+  const S = decoded.world || LEGACY_SCENE;
+  const hex = (s) => parseInt(s.slice(1), 16);
+  // This decoder's engine maps the scene's universal names to its own
+  // constants. The scene part itself never names the engine: any capable
+  // 3D environment makes the same mapping to its own constants.
+  const COLOR_SPACES = { sRGB: THREE.SRGBColorSpace };
+  const TONE_MAPPINGS = { 'ACES filmic': THREE.ACESFilmicToneMapping };
+  const WRAPS = { repeat: THREE.RepeatWrapping, clamp_to_edge: THREE.ClampToEdgeWrapping };
+  const FILTERS = { linear: THREE.LinearFilter };
+  const MAPPINGS = { equirectangular: THREE.EquirectangularReflectionMapping };
+  const cssFont = (f) => (f.weight === 'bold' ? 'bold ' : '') + f.size_px + 'px ' +
+    f.families.map((n) => (n === 'serif' || n === 'sans-serif' ? n : '"' + n + '"')).join(', ');
   const title = pack.title || ('Psalm ' + header.chapter);
   const hebrewTitle = '\u05EA\u05B0\u05D4\u05B4\u05DC\u05B4\u05D9\u05DD ' + hebrewNumeral(header.chapter);
   const worldEl = document.getElementById('world');
@@ -604,12 +793,11 @@ function startWorld(decoded, lang) {
   const forcedScroll = params.has('scroll') ? Math.min(1, Math.max(0, parseFloat(params.get('scroll')) || 0)) : null;
 
   // ---- scroll text canvas (same as the viewer) ----
-  const CW = 1400, PAD = 80;
-  const FONT = '46px "Noto Serif Hebrew", "Noto Serif", "Times New Roman", serif';
-  const FONT_BOLD = 'bold 58px "Noto Serif Hebrew", "Noto Serif", "Times New Roman", serif';
-  const FONT_SEP = '34px "Noto Serif Hebrew", "Noto Serif", "Times New Roman", serif';
-  const LINE_H = 78;
-  const SHEET_W = 7, SHEET_H = 3.5;
+  const CW = S.scroll_text.canvas_width, PAD = S.scroll_text.padding;
+  const FONT = cssFont(S.scroll_text.font);
+  const FONT_BOLD = cssFont(S.scroll_text.font_bold);
+  const FONT_SEP = cssFont(S.scroll_text.font_separator);
+  const LINE_H = S.scroll_text.line_height;
   function intercalateVerses(pack, lang) {
     const glossLang = pack.languages.includes(lang) ? lang : pack.fallback;
     const script = scriptForLang(glossLang);
@@ -630,7 +818,7 @@ function startWorld(decoded, lang) {
     lines.push({ text: title, kind: 'head' });
     lines.push({ text: hebrewTitle, kind: 'head' });
     verses.forEach((tokens, vi) => {
-      lines.push({ text: `— ${vi + 1} —`, kind: 'sep' });
+      lines.push({ text: S.scroll_text.separator_format.replace('N', String(vi + 1)), kind: 'sep' });
       let cur = '';
       for (const tok of tokens) {
         const next = cur ? cur + ' ' + tok : tok;
@@ -643,12 +831,12 @@ function startWorld(decoded, lang) {
       }
       if (cur) lines.push({ text: cur, kind: 'text' });
     });
-    const canvasH = Math.max(700, lines.length * LINE_H + PAD * 2);
+    const canvasH = Math.max(S.scroll_text.min_height, lines.length * LINE_H + PAD * 2);
     c.height = canvasH;
     const g = c.getContext('2d');
-    g.fillStyle = '#efe3c0';
+    g.fillStyle = S.scroll_text.background;
     g.fillRect(0, 0, CW, canvasH);
-    g.fillStyle = '#2a2118';
+    g.fillStyle = S.scroll_text.text_color;
     g.textBaseline = 'middle';
     let y = PAD + LINE_H / 2;
     for (const ln of lines) {
@@ -671,34 +859,62 @@ function startWorld(decoded, lang) {
     return { canvas: c, canvasH };
   }
 
+  // ---- scene: read from the cartridge's own glTF scene part ----
+  // S.gltf is a standard glTF 2.0 scene document. This decoder reads its
+  // camera, sun light and palace reference from the JSON itself; the
+  // scroll meshes come from the engine's glTF loader below. No scene
+  // value is hardcoded here — everything below is a lookup into S.
+  const G = S.gltf;
+  const gltfNode = (name) => G.nodes.find((n) => n.name === name);
+  const gltfCameraNode = gltfNode('camera');
+  const gltfCamera = G.cameras[gltfCameraNode.camera];
+  const palaceExt = gltfNode('palace').extensions.PSLM_part;
+  const scrollNodeDef = gltfNode('scroll');
+  const SCROLL_BASE_Y = scrollNodeDef.translation[1];
+  const BOB = S.animation.scroll_bob;
+  // The sheet's width/height come from its own geometry (the POSITION
+  // accessor min/max of the scroll-sheet mesh) — the scroll-text repeat
+  // math needs them before the loader runs.
+  const sheetMeshDef = G.meshes.find((m) => m.name === 'scroll-sheet');
+  const sheetPosAcc = G.accessors[sheetMeshDef.primitives[0].attributes.POSITION];
+  const SHEET_W = sheetPosAcc.max[0] - sheetPosAcc.min[0];
+  const SHEET_H = sheetPosAcc.max[1] - sheetPosAcc.min[1];
+
   // ---- scene (same as the viewer) ----
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  const renderer = new THREE.WebGLRenderer({ antialias: S.renderer.antialias });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, S.renderer.pixel_ratio_cap));
   renderer.setSize(innerWidth, innerHeight);
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.0;
+  renderer.outputColorSpace = COLOR_SPACES[S.renderer.output_color_space];
+  renderer.toneMapping = TONE_MAPPINGS[S.renderer.tone_mapping];
+  renderer.toneMappingExposure = S.renderer.exposure;
   container.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0b1020);
-  const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 500);
-  let yaw = 0, pitch = -0.06;
-  const EYE_Y = 2.0;
-  camera.position.set(0, EYE_Y, 11);
-  camera.rotation.order = 'YXZ';
+  scene.background = new THREE.Color(hex(S.renderer.background_fallback));
+  // Camera: the glTF perspective camera. Its node carries the position
+  // and the rotation (a quaternion for yaw-then-pitch); the aspect ratio
+  // is viewport-dependent, so it is set from the window, not the scene.
+  const camPersp = gltfCamera.perspective;
+  const camera = new THREE.PerspectiveCamera(
+    camPersp.yfov * 180 / Math.PI, innerWidth / innerHeight, camPersp.znear, camPersp.zfar);
+  camera.rotation.order = 'YXZ'; // this engine's order for "yaw then pitch"
+  camera.position.set(...gltfCameraNode.translation);
+  camera.quaternion.fromArray(gltfCameraNode.rotation);
+  let yaw = camera.rotation.y, pitch = camera.rotation.x;
+  const EYE_Y = gltfCameraNode.translation[1];
 
-  scene.add(new THREE.HemisphereLight(0xbfd9ff, 0x8a6f4d, 0.9));
-  const sun = new THREE.DirectionalLight(0xfff2dd, 1.6);
-  sun.position.set(20, 30, 10);
-  scene.add(sun);
+  // The sun is a KHR_lights_punctual directional light in the scene
+  // part's glTF; the engine's loader creates it from the extension when
+  // the scene parses below (its node rotation points its -Z axis at the
+  // origin). There is no hemisphere light in glTF: the ambient
+  // contribution is image-based lighting from the sky environment, set
+  // when the sky texture loads (setSkyBackground). No studio room is
+  // named anywhere.
 
   const pmrem = new THREE.PMREMGenerator(renderer);
-  const studioEnv = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
-  pmrem.dispose();
 
   const loader = new GLTFLoader();
-  const loadState = { palace: false, skybox: false, cartridge: true };
+  const loadState = { palace: false, skybox: false, cartridge: true, scene: false };
 
   function recenterOnFloor(group) {
     const box = new THREE.Box3().setFromObject(group);
@@ -734,41 +950,52 @@ function startWorld(decoded, lang) {
   }
 
   // The palace, parsed from the GLB bytes extracted from the cartridge —
-  // never fetched. (Same placement + polished-metal pillars as the viewer.)
-  modelBytes('palace').then((palaceBytes) => {
-    if (disposed) return;
-    try {
-      loader.parse(toArrayBuffer(palaceBytes), '', (g) => {
-        if (disposed) return;
-        recenterOnFloor(g.scene);
-        g.scene.updateMatrixWorld(true);
-        let floor = null, floorFlat = Infinity, floorMesh = null;
-        g.scene.traverse((o) => {
-          if (!o.isMesh) return;
-          const b = new THREE.Box3().setFromObject(o);
-          const s = b.getSize(new THREE.Vector3());
-          const flat = s.y / Math.max(s.x, s.z);
-          if (flat < floorFlat) { floorFlat = flat; floor = b; floorMesh = o; }
-        });
-        if (floor) {
-          const c = floor.getCenter(new THREE.Vector3());
-          g.scene.position.y -= c.y;
-        }
-        const pillarMetal = new THREE.MeshStandardMaterial({
-          color: 0xf2f3f5, metalness: 1.0, roughness: 0.05,
-          envMap: studioEnv, envMapIntensity: 1.25, side: THREE.DoubleSide,
-        });
-        g.scene.traverse((o) => {
-          if (o.isMesh && o !== floorMesh) o.material = pillarMetal;
-        });
-        scene.add(g.scene);
-        loadState.palace = true;
-        refreshStatus();
-      }, (e) => fail('palace GLB failed to parse: ' + (e?.message || e)));
-    } catch (e) {
-      fail('palace GLB failed to parse: ' + (e?.message || e));
-    }
-  }).catch((e) => fail('palace model unavailable: ' + (e?.message || e)));
+  // never fetched. It is attached under the scene part's palace node
+  // (the node the PSLM_part extension names). The recenter, floor and
+  // metal rules come from that extension; the code below implements
+  // them (the extension names the rule, the decoder performs it). The
+  // metal's colour is linear (glTF baseColorFactor); its environment
+  // comes from the scene environment (the sky), not a studio room.
+  function loadPalace(parent) {
+    modelBytes('palace').then((palaceBytes) => {
+      if (disposed) return;
+      try {
+        loader.parse(toArrayBuffer(palaceBytes), '', (g) => {
+          if (disposed) return;
+          recenterOnFloor(g.scene);
+          g.scene.updateMatrixWorld(true);
+          let floor = null, floorFlat = Infinity, floorMesh = null;
+          g.scene.traverse((o) => {
+            if (!o.isMesh) return;
+            const b = new THREE.Box3().setFromObject(o);
+            const s = b.getSize(new THREE.Vector3());
+            const flat = s.y / Math.max(s.x, s.z);
+            if (flat < floorFlat) { floorFlat = flat; floor = b; floorMesh = o; }
+          });
+          if (floor) {
+            const c = floor.getCenter(new THREE.Vector3());
+            g.scene.position.y -= c.y;
+          }
+          const mat = palaceExt.material;
+          const pillarMetal = new THREE.MeshStandardMaterial({
+            color: new THREE.Color().setRGB(...mat.baseColorFactor.slice(0, 3)),
+            metalness: mat.metallicFactor,
+            roughness: mat.roughnessFactor,
+            envMapIntensity: mat.environmentIntensity,
+            side: mat.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
+          });
+          g.scene.traverse((o) => {
+            if (o.isMesh && o !== floorMesh) o.material = pillarMetal;
+          });
+          (parent || scene).add(g.scene);
+          loadState.palace = true;
+          refreshStatus();
+        }, (e) => fail('palace GLB failed to parse: ' + (e?.message || e)));
+      } catch (e) {
+        fail('palace GLB failed to parse: ' + (e?.message || e));
+      }
+    }).catch((e) => fail('palace model unavailable: ' + (e?.message || e)));
+  }
 
   // ---- sky texture, from the extracted skybox GLB bytes ----
   function parseGlbContainer(buf) {
@@ -786,12 +1013,12 @@ function startWorld(decoded, lang) {
 
   function orientSkyTexture(cv) {
     const w = cv.width, h = cv.height;
-    const shift = 80;
+    const shift = S.sky.shift_rows;
     const out = document.createElement('canvas');
     out.width = w; out.height = h;
     const ctx = out.getContext('2d');
     ctx.save();
-    ctx.translate(w, 0); ctx.scale(-1, 1);
+    if (S.sky.flip_horizontal) { ctx.translate(w, 0); ctx.scale(-1, 1); }
     ctx.drawImage(cv, 0, shift, w, h);
     ctx.drawImage(cv, 0, shift - h, w, h);
     ctx.restore();
@@ -824,8 +1051,9 @@ function startWorld(decoded, lang) {
       }
       return { sat: sat / n, lum: lum / n, flat: flat / n };
     };
-    const pole = bandStats(Math.floor(h * 0.92), h);
-    const ref = bandStats(Math.floor(h * 0.65), Math.floor(h * 0.80));
+    const pole = bandStats(Math.floor(h * S.sky.pole_band_heal.pole_band_top), h);
+    const ref = bandStats(Math.floor(h * S.sky.pole_band_heal.reference_band[0]),
+                          Math.floor(h * S.sky.pole_band_heal.reference_band[1]));
     let run = 0;
     for (let y = h - 1; y >= 0; y--) {
       if (rowInfo(y).uniform) run++; else break;
@@ -845,7 +1073,7 @@ function startWorld(decoded, lang) {
         } else {
           ctx.drawImage(cv, 0, goodY, w, 1, 0, badTop, w, runH);
         }
-        const fadeTop = Math.max(0, badTop - 100);
+        const fadeTop = Math.max(0, badTop - S.sky.pole_band_heal.fade_rows);
         let mr = 0, mg = 0, mb = 0, mc = 0;
         for (let y = fadeTop; y < badTop; y += 2) {
           for (let x = 0; x < w; x += 64) {
@@ -869,7 +1097,7 @@ function startWorld(decoded, lang) {
           const tctx = tmp.getContext('2d');
           tctx.drawImage(cv, 0, seamTop, w, seamH, 0, 0, w, seamH);
           ctx.save();
-          ctx.filter = 'blur(2px)';
+          ctx.filter = 'blur(' + S.sky.pole_band_heal.seam_blur_px + 'px)';
           ctx.drawImage(tmp, 0, seamTop);
           ctx.restore();
         } catch (e) { /* blur unsupported — the mirror alone is seamless */ }
@@ -889,20 +1117,21 @@ function startWorld(decoded, lang) {
     cv.width = w; cv.height = h;
     const ctx = cv.getContext('2d');
     ctx.drawImage(img, 0, 0);
-    healSkyPoleBand(cv);
+    if (S.sky.pole_band_heal.enabled) healSkyPoleBand(cv);
     const oriented = orientSkyTexture(cv);
     const fixed = new THREE.CanvasTexture(oriented);
     fixed.colorSpace = tex.colorSpace;
     fixed.flipY = tex.flipY;
     fixed.wrapS = tex.wrapS; fixed.wrapT = tex.wrapT;
-    fixed.minFilter = THREE.LinearFilter; fixed.magFilter = THREE.LinearFilter;
-    fixed.generateMipmaps = false;
+    fixed.minFilter = FILTERS[S.sky.texture.min_filter];
+    fixed.magFilter = FILTERS[S.sky.texture.mag_filter];
+    fixed.generateMipmaps = S.sky.texture.generate_mipmaps;
     return fixed;
   }
 
   // Hand-built sky texture: the skybox GLB's embedded panorama, decoded
   // straight out of the extracted BIN chunk and used as the scene
-  // background with EquirectangularReflectionMapping (per-pixel sampling
+  // background in equirectangular projection (per-pixel sampling
   // — the real fix for the zenith fan wedges). The heal no-ops on a
   // complete texture and only fills rows that are actually missing.
   async function buildSkyTextureFromBytes(skyBytes) {
@@ -930,21 +1159,29 @@ function startWorld(decoded, lang) {
     cv.width = imgEl.naturalWidth; cv.height = imgEl.naturalHeight;
     const ctx = cv.getContext('2d');
     ctx.drawImage(imgEl, 0, 0);
-    healSkyPoleBand(cv);
+    if (S.sky.pole_band_heal.enabled) healSkyPoleBand(cv);
     const oriented = orientSkyTexture(cv);
     const out = new THREE.CanvasTexture(oriented);
-    out.colorSpace = THREE.SRGBColorSpace;
-    out.flipY = false;
-    out.wrapS = THREE.RepeatWrapping; out.wrapT = THREE.RepeatWrapping;
-    out.minFilter = THREE.LinearFilter;
-    out.magFilter = THREE.LinearFilter;
-    out.generateMipmaps = false;
+    out.colorSpace = COLOR_SPACES[S.sky.texture.color_space];
+    out.flipY = S.sky.texture.flip_vertical;
+    out.wrapS = WRAPS[S.sky.texture.wrap_s]; out.wrapT = WRAPS[S.sky.texture.wrap_t];
+    out.minFilter = FILTERS[S.sky.texture.min_filter];
+    out.magFilter = FILTERS[S.sky.texture.mag_filter];
+    out.generateMipmaps = S.sky.texture.generate_mipmaps;
     return out;
   }
 
   function setSkyBackground(tex) {
-    tex.mapping = THREE.EquirectangularReflectionMapping;
+    tex.mapping = MAPPINGS[S.sky.mapping];
     scene.background = tex;
+    // The sky is also the image-based lighting environment (ambient
+    // light and reflections for the whole scene) — the scene part's
+    // sky.environment. There is no separate studio room.
+    try {
+      scene.environment = pmrem.fromEquirectangular(tex).texture;
+    } catch (e) {
+      console.warn('[sky] environment from sky failed:', e);
+    }
     loadState.skybox = true;
     refreshStatus();
   }
@@ -976,70 +1213,89 @@ function startWorld(decoded, lang) {
     }).catch((e) => fail('skybox model unavailable: ' + (e?.message || e)));
   });
 
-  // ---- scroll (same as the viewer) ----
-  const scrollGroup = new THREE.Group();
-  const TAN = 0xc8a06a, TAN_DARK = 0xb08d55, WOOD = 0x7a5230;
+  // ---- scroll: the scroll meshes come from the scene part's glTF ----
+  // The scroll-text texture is dynamic (chapter + language), so the
+  // scene references it by the plain name "scroll-text" and this decoder
+  // generates it from the text part + the scroll_text layout, then hands
+  // it to the loader as a data URL. The loader builds the sheet, rolls,
+  // rods and caps from the glTF geometry; nothing here is hardcoded.
+  // (The viewer page still builds its scroll by hand — this decoder
+  // builds it from the cartridge.)
+  let scrollGroup = null, sheet = null, frontMat = null;
   let scrollTex = null;
   let scrollFrac = forcedScroll ?? 0;
   let scrollMaxFrac = 0;
+  let pendingScrollTex = null;
 
-  function buildScrollTexture(verses) {
-    const { canvas, canvasH } = layoutScrollText(verses);
-    const tex = new THREE.CanvasTexture(canvas);
-    tex.colorSpace = THREE.SRGBColorSpace;
-    tex.wrapS = THREE.ClampToEdgeWrapping;
-    tex.wrapT = THREE.RepeatWrapping;
+  function applyScrollOffset(tex) {
+    // glTF convention (v=0 is the top of the image): at scrollFrac 0
+    // the top of the scroll shows the top of the text; at 1, the bottom.
+    tex.offset.y = (1 - tex.repeat.y) * scrollFrac;
+  }
+  function setScrollRepeat(tex, canvasH) {
     const visibleH = CW * (SHEET_H / SHEET_W);
     const repeatY = Math.min(1, visibleH / canvasH);
     tex.repeat.set(1, repeatY);
     scrollMaxFrac = 1 - repeatY;
     applyScrollOffset(tex);
+  }
+  function buildScrollTexture(verses) {
+    const { canvas, canvasH } = layoutScrollText(verses);
+    const tex = new THREE.CanvasTexture(canvas);
+    // The scene's UVs follow the glTF convention (v=0 is the top of the
+    // image), so this texture must not be flipped either.
+    tex.flipY = false;
+    tex.colorSpace = COLOR_SPACES[S.scroll_text.color_space];
+    tex.wrapS = WRAPS[S.scroll_text.texture.wrap_s];
+    tex.wrapT = WRAPS[S.scroll_text.texture.wrap_t];
+    setScrollRepeat(tex, canvasH);
     return tex;
   }
-  function applyScrollOffset(tex) {
-    tex.offset.y = (1 - tex.repeat.y) * (1 - scrollFrac);
+
+  // The scene's glTF, with the generated scroll-text canvas as the
+  // "scroll-text" image (a data URL — the image is generated here, so
+  // the loader needs it in the document, not from a file).
+  const initialScroll = layoutScrollText(intercalateVerses(pack, langUsed));
+  const sceneGltf = JSON.parse(JSON.stringify(G));
+  const scrollTextImage = sceneGltf.images.find(
+    (im) => im.uri === S.scroll_text.texture_name);
+  if (!scrollTextImage) {
+    fail('scene part has no scroll-text image');
+  } else {
+    scrollTextImage.uri = initialScroll.canvas.toDataURL('image/png');
   }
-
-  const sheetMats = [
-    new THREE.MeshStandardMaterial({ color: TAN_DARK, roughness: 0.9 }),
-    new THREE.MeshStandardMaterial({ color: TAN_DARK, roughness: 0.9 }),
-    new THREE.MeshStandardMaterial({ color: TAN_DARK, roughness: 0.9 }),
-    new THREE.MeshStandardMaterial({ color: TAN_DARK, roughness: 0.9 }),
-    new THREE.MeshStandardMaterial({ roughness: 0.9 }),
-    new THREE.MeshStandardMaterial({ color: TAN_DARK, roughness: 0.9 }),
-  ];
-  const sheet = new THREE.Mesh(new THREE.BoxGeometry(SHEET_W, SHEET_H, 0.06), sheetMats);
-  sheet.name = 'scroll-sheet';
-  scrollGroup.add(sheet);
-
-  const rollGeo = new THREE.CylinderGeometry(0.5, 0.5, SHEET_H, 24);
-  const rollMat = new THREE.MeshStandardMaterial({ color: TAN, roughness: 0.85 });
-  const rodGeo = new THREE.CylinderGeometry(0.07, 0.07, 4.3, 12);
-  const rodMat = new THREE.MeshStandardMaterial({ color: WOOD, roughness: 0.8 });
-  const capGeo = new THREE.CylinderGeometry(0.56, 0.56, 0.12, 24);
-  const capMat = new THREE.MeshStandardMaterial({ color: WOOD, roughness: 0.8 });
-  for (const side of [-1, 1]) {
-    const x = side * (SHEET_W / 2 + 0.30);
-    const roll = new THREE.Mesh(rollGeo, rollMat);
-    roll.position.set(x, 0, 0);
-    scrollGroup.add(roll);
-    const rod = new THREE.Mesh(rodGeo, rodMat);
-    rod.position.set(x, 0, 0);
-    scrollGroup.add(rod);
-    for (const end of [-1, 1]) {
-      const cap = new THREE.Mesh(capGeo, capMat);
-      cap.position.set(x, end * 1.81, 0);
-      scrollGroup.add(cap);
+  loader.parse(JSON.stringify(sceneGltf), '', (g) => {
+    if (disposed) return;
+    scene.add(g.scene);
+    scrollGroup = g.scene.getObjectByName('scroll');
+    sheet = g.scene.getObjectByName('scroll-sheet');
+    if (sheet) {
+      // The sheet is a group of one mesh per face (the loader makes one
+      // mesh per glTF primitive). The front (+Z) face is the mesh whose
+      // material carries the scroll-text texture.
+      const frontMesh = sheet.children.find((m) => m.material && m.material.map);
+      if (frontMesh) frontMat = frontMesh.material;
     }
-  }
-  sheet.position.z = -0.30;
-  scrollGroup.position.set(0, 3.6, 0);
-  scene.add(scrollGroup);
+    if (frontMat && frontMat.map) {
+      scrollTex = frontMat.map;
+      setScrollRepeat(scrollTex, initialScroll.canvasH);
+      if (pendingScrollTex) {
+        const loaded = scrollTex;
+        frontMat.map = pendingScrollTex;
+        scrollTex = pendingScrollTex;
+        pendingScrollTex = null;
+        loaded.dispose();
+      }
+    }
+    loadState.scene = true;
+    refreshStatus();
+    loadPalace(g.scene.getObjectByName('palace'));
+  }, (e) => fail('scene part failed to parse: ' + (e?.message || e)));
 
   // ---- audio (from the decoded bytes) ----
   let audioReady = false;
   if (audio) {
-    audioEl.src = URL.createObjectURL(new Blob([audio], { type: 'audio/webm' }));
+    audioEl.src = URL.createObjectURL(new Blob([audio], { type: S.audio.mime }));
   }
   audioEl.addEventListener('canplay', () => { audioReady = true; refreshStatus(); });
   audioEl.addEventListener('error', () => {
@@ -1066,25 +1322,30 @@ function startWorld(decoded, lang) {
     const verses = intercalateVerses(pack, lang);
     const old = scrollTex;
     scrollTex = buildScrollTexture(verses);
-    sheetMats[4].map = scrollTex;
-    sheetMats[4].needsUpdate = true;
-    if (old) old.dispose();
+    if (frontMat) {
+      frontMat.map = scrollTex;
+      frontMat.needsUpdate = true;
+    } else {
+      // The scene has not parsed yet: apply it when it does.
+      pendingScrollTex = scrollTex;
+    }
+    if (old && old !== scrollTex) old.dispose();
     refreshStatus();
   }
-  rebuildScroll(langUsed);
 
   function refreshStatus() {
     const remoteCount = Object.keys(decoded.remoteModels || {}).length;
     const bits = [
       'palace ' + (loadState.palace ? 'OK' : '…'),
       'skybox ' + (loadState.skybox ? 'OK' : '…'),
+      'scene ' + (loadState.scene ? 'OK' : '…'),
       'cartridge OK',
       langUsed ? ('lang ' + langUsed) : '',
       audioReady ? 'audio OK' : 'audio …',
       remoteCount ? 'remote models — needs network' : '',
     ].filter(Boolean);
     setStatus(bits.join(' · '));
-    if (loadState.palace && loadState.skybox && loadState.cartridge) {
+    if (loadState.palace && loadState.skybox && loadState.scene && loadState.cartridge) {
       status.ready = true;
     }
   }
@@ -1105,8 +1366,10 @@ function startWorld(decoded, lang) {
     let dy = (cy - (r.top + r.height / 2)) / (r.height / 2);
     const len = Math.hypot(dx, dy);
     if (len > 1) { dx /= len; dy /= len; }
-    if (len < 0.12) { dx = 0; dy = 0; }
+    if (len < S.controls.joystick.dead_zone) { dx = 0; dy = 0; }
     joyVec = { x: dx, y: dy };
+    // The knob pixel layout is this page's UI geometry, not the scene:
+    // the pad is 62 px across with the knob resting at its center (31 px).
     knobEl.style.left = 31 + dx * 30 + 'px';
     knobEl.style.top = 31 + dy * 30 + 'px';
   }
@@ -1127,10 +1390,11 @@ function startWorld(decoded, lang) {
   let dragMode = null;
   let downPos = null, downTime = 0, lastPos = null;
   function pickScroll(e) {
+    if (!sheet) return false;
     ptr.x = (e.clientX / innerWidth) * 2 - 1;
     ptr.y = -(e.clientY / innerHeight) * 2 + 1;
     ray.setFromCamera(ptr, camera);
-    return ray.intersectObject(sheet, false).length > 0;
+    return ray.intersectObject(sheet, true).length > 0;
   }
   const onPointerDown = (e) => {
     downPos = { x: e.clientX, y: e.clientY };
@@ -1144,17 +1408,19 @@ function startWorld(decoded, lang) {
     const dx = e.clientX - lastPos.x, dy = e.clientY - lastPos.y;
     lastPos = { x: e.clientX, y: e.clientY };
     if (dragMode === 'look') {
-      yaw -= dx * 0.004;
-      pitch = Math.max(-1.2, Math.min(1.2, pitch - dy * 0.004));
+      yaw -= dx * S.controls.drag_look.sensitivity;
+      const [plo, phi] = S.controls.drag_look.pitch_clamp;
+      pitch = Math.max(plo, Math.min(phi, pitch - dy * S.controls.drag_look.sensitivity));
     } else if (dragMode === 'scroll' && scrollTex && scrollMaxFrac > 0) {
-      scrollFrac = Math.min(1, Math.max(0, scrollFrac - dy * 0.002));
+      scrollFrac = Math.min(1, Math.max(0, scrollFrac - dy * S.controls.drag_scroll.sensitivity));
       applyScrollOffset(scrollTex);
     }
   };
   const onPointerUp = (e) => {
     if (dragMode === 'scroll' && downPos) {
       const moved = Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y);
-      if (moved < 8 && performance.now() - downTime < 500) toggleAudio();
+      if (moved < S.controls.tap_audio.max_move_px &&
+          performance.now() - downTime < S.controls.tap_audio.max_time_ms) toggleAudio();
     }
     dragMode = null; downPos = null; lastPos = null;
   };
@@ -1171,7 +1437,7 @@ function startWorld(decoded, lang) {
     let d = e.deltaY;
     if (e.deltaMode === 1) d *= 16;
     else if (e.deltaMode === 2) d *= innerHeight;
-    scrollFrac = Math.min(1, Math.max(0, scrollFrac + d * 0.0008));
+    scrollFrac = Math.min(1, Math.max(0, scrollFrac + d * S.controls.wheel_scroll.sensitivity));
     applyScrollOffset(scrollTex);
   };
   renderer.domElement.addEventListener('wheel', onWheel, { passive: false });
@@ -1191,22 +1457,27 @@ function startWorld(decoded, lang) {
     if (!visible) return;
     const dt = Math.min(clock.getDelta(), 0.05);
     const t = clock.elapsedTime;
-    scrollGroup.position.y = 3.6 + Math.sin(t * 0.8) * 0.12;
+    if (scrollGroup) {
+      scrollGroup.position.y = SCROLL_BASE_Y +
+        Math.sin(t * BOB.frequency) * BOB.amplitude;
+    }
     let mx = joyVec.x, mz = joyVec.y;
-    if (keys['w'] || keys['arrowup']) mz -= 1;
-    if (keys['s'] || keys['arrowdown']) mz += 1;
-    if (keys['a'] || keys['arrowleft']) mx -= 1;
-    if (keys['d'] || keys['arrowright']) mx += 1;
+    const MK = S.controls.move.keys;
+    const pressed = (names) => names.some((k) => keys[k]);
+    if (pressed(MK.up)) mz -= 1;
+    if (pressed(MK.down)) mz += 1;
+    if (pressed(MK.left)) mx -= 1;
+    if (pressed(MK.right)) mx += 1;
     const len = Math.hypot(mx, mz);
     if (len > 0.01) {
-      const sp = 4 * dt * Math.min(len, 1);
+      const sp = S.controls.move.speed * dt * Math.min(len, 1);
       const sin = Math.sin(yaw), cos = Math.cos(yaw);
       camera.position.x += (-sin * -mz + cos * mx) * sp;
       camera.position.z += (-cos * -mz - sin * mx) * sp;
       const r = Math.hypot(camera.position.x, camera.position.z);
-      if (r > 11) {
-        camera.position.x *= 11 / r;
-        camera.position.z *= 11 / r;
+      if (r > S.controls.move.radius_clamp) {
+        camera.position.x *= S.controls.move.radius_clamp / r;
+        camera.position.z *= S.controls.move.radius_clamp / r;
       }
       camera.position.y = EYE_Y;
     }
@@ -1228,7 +1499,10 @@ function startWorld(decoded, lang) {
       set yaw(v) { yaw = v; },
       get pitch() { return pitch; },
       set pitch(v) { pitch = v; },
-      camera, scene, scrollGroup, THREE,
+      camera, scene, THREE,
+      get scrollGroup() { return scrollGroup; },
+      get sheet() { return sheet; },
+      get frontMat() { return frontMat; },
     };
   }
 
@@ -1369,9 +1643,15 @@ function handleDecoded(d, file) {
   const h = d.header;
   const remoteModels = Object.values(d.remoteModels || {});
   const embeddedCount = d.models ? Object.keys(d.models).length : 0;
+  // v4 headers carry a parts list; v3 headers carry pack_len/audio_len.
+  // The displayed pack length is the UNCOMPRESSED text pack either way.
+  const textLen = h.version === 4 ? d.packTextLen : h.pack_len;
+  const audioLen = h.version === 4
+    ? (h.parts.find((p) => p.name === 'audio') || {}).len
+    : h.audio_len;
   verifiedEl.innerHTML = '<strong>Verified — ' + (d.pack.title || ('Psalm ' + h.chapter)) +
     '</strong><br><span class="meta">PSLM v' + h.version + ' · ' + d.w + '×' + d.h +
-    ' · text pack ' + h.pack_len + ' bytes · audio ' + h.audio_len + ' bytes · ' +
+    ' · text pack ' + textLen + ' bytes · audio ' + audioLen + ' bytes · ' +
     'languages: ' + h.languages.join(', ') +
     (embeddedCount ? ' · models packed in image: ' + embeddedCount : '') +
     (remoteModels.length ? ' · models remote: ' + remoteModels.length : '') +
@@ -1396,7 +1676,7 @@ function handleDecoded(d, file) {
   }
 
   const hasModels = embeddedCount > 0 || remoteModels.length > 0;
-  if (h.version === 3 && hasModels) {
+  if ((h.version === 3 || h.version === 4) && hasModels) {
     enterWorldBtn.hidden = false;
     if (remoteModels.length) showRemoteWarning(remoteModels);
     // A proper (valid) cartridge with its models embedded takes over the
@@ -1487,62 +1767,152 @@ const SPEC_TEXT = [
 'PIXEL LAYOUT',
 'Pixels are read row-major, top-left first, 4 bytes per pixel (R, G, B,',
 'A) as returned by a canvas 2D context. The alpha channel is never used.',
-'The top of the image is a visible strip of rows holding the text pack.',
-'Below the strip, the rest of the image holds one LSB bitstream.',
+'The whole payload lives in ONE LSB bitstream starting at pixel (0, 0):',
+'the header blob first, then the parts the header lists, in listed',
+'order. Nothing is written as visible pixels: a cartridge differs from',
+'its cover only in the least-significant bits of its channels (at most',
+'1 level per channel at depth 1, at most 3 at depth 2).',
 '',
-'THE STRIP (text pack)',
-'The strip stores bytes 3 per pixel (R, then G, then B), row by row.',
+'THE BITSTREAM',
+'Read the least-significant lsb_depth bits of every colour channel (R,',
+'G, B — never alpha), pixel by pixel, row by row, starting at the top',
+'left. Within each byte, bits are MSB-first: the first bit read is the',
+'most-significant bit of byte 0. At depth 1, take bit 0 of each channel;',
+'at depth 2, take bit 1 first, then bit 0. Try depth 1 first; if the',
+'first four bytes are not P S L M, try depth 2.',
 'Byte 0..3: magic, the four ASCII bytes P S L M (0x50 0x53 0x4C 0x4D).',
-'Byte 4: version. 2 or 3.',
+'Byte 4: version. 4.',
 'Bytes 5..8: header length, big-endian uint32.',
 'Bytes 9..(9+header length-1): the header, UTF-8 JSON (see HEADER).',
-'Immediately after the header, in the same strip: the text pack,',
-'zlib-compressed (raw DEFLATE stream inside a zlib wrapper: bytes 0-1',
-'are the zlib header, the last 4 bytes are the Adler-32 checksum).',
-'The strip height in rows is header.strip_h. The text pack is exactly',
-'header.pack_comp_len bytes long in the strip.',
+'Immediately after the header, in the same bitstream: the parts, in',
+'the order the header lists them, back to back, with no separators.',
+'If the image runs out of pixels before all parts are read, the',
+'cartridge is truncated: report DAMAGE.',
 '',
 'HEADER (JSON)',
-'{"format":"PSLM","version":3,"chapter":1,',
+'{"format":"PSLM","version":4,"lsb_depth":1,"strip_h":0,',
+' "chapter":1,',
 ' "languages":["en","es","pt","fr","de","ru","ar","zh","hi","id","ja","ko"],',
-' "fallback":"en","strip_h":16,',
-' "pack_len":7737,"pack_comp_len":2965,',
-' "pack_sha256":"<hex of the UNCOMPRESSED text pack>",',
-' "audio_len":192766,"audio_sha256":"<hex of the audio bytes>",',
-' "lsb_depth":1,',
-' "models":[',
-'   {"name":"palace","len":795224,"sha256":"<hex of the GLB bytes>",',
-'    "stored_len":291028,"compressed":true},',
-'   {"name":"skybox","len":2697556,"sha256":"<hex of the GLB bytes>",',
-'    "stored_len":2622191,"compressed":true}]}',
+' "fallback":"en","audio_format":"opus-webm",',
+' "parts":[',
+'   {"name":"text","len":2965,"sha256":"<hex of the STORED bytes>",',
+'    "encoding":"zlib"},',
+'   {"name":"audio","len":192766,"sha256":"<hex of the audio bytes>",',
+'    "encoding":"raw"},',
+'   {"name":"world","len":29612,"sha256":"<hex of the scene JSON>",',
+'    "encoding":"raw"},',
+'   {"name":"palace","len":291028,"sha256":"<hex of the STORED bytes>",',
+'    "encoding":"zlib"},',
+'   {"name":"skybox","len":2622191,"sha256":"<hex of the STORED bytes>",',
+'    "encoding":"zlib"}]}',
 '',
 'Meaning of the fields:',
-'- format is always "PSLM"; version is 2 or 3.',
-'- chapter: the psalm number (1..150).',
-'- languages: the gloss languages packed, in order. fallback: the',
-'  language to use when the reader\'s language has no gloss (usually',
-'  "en").',
-'- strip_h: how many rows at the top of the image are the strip.',
-'- pack_len / pack_comp_len / pack_sha256: the text pack (see TEXT',
-'  PACK). pack_sha256 is the SHA-256 of the UNCOMPRESSED pack bytes.',
-'- audio_len / audio_sha256: the audio payload (see AUDIO).',
+'- format is always "PSLM"; version is 4.',
 '- lsb_depth: 1 or 2. How many least-significant bits per colour',
-'  channel the LSB bitstream uses. Version 2 always means 1.',
-'- models: version 3 only. One entry per 3D model, in the order they',
-'  appear in the LSB bitstream. name is "palace" or "skybox". len is',
-'  the length of the original GLB file in bytes. sha256 is the SHA-256',
-'  of the ORIGINAL GLB bytes. stored_len is how many bytes the model',
-'  occupies in the LSB bitstream. compressed is true when the stored',
-'  bytes are a zlib-compressed copy of the GLB (the encoder compresses',
-'  only when it actually shrinks the file, and only losslessly — the',
-'  decoded bytes are identical to the original). When compressed is',
-'  false, stored_len equals len and the stored bytes ARE the GLB.',
-'  A model entry may instead be remote: {"name":"palace",',
-'  "remote":true,"url":"https://.../assets/cloud-palace.glb",',
-'  "len":795224,"sha256":"<hex of the original GLB>"} — see MODELS.',
-'  Version 2 has no models field at all.',
+'  channel the bitstream uses. The decoder tries 1, then 2.',
+'- strip_h is always 0 in version 4: there is no visible strip. It is',
+'  kept so the header shape is stable across versions.',
+'- chapter: the psalm number (1..150). languages: the gloss languages',
+'  packed, in order. fallback: the language to use when the reader\'s',
+'  language has no gloss (usually "en"). audio_format: "opus-webm".',
+'  These are metadata for the renderer; the extractor ignores them.',
+'- parts: a generic, self-describing list of everything that follows',
+'  the header, in order. Each part has a name, a length in bytes, the',
+'  SHA-256 of its STORED bytes, and an encoding: "zlib" means the',
+'  stored bytes are a zlib-compressed copy (raw DEFLATE stream inside',
+'  a zlib wrapper: bytes 0-1 are the zlib header, the last 4 bytes are',
+'  the Adler-32 checksum); "raw" means the stored bytes are the part',
+'  itself. The extractor reads whatever the header lists and verifies',
+'  each hash; it knows nothing about what any part IS. The names are',
+'  what the renderer looks up afterwards: "text" is the text pack,',
+'  "audio" is the audio, "world" is the scene recipe (see WORLD), every',
+'  other part is a 3D model. A part may',
+'  instead be remote: {"name":"palace","remote":true,',
+'  "url":"https://.../assets/cloud-palace.glb","len":795224,',
+'  "sha256":"<hex of the original GLB>","encoding":"raw"} — a remote',
+'  part occupies NO bytes in the bitstream; see MODELS.',
 '',
-'TEXT PACK (JSON, after zlib decompression)',
+'WORKED EXAMPLE — the first bytes of a real v4 cartridge (Psalm 1),',
+'decoded by hand. Read the LSB plane (the least-significant bit of',
+'every R, G, B channel, row by row from the top-left,',
+'most-significant bit first, 8 bits = 1 byte). The opening bytes of',
+'the stream are readable ASCII — that is how you know you are reading',
+'the right plane:',
+'',
+'Bytes 0-3 (hex 50 53 4c 4d): the letters P S L M. The magic. If these',
+'  four bytes are not P S L M, you are reading the wrong plane: try',
+'  the lowest 2 bits per channel instead (bit 1 first, then bit 0).',
+'Byte 4 (hex 04): the version. 4.',
+'Bytes 5-8 (hex 00 00 03 49): the header length, big-endian uint32.',
+'  0x0349 = 841. The next 841 bytes are the header JSON.',
+'Bytes 9-849: the header JSON, UTF-8 text. For this cartridge it is:',
+'  The header JSON below is wrapped for reading at commas only;',
+'  delete the line breaks to recover the exact 841 bytes:',
+'  {"format":"PSLM","version":4,"lsb_depth":1,"parts":[',
+'  {"name":"text","len":2965,',
+'  "sha256":"6afc3739d6fef6afcfc67b5df1739dec74c96864d9642864dd00c47ad646ec06",',
+'  "encoding":"zlib"},',
+'  {"name":"audio","len":192766,',
+'  "sha256":"5474dd972f3b18360470c3621e5aa9a55a23c33dd3c97c28903d8ef39447ec9a",',
+'  "encoding":"raw"},',
+'  {"name":"world","len":29612,',
+'  "sha256":"91475c43f78b9256fa48b4036e6cbd1306aa04be9cdee6434f0640e924871e00",',
+'  "encoding":"raw"},',
+'  {"name":"palace","len":291028,',
+'  "sha256":"8f63aa4d082efbc87d6d7fb68fc4f0498e09c93924f6369abd44a5a531f0822c",',
+'  "encoding":"zlib"},',
+'  {"name":"skybox","len":2622191,',
+'  "sha256":"f6f1495de7954d22fce0160727dfb0bf615845fe461605bd85e3ca7cbc445e8c",',
+'  "encoding":"zlib"}],',
+'  "strip_h":0,"cover_w":4096,"cover_h":4096,"chapter":1,',
+'  "languages":["en","es","pt","fr","de","ru","ar","zh","hi","id","ja","ko"],',
+'  "fallback":"en","audio_format":"opus-webm"}',
+'  Read it as JSON. It is the table of contents: five parts, in order,',
+'  each with a name, a length, a SHA-256, and an encoding.',
+'Bytes 850-3814: the first part, "text", 2965 bytes, encoding "zlib".',
+'  Its first bytes (hex 78 da bd 59 5b 6f ...) are a zlib stream',
+'  (0x78 0xda is the zlib header for best compression). Decompress it:',
+'  7737 bytes of JSON, starting {"chapter":1,"title":"Psalm 1",...}.',
+'  Check its SHA-256 against the header: it must match, or the file is',
+'  damaged. Then the next part ("audio", 192766 bytes, raw), then',
+'  "world" (29612 bytes, raw — the scene recipe, JSON), then "palace"',
+'  (291028 bytes, zlib) and "skybox" (2622191 bytes, zlib), each in',
+'  turn, each hash-checked. That is the whole decode.',
+'',
+'THE PNG TEACHES ITSELF — the bootstrap chunk (a bonus, not a dependency)',
+'Every v4 cartridge also carries its instructions in the PNG file',
+'itself, as a plain-text PNG metadata chunk (tEXt, keyword "PSLM"),',
+'readable by any tool that opens the file, even a hex dump. It touches',
+'no pixels. Its exact text is:',
+'',
+'PSLM cartridge. Read the least-significant bit of each R, G, B',
+'channel, row by row from the top-left, most-significant bit first',
+'(8 bits = 1 byte). If the first 4 bytes are not PSLM, try the',
+'lowest 2 bits per channel instead. The stream starts: PSLM, 1',
+'version byte, 4-byte big-endian header length, then that many',
+'bytes of JSON. The JSON lists every part with its length and',
+'SHA-256. Read each part, check its hash. The scene is standard',
+'glTF 2.0.',
+'',
+'That chunk is a bootstrap aid ONLY. Nothing depends on it: the LSB',
+'bitstream is fully self-teaching on its own (it opens with readable',
+'ASCII — magic PSLM, then the JSON header — so anyone who reads the',
+'LSB plane sees readable instructions, not noise). Metadata can get',
+'stripped; strip every ancillary chunk from a cartridge and it still',
+'decodes fully. If a reader needs an instruction, it must also be in',
+'the stream (the JSON header) or in this spec — never only in the',
+'metadata chunk.',
+'',
+'HEADER SCHEMA (machine-readable, not just prose)',
+'The header JSON has a JSON Schema (draft 2020-12) alongside this spec',
+'(the fourth textbox on this page, and tools/header-schema.json in the',
+'repository). It defines every header field, its type, and its allowed',
+'values. A decoder can validate the header against it instead of',
+'trusting prose. The extractor still needs only version, lsb_depth and',
+'parts; the schema covers the metadata fields too, so a strict reader',
+'can check the whole header.',
+'',
+'TEXT PACK (JSON, after zlib decompression of the part named "text")',
 '{"title":"Psalm 1","chapter":1,',
 ' "languages":["en","es","pt","fr","de","ru","ar","zh","hi","id","ja","ko"],',
 ' "fallback":"en",',
@@ -1558,59 +1928,68 @@ const SPEC_TEXT = [
 'gloss exists in that language; fall back to the fallback language,',
 'then to an empty string. Never invent a gloss.',
 '',
+'The pack also carries "text": the full Hebrew chapter text,',
+'verses separated by newlines, for reference. The Hebrew title',
+'drawn at the top of the scroll is not a pack field: it is the',
+'word Tehillim (Hebrew for "Psalms") followed by the chapter',
+'number written as a Hebrew numeral, by the standard rule: ones',
+'1-9 are alef-tet (1 alef, 2 bet, 3 gimel, 4 dalet, 5 he, 6 vav,',
+'7 zayin, 8 het, 9 tet), tens 10-90 are yod-tsadi (10 yod, 20 kaf,',
+'30 lamed, 40 mem, 50 nun, 60 samekh, 70 ayin, 80 pe, 90 tsadi),',
+'hundreds 100-400 are qof-tav (100 qof, 200 resh, 300 shin, 400',
+'tav); write hundreds, then tens, then ones — except 15 is',
+'tet-vav and 16 is tet-zayin (never yod-he / yod-vav). Psalm 1 is',
+'Tehillim alef.',
+'',
+'The stored transliteration (t) is Latin (SBL-style). Rendering it',
+'into the reader\'s own alphabet (Cyrillic, Arabic, Devanagari,',
+'Hangul, katakana) is a decoder-side rule table, not cartridge',
+'data: the cartridge carries only the Latin form. A reader that',
+'does not implement those tables shows the stored Latin',
+'transliteration, which is correct.',
+'',
 'AUDIO',
 'The audio is Opus in a WebM container, one reading of the chapter in',
-'Hebrew. It is the first section of the LSB bitstream (see LSB',
-'BITSTREAM). Verify its SHA-256 against header.audio_sha256 before',
-'playing it; on mismatch report DAMAGE and do not play it.',
-'',
-'LSB BITSTREAM',
-'Starts at the first pixel row AFTER the strip (row strip_h). Read the',
-'least-significant lsb_depth bits of every colour channel (R, G, B —',
-'never alpha), pixel by pixel, row by row. Within each byte, bits are',
-'MSB-first: the first bit read is the most-significant bit of byte 0.',
-'Sections follow in order, back to back, with no separators:',
-'  1. audio: exactly audio_len bytes.',
-'  2. each model in header.models order (version 3 only): exactly',
-'     stored_len bytes each. Skip remote models here — they occupy NO',
-'     bytes in the bitstream.',
-'If the image runs out of pixels before all sections are read, the',
-'cartridge is truncated: report DAMAGE.',
+'Hebrew. It is the part named "audio" (encoding "raw"). Verify its',
+'SHA-256 against the header before playing it; on mismatch report',
+'DAMAGE and do not play it.',
 '',
 'MODELS',
-'Each model is a complete GLB file (glTF 2.0 binary). To use it:',
-'decompress with zlib if compressed is true (same zlib format as the',
-'text pack), then check the length equals len and the SHA-256 equals',
-'sha256. Only then parse it as a GLB and build the world from it.',
-'On any mismatch report DAMAGE.',
+'Each model is a complete GLB file (glTF 2.0 binary): the part whose',
+'name is the model name ("palace", "skybox"). Decompress with zlib if',
+'its encoding is "zlib" (the encoder compresses only when it actually',
+'shrinks the file, and only losslessly — the decoded bytes are',
+'identical to the original), then check the length equals the original',
+'length and the SHA-256 equals sha256. Only then parse it as a GLB and',
+'build the world from it. On any mismatch report DAMAGE.',
 '',
 'REMOTE MODELS (opt-in only, never the default):',
 'When a cartridge was encoded from an image too small to hold the',
 'models, the encoder may — only if the person encoding explicitly',
 'turned the "allow remote models" toggle on — record a model as remote',
 'instead of packing it. A remote entry has remote:true and a url, and',
-'occupies no bytes in the LSB bitstream. The decoder fetches the GLB',
-'from that url ONLY when the header says remote, verifies its length',
-'and SHA-256 against the header exactly as for an embedded model, and',
-'uses it only if it verifies. If the fetch fails or the hash does not',
-'match, the model is unavailable: report it, do not substitute any',
-'other file, and do not fetch from any other URL. A remote-models',
-'cartridge is NOT fully offline: always show a clear warning that its',
-'world needs the network. A cartridge with NO models field (v2) or an',
-'empty models list is INCOMPLETE for the world: show its text and',
-'audio, report it incomplete, and NEVER fetch models to fill the gap.',
+'occupies no bytes in the LSB bitstream; its len and sha256 describe',
+'the original GLB. The decoder fetches the GLB from that url ONLY when',
+'the header says remote, verifies its length and SHA-256 against the',
+'header exactly as for an embedded model, and uses it only if it',
+'verifies. If the fetch fails or the hash does not match, the model is',
+'unavailable: report it, do not substitute any other file, and do not',
+'fetch from any other URL. A remote-models cartridge is NOT fully',
+'offline: always show a clear warning that its world needs the',
+'network. A cartridge with a part named "text" and "audio" but no',
+'model parts is INCOMPLETE for the world: show its text and audio,',
+'report it incomplete, and NEVER fetch models to fill the gap.',
 '',
 'VERIFICATION (do all of these, in this order)',
-'1. First 4 strip bytes must be P S L M; version must be 2 or 3.',
+'1. First 4 bitstream bytes must be P S L M; version must be 4.',
 '2. Header JSON must parse; format must be "PSLM" and version must',
-'   match the version byte.',
-'3. Decompress the text pack (zlib). Its length must equal pack_len',
-'   and its SHA-256 must equal pack_sha256. On mismatch: DAMAGE.',
-'4. Read the LSB bitstream. The audio bytes must SHA-256-match',
-'   audio_sha256. On mismatch: DAMAGE.',
-'5. For each embedded model: decompress if needed, check length and',
-'   SHA-256. On mismatch: DAMAGE.',
-'6. Only after all checks pass may the chapter be shown or played.',
+'   match the version byte; parts must be a non-empty list.',
+'3. Read the parts in listed order. Each part\'s SHA-256 (of its',
+'   stored bytes) must match the header. On mismatch: DAMAGE.',
+'4. Decompress the part named "text" (zlib). Parse it as JSON; on',
+'   failure: DAMAGE. If a part named "world" is present, parse it as',
+'   JSON against the WORLD schema; on failure: DAMAGE.',
+'5. Only after all checks pass may the chapter be shown or played.',
 '',
 'RENDERING',
 'Language: use navigator.language; match the full tag, else the',
@@ -1627,72 +2006,308 @@ const SPEC_TEXT = [
 'rendering per script. If a word has no gloss in the reader\'s',
 'language, fall back to the fallback language, then to an empty gloss.',
 'Audio: play the decoded WebM bytes (e.g. via a Blob URL).',
-'WORLD — HOW TO BUILD IT (version 3 with models)',
-'The world is not in the bytes: the cartridge gives you two GLB files',
-'and the chapter text. You must build the scene. Do it exactly like',
-'this, in a browser with three.js (r160 or later):',
+'WORLD — HOW TO BUILD IT (version 4 with a world part)',
+'The world IS in the bytes: the cartridge gives you the two GLB files,',
+'the chapter text, AND the scene recipe — the part named "world" in the',
+'header parts list. Read that part (it is JSON; verify its SHA-256 like',
+'every other part), and build the scene from it. The recipe below is the',
+'SCHEMA of that JSON: it defines the field names, their types and what',
+'they mean. It does NOT carry the values — the values are in the',
+'cartridge, which is the single source of truth for the scene. Do not',
+'copy values from any other document: read the world part.',
 '',
-'1. Load the models from the VERIFIED bytes only, never from a URL:',
-'   new GLTFLoader().parse(arrayBufferOf(palaceBytes), "", onLoad).',
-'   Same for skybox. If either fails to parse, report it; do not',
-'   substitute any other file.',
-'2. Sky: do NOT add the skybox as a mesh. Take the embedded JPEG out',
-'   of the skybox GLB (parse the GLB container: 12-byte header, JSON',
-'   chunk, BIN chunk; the texture is the embedded image), flip it',
-'   horizontally and shift it down 80 rows (the equirect mapping',
-'   mirrors u versus the sphere UVs), then set scene.background to',
-'   that texture with EquirectangularReflectionMapping. If the bottom',
-'   rows are a flat uniform band (a truncated file), extend the last',
-'   good row downward instead of showing black.',
-'3. Palace: add the parsed palace group to the scene, recentered so',
-'   its floor sits at y=0 (subtract the bounding-box center x/z and',
-'   the box minimum y). Give every non-floor mesh a polished metal',
-'   material (color #f2f3f5, metalness 1.0, roughness 0.05,',
-'   DoubleSide) with an environment map; leave the floor mesh with',
-'   its own material.',
-'4. Scroll: a tan sheet 7 wide by 3.5 high by 0.06 thick, with a',
-'   roll (radius 0.5, length 3.5) on each side at x = +/-3.8, a thin',
-'   wooden rod (radius 0.07, length 4.3) through each roll, and',
-'   wooden caps (radius 0.56) at y = +/-1.81. The sheet sits 0.30',
-'   behind the rolls. Put the whole scroll group at y = 3.6, facing',
-'   the camera.',
-'5. Scroll text: draw the chapter on a canvas 1400 px wide (tan',
-'   #efe3c0 background, dark #2a2118 text, 46 px serif, 78 px line',
-'   height): the chapter title, the Hebrew title, then each verse',
-'   (a separator line, then the words in order as',
-'   Hebrew (transliteration, gloss)). Use that canvas as the texture',
-'   on the front face of the sheet. When the text is longer than the',
-'   sheet, show the top part and scroll the texture as the reader',
-'   scrolls.',
-'6. Camera and light: perspective camera, 60 degree field of view,',
-'   near 0.1, far 500, at (0, 2, 11), looking slightly down',
-'   (pitch -0.06). Hemisphere light (sky #bfd9ff, ground #8a6f4d,',
-'   0.9) plus a directional sun (#fff2dd, 1.6) at (20, 30, 10).',
-'   Renderer: antialias on, sRGB output, ACES filmic tone mapping,',
-'   exposure 1.0.',
-'7. Controls: drag to look around; joystick (bottom-left) or WASD',
-'   to move; wheel over the scroll scrolls the text. Tapping or',
-'   clicking the scroll toggles the audio (play/pause). Show a',
-'   status line: palace OK, skybox OK, cartridge OK, language,',
-'   audio OK.',
-'8. Display rule: a valid v3 cartridge with embedded models takes',
-'   over the display with the world immediately, with the plain',
-'   chapter text underneath and a way back to the text. A cartridge',
-'   with no models, or with models that fail to parse, shows text',
-'   and audio only, reports itself incomplete, and NEVER fetches',
-'   models to fill the gap.',
+'The world part JSON has these top-level keys (version 1):',
+'',
+'- version: 1 (the scene-part schema version).',
+'- gltf: a standard glTF 2.0 scene document (Khronos glTF 2.0 — the',
+'  same format as the .glb model parts, but as JSON text, not binary).',
+'  It holds the scroll geometry and materials, the perspective camera,',
+'  the sun light, and the palace reference. Any glTF loader opens it.',
+'  Its keys:',
+'  - asset: {"version": "2.0", "generator": ...}.',
+'  - scene: 0 (the index of the default scene).',
+'  - scenes: [{"name": "psalm-world", "nodes": [0, 1, 2, 3]}] — the',
+'    nodes of the default scene, by index.',
+'  - nodes: an array. The scene\'s own nodes are:',
+'    - {"name": "palace", "extensions": {"PSLM_part": {...}}} — the',
+'      palace is not geometry in this document; it is a reference to',
+'      the cartridge part named "palace" (see PSLM_part below).',
+'    - {"name": "scroll", "translation": [x, y, z], "children": [...]}',
+'      — the scroll group; its children are the sheet, rolls, rods',
+'      and caps (each a node with a "mesh" index and a "translation").',
+'    - {"name": "camera", "camera": 0, "translation": [x, y, z],',
+'      "rotation": [x, y, z, w]} — the camera node. The rotation is a',
+'      quaternion (x, y, z, w); it encodes yaw-then-pitch.',
+'    - {"name": "sun", "extensions": {"KHR_lights_punctual": {"light":',
+'      0}}, "translation": [x, y, z], "rotation": [x, y, z, w]} — the',
+'      sun light node. Its rotation points its -Z axis from its',
+'      position toward the origin.',
+'  - meshes: the scroll geometry. Each mesh has a name and',
+'    "primitives"; each primitive has "attributes" (POSITION, NORMAL,',
+'    TEXCOORD_0 — indexes into "accessors"), "indices" (an index into',
+'    "accessors"), and "material" (an index into "materials"). The',
+'    sheet mesh has six primitives (one per face of the box); the',
+'    front (+Z) face is primitive index 4 and uses the scroll-text',
+'    material.',
+'  - materials: standard glTF PBR materials. Each has a name and',
+'    "pbrMetallicRoughness": {"baseColorFactor": [r, g, b, a]',
+'    (LINEAR colour, 0..1 — glTF colours are linear, not sRGB),',
+'    "metallicFactor" (0..1), "roughnessFactor" (0..1)}. The',
+'    scroll-text material also has "baseColorTexture": {"index": 0}',
+'    (an index into "textures").',
+'  - textures: [{"source": 0, "sampler": 0}]. images: [{"name":',
+'    "scroll-text", "uri": "scroll-text"}] — the uri is NOT a file.',
+'    It is the plain name of the dynamic texture: generate it from',
+'    the text part and the scroll_text layout (below) and use it as',
+'    this material\'s texture. samplers: [{"magFilter": 9729,',
+'    "minFilter": 9729, "wrapS": 33071, "wrapT": 10497}] — 9729 is',
+'    LINEAR, 33071 is CLAMP_TO_EDGE, 10497 is REPEAT (the WebGL enum',
+'    values, as glTF writes them).',
+'  - cameras: [{"name": "camera", "type": "perspective",',
+'    "perspective": {"yfov": <radians>, "znear": <number>, "zfar":',
+'    <number>}}]. There is no aspect ratio in the scene: set it from',
+'    the viewport at render time.',
+'  - extensionsUsed: ["KHR_lights_punctual", "PSLM_part"].',
+'    extensionsRequired: the same two.',
+'  - extensions: {"KHR_lights_punctual": {"lights": [{"name": "sun",',
+'    "type": "directional", "color": [r, g, b] (LINEAR), "intensity":',
+'    <number>}]}} — the standard Khronos lights extension. A loader',
+'    that supports it creates the sun; a loader that does not reads',
+'    this JSON and creates the directional light itself (colour linear,',
+'    intensity as given, position from the sun node, shining toward',
+'    the origin).',
+'  - buffers: [{"byteLength": <number>, "uri":',
+'    "data:application/octet-stream;base64,<base64>"}] — the geometry',
+'    bytes, base64. bufferViews and accessors index into it in the',
+'    standard glTF way (byteOffset, byteLength; componentType 5126 is',
+'    float32, 5125 is uint32; type VEC3/VEC2/SCALAR; POSITION',
+'    accessors carry min/max).',
+'  - UV convention: glTF texture coordinates have v=0 at the TOP of',
+'    the image (textures are not flipped). The sheet\'s front-face UVs',
+'    follow this: v=0 is the top edge of the sheet. A texture',
+'    assigned to the front material must also not be flipped: the',
+'    image\'s first row is the top of the sheet. The scene part\'s',
+'    flip_vertical:false IS the upload flag: in three.js, upload',
+'    BOTH the equirect sky texture and the scroll canvas texture',
+'    with flipY=false. Do not flip either on upload — flipY=true',
+'    turns the sky upside down.',
+'- The PSLM_part extension (on the palace node): {"part": "palace"',
+'  (the cartridge part name), "role": "palace", "recenter": "subtract',
+'  bounding-box center x/z and box minimum height so the floor sits',
+'  at height 0", "floor": {"detect": "flattest mesh by height over',
+'  max(width, depth)", "align": "subtract floor center height from',
+'  the scene height"}, "material": {"baseColorFactor": [r, g, b, a]',
+'  (LINEAR), "metallicFactor": 1.0, "roughnessFactor": 0.05,',
+'  "doubleSided": true, "environmentIntensity": 1.25},',
+'  "material_applies_to": "every mesh except the floor mesh"}. To use',
+'  it: load the cartridge part named by "part" (the palace GLB, from',
+'  the VERIFIED bytes only, never from a URL), parse it as a glTF 2.0',
+'  binary (.glb), add its default scene under the palace node, then:',
+'  (1) recenter it by the recenter rule — the box is the whole',
+'  palace scene\'s WORLD-space bounding box, taken AFTER the GLB\'s',
+'  own node transforms (translation/rotation/scale); subtract its',
+'  center x/z and its minimum height from the scene position, so',
+'  the floor sits at height 0; (2) find the floor mesh by the',
+'  floor.detect rule (the mesh whose own world-space bounding box',
+'  is flattest) and align it by the floor.align rule — a second',
+'  Y-shift that puts the floor mesh\'s bounding-box CENTER at',
+'  height 0;',
+'  (3) replace every other mesh\'s material with a PBR material from',
+'  the "material" values (baseColorFactor is linear;',
+'  environmentIntensity is how strongly the image-based-lighting',
+'  environment affects this material — glTF has no per-material IBL',
+'  strength, so this one value is plain data in the extension, not a',
+'  glTF field).',
+'- sky: plain data (glTF core has no scene background and no scene',
+'  environment): {"source_part": "skybox" (which cartridge part holds',
+'  the panorama), "source": "the panorama image embedded in the',
+'  skybox glTF part (the first material\'s emissive texture, else the',
+'  specular-glossiness diffuse texture)", "mapping":',
+'  "equirectangular", "flip_horizontal": true (mirror the panorama',
+'  left-right), "shift_rows": 80 (shift the panorama down that many',
+'  rows, as a ROLL: the rows that fall off the bottom wrap to the',
+'  top), "pole_band_heal": {"enabled": true, "pole_band_top": 0.92',
+'  (fraction of the height where the pole band starts),',
+'  "reference_band": [0.65, 0.8] (a healthy band to compare against),',
+'  "fade_rows": 100, "seam_blur_px": 2}. Preparation order is FIXED:',
+'  (1) heal the pole band, (2) flip horizontally if flip_horizontal,',
+'  (3) shift down by shift_rows as a roll. The heal runs BEFORE the',
+'  shift: a roll-shift would move the flat band off the bottom pole',
+'  and the heal would find nothing. The heal procedure, exactly:',
+'  sample every 16th pixel across each row; a row is uniform if all',
+'  sampled pixels are identical. Count the run of uniform rows from',
+'  the bottom of the image upward. Compute the reference band\'s',
+'  flat fraction (fraction of uniform rows, sampled every 2nd row,',
+'  in the reference band). Heal ONLY if the run is greater than 0',
+'  AND the reference flat fraction is less than 0.5 (the reference',
+'  band is healthy). Find the last good row above the run: scanning',
+'  upward, the first row that is not uniform AND has mean',
+'  saturation greater than 0.03. Mirror the runH rows immediately',
+'  above the bad region, flipped vertically, into the bad region',
+'  (if fewer than runH rows exist above, stretch the single good',
+'  row). Then fade: a vertical gradient over fade_rows above the',
+'  bad region, from transparent to the mean colour of that band.',
+'  Then blur a 20-row band around the seam by seam_blur_px. If',
+'  there is no uniform run, or the reference band is itself mostly',
+'  flat, do nothing;',
+'  "texture": {"color_space": "sRGB", "flip_vertical": false,',
+'  "generate_mipmaps": false, "min_filter"/"mag_filter": "linear",',
+'  "wrap_s"/"wrap_t": "repeat"}, "background": "use the prepared',
+'  panorama as the scene background", "environment": "use the prepared',
+'  panorama as the image-based lighting environment (ambient light and',
+'  reflections for the whole scene)"}. Use the panorama as the scene',
+'  background in equirectangular projection, AND as the image-based',
+'  lighting environment. There is no hemisphere light in glTF: the',
+'  ambient contribution is the sky environment. There is no separate',
+'  studio-room environment: the world is fully contained in the',
+'  cartridge. The skybox GLB contains a sphere mesh (radius about',
+'  50000) with the panorama as its emissive texture. That sphere is',
+'  NOT rendered as a node: its radius exceeds the camera far plane,',
+'  and the panorama is used directly as the equirect',
+'  background/environment instead. The skybox part is referenced by',
+'  this sky section (its panorama texture is extracted), not as',
+'  geometry.',
+'- scroll_text: plain data (the texture is dynamic — it depends on',
+'  the chapter and the language, so it is generated at render time):',
+'  {"texture_name": "scroll-text" (the plain name the glTF image',
+'  references), "canvas_width": 1400, "padding": 80, "line_height":',
+'  78, "min_height": 700, "background": "#efe3c0", "text_color":',
+'  "#2a2118", "color_space": "sRGB", "font"/"font_bold"/',
+'  "font_separator": {"families": [font family names in preference',
+'  order], "size_px": <number>, "weight": "normal" or "bold"},',
+'  "layout": {"head": {"align": "center", "direction": "ltr", "font":',
+'  "font_bold"}, "separator": {"align": "center", "direction": "ltr",',
+'  "font": "font_separator"}, "text": {"align": "right", "direction":',
+'  "rtl", "font": "font"}, "wrap": "measure text, max width',
+'  canvas_width - 2*padding"}, "separator_format": "— N —" (N is the',
+'  verse number), "word_format": "Hebrew (transliteration, gloss)",',
+'  "texture": {"wrap_s": "clamp_to_edge", "wrap_t": "repeat"}}. Draw',
+'  the chapter on the text surface: the chapter title, the Hebrew',
+'  title, then each verse (a separator line, then the words in order',
+'  as Hebrew (transliteration, gloss)). Use that surface as the',
+'  texture on the front face of the sheet. When the text is longer',
+'  than the sheet, show the top part and scroll the texture as the',
+'  reader scrolls: the visible fraction is (canvas width * sheet',
+'  height / sheet width) / canvas height, and the texture offset',
+'  moves with the scroll fraction (0 is the top of the text, 1 is',
+'  the bottom).',
+'- animation: plain data (a formula, not a keyframed glTF animation',
+'  — a sine is exact as a formula): {"scroll_bob": {"node": "scroll",',
+'  "property": "translation.y", "amplitude": 0.12, "frequency": 0.8,',
+'  "formula": "translation.y = glTF translation.y + amplitude *',
+'  sin(time * frequency)"}}.',
+'- controls: {"drag_look": {"sensitivity" (radians of look per pixel',
+'  of pointer movement), "pitch_clamp": [min, max] (radians)},',
+'  "drag_scroll": {"sensitivity" (fraction of the scroll per pixel)',
+'  — a drag that STARTS on the scroll scrolls the text; a drag that',
+'  starts elsewhere looks around (drag_look)},',
+'  "joystick": {"dead_zone" (number — movement below this normalized',
+'  length is ignored), "note": "a circular on-screen pad at the bottom',
+'  left; the pointer offset from the pad center, divided by the pad',
+'  radius and clamped to length 1, is the movement vector"}, "move":',
+'  {"keys": {"up"/"down"/"left"/"right": [keyboard key names]}, "speed"',
+'  (world units per second), "radius_clamp" (number — how far from the',
+'  center the camera may move)}, "tap_audio": {"max_move_px",',
+'  "max_time_ms" (a tap is a press that moves less than this many screen',
+'  pixels within this many milliseconds — it toggles the audio)},',
+'  "wheel_scroll": {"sensitivity" (fraction of the scroll per wheel',
+'  delta unit)}}. Drag to look around; joystick or keys to move; wheel',
+'  over the scroll scrolls the text; tapping the scroll toggles the audio.',
+'- audio: {"mime": "audio/webm", "source_part": "audio"} — play the',
+'  decoded audio part (e.g. via a Blob URL).',
+'- renderer: {"antialias": true, "pixel_ratio_cap": 2 (the maximum',
+'  device-pixel ratio), "output_color_space": "sRGB", "tone_mapping":',
+'  "ACES filmic" (the ACES filmic tone-mapping curve), "exposure": 1.0,',
+'  "background_fallback": "#0b1020" (a colour, shown before the sky',
+'  texture loads)}.',
+'',
+'How to build the world, in order:',
+'1. Read the world part, verify its SHA-256, parse it as JSON.',
+'2. Generate the scroll-text surface from the text part and the',
+'   scroll_text layout; hand it to the glTF loader as the',
+'   "scroll-text" image (a data URL, or assign the generated texture',
+'   to the front material after loading).',
+'3. Load the glTF document (the "gltf" key) with any glTF loader. It',
+'   gives you the scroll meshes (with materials), the perspective',
+'   camera, and the sun light (KHR_lights_punctual).',
+'4. Load the palace part (named by the PSLM_part extension) from the',
+'   VERIFIED bytes, parse it as a GLB, add it under the palace node,',
+'   apply the recenter / floor / metal rules.',
+'5. Extract the panorama from the skybox part (the first material\'s',
+'   emissive texture, else the specular-glossiness diffuse texture),',
+'   prepare it in the fixed order — heal the pole band first (if',
+'   enabled), then flip horizontally, then shift down by shift_rows',
+'   as a roll — and use it as the scene background',
+'   (equirectangular) and as the image-based lighting environment.',
+'6. Set the camera from the glTF (fov, near, far, node position and',
+'   rotation; aspect ratio from the viewport). Set the sun from',
+'   KHR_lights_punctual. Set the renderer from the renderer section.',
+'7. Animate the scroll bob from the animation formula. Wire the',
+'   controls from the controls section. Play the audio part.',
+'',
+'Runtime: the reader needs a 3D engine. In a browser or in Koder',
+'(HTML/JS), the environment natively gives PNG decoding, canvas,',
+'WebGL and <audio>; three.js is a file, not a service — save it',
+'locally once (this decoder page already inlines it) or use raw',
+'WebGL. Inline three.js into the single HTML file, as this page',
+'does: ES-module imports from file:// are blocked by the',
+'browser\'s CORS rules, so a decoder that imports three.js from',
+'separate local files works only over HTTP, not from file://.',
+'No CDN, no fetch, no AI, no internet at runtime.',
+'',
+'Gaps, named (not hidden):',
+'- glTF has no hemisphere light: the ambient contribution is',
+'  image-based lighting from the sky environment, and the sun is a',
+'  KHR_lights_punctual directional light.',
+'- glTF core has no scene background or scene environment: the sky',
+'  section (plain data) names the panorama as both.',
+'- The scroll-text texture is dynamic: the glTF references it by the',
+'  plain name "scroll-text"; the layout data stays in the scene part',
+'  as plain data.',
+'- Controls are interaction, not scene: plain data, not glTF.',
+'- glTF has no per-material IBL strength: the palace metal\'s',
+'  environmentIntensity is plain data in the PSLM_part extension.',
+'- The bob is a formula, not keyframes: plain data in the animation',
+'  section.',
+'- The skybox GLB\'s sphere mesh is not rendered (its radius exceeds',
+'  the camera far plane); the panorama is used directly.',
+'',
+'',
+'Display rule: a valid v4 cartridge with embedded models and a world',
+'part takes over the display with the world immediately, with the plain',
+'chapter text underneath and a way back to the text. A cartridge with no',
+'models, or with models that fail to parse, shows text and audio only,',
+'reports itself incomplete, and NEVER fetches models to fill the gap. A',
+'cartridge with no world part (versions 2 and 3) has no scene recipe in',
+'the image: a decoder may still render the world from its own built-in',
+'copy of the recipe, and must say so — the recipe is not in that',
+'cartridge.',
 '',
 'The world comes out of the image; it is never fetched from the site.',
+'The world comes out of the image; it is never fetched from the site.',
+'',
+'OLD CARTRIDGES (versions 2 and 3 — still read)',
+'Version 3 (and 2) cartridges put the header blob in a VISIBLE strip',
+'at the top of the image: the strip stores bytes 3 per pixel (R, then',
+'G, then B), row by row — magic P S L M, version byte (2 or 3),',
+'big-endian header length, header JSON, then the zlib text pack —',
+'and the audio and models in the LSB bitstream below the strip,',
+'starting at row header.strip_h. The v3 header is not a parts list:',
+'it has pack_len / pack_comp_len / pack_sha256 for the text pack,',
+'audio_len / audio_sha256 for the audio, and models[] with len /',
+'sha256 / stored_len / compressed per model. The decoder reads both',
+'layouts: try the strip magic first, then the LSB magic. The encoder',
+'writes version 4 only.',
 '',
 'ENCODING (for completeness — what the encoder does)',
 'The encoder takes a cover image, the chapter data (text pack JSON),',
 'the audio WebM, and the two GLBs. It zlib-compresses the text pack',
 'and each GLB (only when that shrinks it — lossless only, decoded',
-'bytes identical). It writes the strip (magic, version, header length,',
-'header, compressed pack) on top of the cover as extra rows, then',
-'writes audio and models into the LSBs at 1 bit per channel, or 2 bits',
-'if 1 does not fit. It chooses the minimum depth that fits and refuses',
-'loudly, with numbers, when even 2 bits do not fit. A 1024x1024 cover',
+'bytes identical). It builds the header blob (magic, version 4,',
+'header length, header JSON) and writes the blob followed by the',
+'parts into the LSBs at 1 bit per channel, or 2 bits if 1 does not',
+'fit. It chooses the minimum depth that fits and refuses loudly,',
+'with numbers, when even 2 bits do not fit. A 1024x1024 cover',
 'cannot hold the models. Full quality is the default: nothing lossy',
 '(no Draco/meshopt, no JPEG re-encode, no lower audio bitrate) is ever',
 'applied without an explicit opt-in from the person encoding. If the',
@@ -1718,28 +2333,33 @@ const MIN_SPEC_TEXT = [
 'Read the pixels row by row, top-left first: red, green, blue per',
 'pixel (ignore alpha).',
 '',
-'1. The top rows are a visible strip. Its bytes, 3 per pixel (R,',
-'   then G, then B), read:',
+'1. One LSB bitstream, from the top-left pixel: read the',
+'   least-significant bit of every R, G and B channel, most-',
+'   significant bit first inside each byte. (If the first four',
+'   bytes are not P S L M, try the lowest 2 bits of each channel',
+'   instead: bit 1 first, then bit 0.) The stream starts:',
 '   bytes 0-3: the letters P S L M.',
-'   byte 4: version (2 or 3).',
+'   byte 4: version (4).',
 '   bytes 5-8: header length, big-endian uint32.',
-'   then the header, UTF-8 JSON. It tells you everything: the psalm',
-'   number, the languages packed, the strip height (strip_h), the',
-'   text pack length and SHA-256, the audio length and SHA-256, how',
-'   many LSB bits per channel (lsb_depth: 1 or 2), and each 3D model',
-'   (length, SHA-256, stored length, whether it is compressed).',
-'   right after the header, in the same strip: the text pack,',
-'   zlib-compressed. Decompress it: JSON with verses (indexes into a',
+'   then the header, UTF-8 JSON. It is the table of contents: a',
+'   parts list — each part has a name, a length, a SHA-256, and',
+'   an encoding ("zlib" or "raw"). The parts follow the header',
+'   in listed order, back to back. The part named "text" is the',
+'   text pack, zlib-compressed: JSON with verses (indexes into a',
 '   lexicon) and the lexicon (Hebrew word, Latin transliteration,',
-'   glosses per language).',
-'2. Below the strip, the rest of the image is one LSB bitstream:',
-'   read the least-significant lsb_depth bits of every R, G and B',
-'   channel, pixel by pixel, row by row, most-significant bit first',
-'   inside each byte. First the audio (audio_len bytes), then each',
-'   model in header order (stored_len bytes each; zlib-decompress',
-'   it if the header says compressed).',
-'3. Check every SHA-256 against the header. Any mismatch means the',
+'   glosses per language). The part named "audio" is the audio,',
+'   Opus in WebM. The part named "world" is the scene recipe: a',
+'   standard glTF 2.0 scene document (JSON — see the WORLD section',
+'   of the full spec for its schema). Every',
+'   other part is a 3D model (.glb);',
+'   zlib-decompress it if its encoding is "zlib".',
+'2. Check every SHA-256 against the header. Any mismatch means the',
 '   file is damaged: say so, and show nothing unverified.',
+'3. Old cartridges (versions 2 and 3) are different: their header',
+'   blob sits in a visible strip of rows at the top, 3 bytes per',
+'   pixel (R, G, B), with the audio and models in the LSB layer',
+'   below the strip. A decoder that reads both layouts tries the',
+'   strip magic first, then the LSB magic.',
 '',
 'WHAT YOU NEED TO READ IT',
 'Anything that can read PNG pixels: Python + Pillow, JavaScript +',
@@ -1751,11 +2371,11 @@ const MIN_SPEC_TEXT = [
 '- Audio: the bytes are Opus in a WebM container. Any WebM/Opus',
 '  player plays them; in a browser, a plain <audio> tag does.',
 '- The 3D world: the models are standard glTF 2.0 binary (.glb)',
-'  files. Any glTF viewer opens them; in a browser, three.js with',
-'  GLTFLoader is the simplest route. If you cannot do 3D, the chapter',
+'  files. Any glTF viewer opens them. If you cannot do 3D, the chapter',
 '  is still complete as text + audio — the world is presentation,',
 '  not the content. The exact scene recipe — camera, sky, scroll,',
-'  controls — is in the WORLD section of the full spec.',
+'  controls — is in the world part of the cartridge; the WORLD section',
+'  of the full spec defines that part\'s schema.',
 ].join('\n');
 const READ_SPEC_TEXT = [
 'PSLM cartridge — just reading the code.',
@@ -1778,8 +2398,9 @@ const READ_SPEC_TEXT = [
 'Which way to try first: the least-significant bit of each',
 'channel, from the top-left. If the first four bytes are not the',
 'letters P S L M, try the lowest 2 bits of each channel instead.',
-'If they are still not P S L M, try the pixel values themselves,',
-'from the top rows.',
+'Old cartridges (versions 2 and 3) put the stream in the pixel',
+'values themselves, from the top rows: try those only if the',
+'least-significant bits give no P S L M at either depth.',
 '',
 'HOW THE STREAM INTRODUCES ITSELF',
 'The byte stream starts with the letters P S L M, then one',
@@ -1797,9 +2418,11 @@ const READ_SPEC_TEXT = [
 'That is all. What the parts ARE is in the JSON header, not in',
 'this spec. Read the header, and the cartridge tells you the rest.',
 ].join('\n');
+const HEADER_SCHEMA_TEXT = "{\"$id\":\"https://j0shuaisrael.github.io/bible-cartridges/pslm-v4-header-schema.json\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"additionalProperties\":true,\"description\":\"The header JSON at the start of a PSLM v4 cartridge's LSB bitstream (after magic PSLM, version byte 4, and a 4-byte big-endian header length). The extractor needs only version, lsb_depth and parts; every other field is metadata it ignores. Roles (which part is the text, the audio, a model) are just names the renderer uses afterwards \u2014 extraction and verification stay role-blind.\",\"properties\":{\"audio_format\":{\"description\":\"The audio container format (opus-webm), or null when there is no audio part.\",\"type\":[\"string\",\"null\"]},\"chapter\":{\"description\":\"The psalm number.\",\"maximum\":150,\"minimum\":1,\"type\":\"integer\"},\"cover_h\":{\"description\":\"Cover image height in pixels.\",\"minimum\":1,\"type\":\"integer\"},\"cover_w\":{\"description\":\"Cover image width in pixels.\",\"minimum\":1,\"type\":\"integer\"},\"fallback\":{\"description\":\"The language to use when the reader's language has no gloss.\",\"type\":\"string\"},\"format\":{\"const\":\"PSLM\",\"description\":\"Always PSLM.\"},\"languages\":{\"description\":\"The gloss languages packed, in order.\",\"items\":{\"type\":\"string\"},\"minItems\":1,\"type\":\"array\"},\"lsb_depth\":{\"description\":\"How many least-significant bits per colour channel the bitstream uses. The decoder tries 1, then 2.\",\"enum\":[1,2]},\"parts\":{\"description\":\"A generic, self-describing list of everything that follows the header in the bitstream, in order. The extractor reads whatever the header lists, in order, and verifies each hash; it knows nothing about what any part is.\",\"items\":{\"additionalProperties\":true,\"properties\":{\"encoding\":{\"description\":\"zlib: the stored bytes are a zlib-compressed copy (decompress after verifying). raw: the stored bytes are the part itself.\",\"enum\":[\"zlib\",\"raw\"]},\"len\":{\"description\":\"How many bytes the part occupies in the bitstream (0 for a remote part).\",\"minimum\":0,\"type\":\"integer\"},\"name\":{\"description\":\"An opaque label. The renderer looks parts up by name: text is the text pack, audio is the audio, world is the scene recipe, every other part is a 3D model.\",\"type\":\"string\"},\"remote\":{\"description\":\"True only when the part is not in the bitstream at all: the decoder fetches it from url and verifies len + sha256 exactly as for an embedded part.\",\"type\":\"boolean\"},\"sha256\":{\"description\":\"SHA-256 (lowercase hex) of the STORED bytes, exactly as they sit in the bitstream. For a remote part, of the original file.\",\"pattern\":\"^[0-9a-f]{64}$\",\"type\":\"string\"},\"url\":{\"description\":\"Present only when remote is true: where to fetch the part from.\",\"format\":\"uri\",\"type\":\"string\"}},\"required\":[\"name\",\"len\",\"sha256\",\"encoding\"],\"type\":\"object\"},\"minItems\":1,\"type\":\"array\"},\"strip_h\":{\"const\":0,\"description\":\"Always 0 in version 4: there is no visible strip. Kept so the header shape is stable across versions.\"},\"version\":{\"const\":4,\"description\":\"Format version. Must match the version byte in the bitstream.\"}},\"required\":[\"format\",\"version\",\"lsb_depth\",\"parts\",\"strip_h\",\"cover_w\",\"cover_h\",\"chapter\",\"languages\",\"fallback\",\"audio_format\"],\"title\":\"PSLM v4 cartridge header\",\"type\":\"object\"}";
 document.getElementById('spec').value = SPEC_TEXT;
 document.getElementById('minspec').value = MIN_SPEC_TEXT;
 document.getElementById('readspec').value = READ_SPEC_TEXT;
+document.getElementById('headerschema').value = HEADER_SCHEMA_TEXT;
 document.getElementById('copySpec').addEventListener('click', async () => {
   const ta = document.getElementById('spec');
   const note = document.getElementById('copyNote');
@@ -1820,6 +2443,23 @@ document.getElementById('copySpec').addEventListener('click', async () => {
 document.getElementById('copyMinSpec').addEventListener('click', async () => {
   const ta = document.getElementById('minspec');
   const note = document.getElementById('copyMinNote');
+  try {
+    await navigator.clipboard.writeText(ta.value);
+    note.textContent = 'Copied.';
+  } catch (e) {
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand('copy');
+      note.textContent = 'Copied.';
+    } catch (e2) {
+      note.textContent = 'Copy failed — select the text manually.';
+    }
+  }
+});
+document.getElementById('copyHeaderSchema').addEventListener('click', async () => {
+  const ta = document.getElementById('headerschema');
+  const note = document.getElementById('copyHeaderNote');
   try {
     await navigator.clipboard.writeText(ta.value);
     note.textContent = 'Copied.';

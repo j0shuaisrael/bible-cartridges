@@ -3,6 +3,11 @@
 Date: 2026-11-20. Status: INVESTIGATION + DESIGN ONLY. No code changed, no
 cartridge rebuilt, nothing pushed. Yashar decides before anything is (re)built.
 
+Note (2026-11-21): PSLM v4 as built puts the entire payload in one LSB
+bitstream — there is no visible strip. This doc's strip references describe
+the v3 layout it was written against; the AAC dual-audio design itself is
+unchanged and still parked.
+
 Live report: Psalm 1's audio plays on Safari on Mac, FAILS on Pol's iPhone.
 The viewer (`psalms/001/index.html`) plays a sidecar `audio.webm`
 (Opus-in-WebM, single source, no fallback) through a plain `<audio>` element.

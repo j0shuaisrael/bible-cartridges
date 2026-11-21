@@ -1,47 +1,72 @@
 #!/usr/bin/env python3
-"""Encode a Bible cartridge PNG (format PSLM v3).
+"""Encode a Bible cartridge PNG (format PSLM v4).
 
     python3 encode.py --cover psalms/001/cover.png --audio psalms/001/audio.webm \\
         --data tools/psalm001_data.json --palace assets/cloud-palace.glb \\
         --skybox assets/skybox.glb --out psalms/001/cartridge.png
 
 Layout of the cartridge PNG (all lossless, exactly reversible):
-  * Visible strip: the top `strip_h` rows of the cover hold the text pack as
-    raw RGB bytes (3 bytes per pixel). The strip is at least 16 rows tall so
-    it reads as a visible band of code; bytes past the end of the payload
-    inside the strip are deterministic filler (seeded from the pack hash) and
-    are ignored by the decoder.
-  * Invisible LSB layer: ONE bitstream below the strip, at `lsb_depth` bits
-    per colour channel (1 or 2, chosen as the minimum that fits), row-major,
-    MSB-first within each byte. Sections in order: the chapter audio (raw
-    Opus/WebM), then each model in header order (stored bytes; zlib-
-    compressed only where that actually shrinks them — the palace geometry
-    compresses to ~37%, the skybox's embedded JPEG does not, so it is
-    stored raw). Changing a channel by at most 1/255 (depth 1) or 3/255
-    (depth 2) is invisible to the eye.
+  * ONE LSB bitstream, starting at pixel (0, 0), row-major, at `lsb_depth`
+    bits per colour channel (1 or 2, chosen as the minimum that fits),
+    MSB-first within each byte. Sections in order, back to back, with no
+    separators: the header blob (magic + version + header length + header
+    JSON), then the parts the header lists, in the order it lists them.
+    Each part's stored bytes are zlib-compressed only where that actually
+    shrinks them — the text pack and the palace geometry compress well,
+    the skybox's embedded JPEG does not, so it is stored raw. Changing a
+    channel by at most 1/255 (depth 1) or 3/255 (depth 2) is invisible
+    to the eye.
+  * There is NO visible strip. The cartridge differs from its cover ONLY
+    in the least-significant bits of its pixels (at most 1/255 per channel
+    at depth 1, 3/255 at depth 2), and no row of the cover is lost — the
+    top rows of the photo survive in the cartridge. (PSLM v3 wrote the
+    header + text pack as a visible band of code over the top rows; v4
+    restores the original spec: everything lives in the LSBs.)
 
-Visible blob layout:
+Header blob layout (the first section of the bitstream):
     [0:4]   magic "PSLM"
-    [4]     version (3)
+    [4]     version (4)
     [5:9]   uint32 big-endian header JSON length N
     [9:9+N] header JSON (see below)
-    [9+N:]  zlib-compressed text pack (the data JSON: verses as lexicon
-            indices + the per-unique-word lexicon with transliteration and
-            a baked gloss per packed language + the canonical Hebrew text)
+    [9+N:]  the parts, in the order the header lists them.
 
-Header JSON:
-    {"format": "PSLM", "version": 3, "chapter": 1,
-     "languages": ["en", "es", ...], "fallback": "en",
-     "pack_len": <uncompressed pack bytes>, "pack_comp_len": <compressed>,
-     "pack_sha256": <hex of the uncompressed pack>,
-     "audio_len": <bytes>, "audio_sha256": <hex or null>,
-     "audio_format": "opus-webm",
-     "strip_h": <rows>, "cover_w": <px>, "cover_h": <px>,
+Header JSON — a generic, self-describing parts list. The extractor
+needs only version, lsb_depth and parts; everything else is metadata
+it ignores. Roles (which part is the text, the audio, a model) are just
+names the RENDERER uses afterwards — extraction and verification stay
+role-blind:
+    {"format": "PSLM", "version": 4,
      "lsb_depth": 1 or 2,
-     "models": [{"name": "palace", "len": <GLB bytes>, "sha256": <hex>,
-                "stored_len": <bytes in the LSB stream>,
-                "compressed": true/false},
-               {"name": "skybox", ...}]}
+     "parts": [{"name": "text", "len": <stored bytes>,
+                "sha256": <hex of the stored bytes>, "encoding": "zlib"},
+               {"name": "audio", "len": <bytes>, "sha256": <hex>,
+                "encoding": "raw"},
+               {"name": "world", "len": <bytes>, "sha256": <hex>,
+                "encoding": "raw"},
+               {"name": "palace", "len": <stored bytes>, "sha256": <hex>,
+                "encoding": "zlib"},
+               {"name": "skybox", "len": <stored bytes>, "sha256": <hex>,
+                "encoding": "zlib"}],
+     "strip_h": 0, "cover_w": <px>, "cover_h": <px>,
+     "chapter": 1, "languages": ["en", "es", ...], "fallback": "en",
+     "audio_format": "opus-webm"}
+Each part: name (an opaque label — the renderer looks parts up by
+name), len (how many bytes it occupies in the bitstream), sha256 (of
+the STORED bytes, exactly as they sit in the bitstream), encoding
+("zlib" — a zlib-wrapped DEFLATE stream, decompress after verifying —
+or "raw" — the bytes as-is). A part may instead be remote:
+{"name": "palace", "len": <GLB bytes>, "sha256": <hex of the GLB>,
+ "encoding": "raw", "remote": true, "url": "https://..."} — it occupies
+no bytes in the bitstream; the renderer fetches it only when the header
+says remote and verifies len + sha256 exactly as for an embedded part.
+`strip_h` is kept (always 0 in v4) so the header shape is stable across
+versions: it is the row where the LSB bitstream starts — row 0 in v4.
+A v3 header has strip_h >= 16; the decoder tells the versions apart by
+the version byte, not by this field.
+The metadata (chapter, languages, fallback, cover_w, cover_h,
+audio_format) is for the renderer: the chapter number, the gloss
+languages packed, the fallback language, the cover dimensions, and the
+audio container format. The extractor ignores all of it.
 
 THE MODELS LIVE IN THE IMAGE. The cartridge carries the full palace and
 skybox GLBs; the decoder extracts them and builds the world from them.
@@ -49,14 +74,54 @@ Nothing is ever fetched from the site — not by the decoder, not by any
 viewer page. A cartridge with no models is incomplete: the decoder must
 report it, never quietly complete it from assets/ or anywhere else.
 
-CAPACITY (measured for Psalm 1: audio 192,766 + palace stored 291,028 +
-skybox stored 2,622,191 = 3,105,985 bytes in the LSB stream):
+THE SCENE RECIPE LIVES IN THE IMAGE TOO. The parts list carries a
+"world" part: the scene recipe as JSON, exactly the bytes of
+tools/scene.json (built by tools/build_scene.py), stored raw — raw keeps
+the part byte-identical across encoders. It gets a SHA-256 in the header
+like every other part. The decoder builds the world from the cartridge's
+own scene part, using only a 3D engine — it needs no WORLD section in
+the spec to know the scene. The scene part is a STANDARD glTF 2.0 scene
+document (key "gltf": nodes, meshes, PBR materials, perspective camera,
+KHR_lights_punctual sun, palace referenced by the PSLM_part extension)
+plus plain-data sections for what glTF core does not name (sky
+background/environment, dynamic scroll-text layout, animation formula,
+controls, audio, renderer settings). No engine names, no function names,
+nothing that only makes sense with one decoder's source. The spec's
+WORLD section defines the schema of that JSON, not its values: the
+cartridge is the single source of truth for the scene. Gaps, all named
+in the spec: the hemisphere light is not in glTF, so the ambient
+contribution is image-based lighting from the sky environment (the old
+neutral studio-room environment is gone — the world is now fully
+contained in the cartridge); the sky background is not in glTF core, so
+the panorama from the skybox part is used directly as the equirect
+background/environment (the skybox GLB's sphere mesh is not rendered —
+its radius exceeds the camera far plane); the scroll-text texture is
+dynamic, referenced by the plain name "scroll-text" with its layout data
+in the scene part; controls are plain interaction data, not glTF.
+
+THE PNG TEACHES ITSELF. The encoder also writes a plain-text PNG
+metadata chunk (tEXt, keyword "PSLM") into the cartridge file, carrying
+the whole bootstrap in one paragraph: the bit order, the depth fallback,
+the stream layout, the JSON header, the hashes, and glTF for the scene.
+It touches no pixels and is readable by any tool that opens the file,
+even a hex dump. It is a bootstrap aid ONLY — nothing depends on it.
+The LSB bitstream is fully self-teaching on its own: it opens with
+readable ASCII (magic PSLM, then the JSON header), so anyone who reads
+the LSB plane — the standard first place to look for hidden data in an
+image — sees readable instructions, not noise. Strip every ancillary
+chunk from a cartridge and it still decodes fully; that is the proof.
+The chunk text is BOOTSTRAP_TEXT below; the full spec documents it.
+
+CAPACITY — the whole image is the bitstream (w*h*3*depth/8 bytes):
     cover      depth 1          depth 2
-    1024x1024    387,072 B        774,144 B   (cannot hold the models)
-    2048x2048  1,560,576 B      3,121,152 B   (fits at depth 2, 99.5% used —
-                                               only ~15 KB spare; tight)
-    3072x3072  3,520,512 B      7,041,024 B   (fits at depth 1, 88% used)
-    4096x4096  6,266,880 B     12,533,760 B   (fits at depth 1, 50% used)
+    1024x1024    393,216 B        786,432 B   (cannot hold the models)
+    2048x2048  1,572,864 B      3,145,728 B
+    3072x3072  3,538,944 B      7,077,888 B   (fits Psalm 1 at depth 1)
+    4096x4096  6,291,456 B     12,582,912 B
+Psalm 1's v4 payload is 3,139,412 bytes (header blob 3,815 + audio
+192,766 + world scene 29,612 + palace stored 291,028 + skybox stored
+2,622,191) — 49.9% of a 4096 cover at depth 1, 88.6% of a 3072 cover
+at depth 1.
 The encoder chooses the minimum depth that fits and REFUSES LOUDLY with
 the numbers when no depth fits the cover — it never silently drops the
 models, never truncates, and never falls back to fetching them.
@@ -68,12 +133,12 @@ bytes are byte-identical to the originals, so quality is unchanged):
             compressed embedded JPEG; zlib barely helps, but it is
             smaller, so it is stored compressed)
 Draco/meshopt (measured, NOT adopted): Draco gets the palace to 155,876
-and the skybox to 2,589,880 (total payload 3,105,985 -> 2,927,956, a 5.7%
-saving) — but Draco is LOSSY (quantised geometry; decoded bytes differ),
-and the Draco decoder is a ~763 KB JS+WASM pair that would have to be
-bundled into the decoder, so the decoder would grow by ~1 MB to save
-~178 KB in the cartridge. Not worth it. Anything lossy needs an explicit
-opt-in from the person encoding; nothing lossy is applied by default.
+and the skybox to 2,589,880 (a 5.7% saving) — but Draco is LOSSY
+(quantised geometry; decoded bytes differ), and the Draco decoder is a
+~763 KB JS+WASM pair that would have to be bundled into the decoder, so
+the decoder would grow by ~1 MB to save ~178 KB in the cartridge. Not
+worth it. Anything lossy needs an explicit opt-in from the person
+encoding; nothing lossy is applied by default.
 
 FULL QUALITY IS THE DEFAULT: the cartridge holds the complete,
 unmodified models, audio and text. Lossless zlib is the only compression
@@ -100,21 +165,39 @@ word, stored once per chapter). Decoding is fully offline and free forever:
 the decoder reads navigator.language, picks the best matching packed
 language, and falls back to English. Adding a language later means adding
 one gloss per word at build time — the format needs no redesign.
+
+BACKWARDS COMPATIBILITY: v4 changes the layout, not the contract. The
+decoder (tools/decode.py, psalms/NNN/decode.js, decode.html) reads v4 and
+v3 (and v2) cartridges: it tries the v3 visible-strip header first, then
+the v4 LSB header, and validates the header fully (version, header-length
+bounds, JSON, format/version match, every SHA-256) before trusting
+either. A v3 cartridge keeps working until it is rebuilt as v4.
+
+PIXEL WRITING: the LSB layer is written with numpy when it is available
+(vectorised — seconds per cartridge instead of minutes); without numpy
+the same layout is written by the pure-Python loop below it. The two
+paths produce byte-identical pixels (checked on Psalms 1 and 119).
 """
 import argparse
 import hashlib
 import json
-import math
-import random
+import os
 import struct
 import sys
 import zlib
 
 from PIL import Image
 
+try:
+    import numpy as _np
+except ImportError:  # pragma: no cover - numpy is installed here; the
+    _np = None       # fallback keeps the tools working without it.
+
 MAGIC = b"PSLM"
-VERSION = 3
-MIN_STRIP_H = 16  # the code band stays visible as a design element
+VERSION = 4
+# A header longer than this is not a PSLM header (real ones are ~500 B);
+# the bound stops a corrupt length field from causing a huge read.
+MAX_HEADER_LEN = 1_000_000
 
 # Stable GitHub Pages URLs for the models. Used ONLY when a cartridge is
 # encoded with --remote-models (explicit opt-in, default off) because the
@@ -124,6 +207,54 @@ REMOTE_URLS = {
     "palace": "https://j0shuaisrael.github.io/bible-cartridges/assets/cloud-palace.glb",
     "skybox": "https://j0shuaisrael.github.io/bible-cartridges/assets/skybox.glb",
 }
+
+# The canonical scene recipe (tools/scene.json): the exact bytes packed
+# as the "world" part of every v4 cartridge, stored raw. Loaded once;
+# validated as JSON here so a broken scene file fails the build loudly
+# instead of producing cartridges whose world part will not parse.
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "scene.json"), "rb") as _f:
+    SCENE_BYTES = _f.read()
+json.loads(SCENE_BYTES.decode("utf-8"))  # raises if the scene file is not valid JSON
+
+# The self-teaching bootstrap, written into every v4 cartridge as a
+# plain-text PNG tEXt chunk (keyword "PSLM"). One paragraph, the whole
+# bootstrap: bit order, depth fallback, stream layout, JSON header,
+# hashes, glTF for the scene. A bootstrap aid ONLY — nothing depends on
+# it; the LSB bitstream is self-teaching on its own (it opens with
+# readable ASCII: PSLM, then the JSON header). The browser encoder
+# (psalms/encode.html) writes this exact text in its tEXt chunk.
+BOOTSTRAP_TEXT = (
+    "PSLM cartridge. Read the least-significant bit of each R, G, B "
+    "channel, row by row from the top-left, most-significant bit first "
+    "(8 bits = 1 byte). If the first 4 bytes are not PSLM, try the "
+    "lowest 2 bits per channel instead. The stream starts: PSLM, 1 "
+    "version byte, 4-byte big-endian header length, then that many "
+    "bytes of JSON. The JSON lists every part with its length and "
+    "SHA-256. Read each part, check its hash. The scene is standard "
+    "glTF 2.0."
+)
+
+
+def _png_chunk(chunk_type, data):
+    crc = zlib.crc32(chunk_type + data) & 0xFFFFFFFF
+    return (struct.pack(">I", len(data)) + chunk_type + data +
+            struct.pack(">I", crc))
+
+
+def insert_bootstrap_chunk(png_bytes):
+    """Insert the tEXt "PSLM" bootstrap chunk right after IHDR.
+    Returns new PNG bytes. The chunk touches no pixels."""
+    if png_bytes[:8] != b"\x89PNG\r\n\x1a\n":
+        raise ValueError("not a PNG file")
+    pos = 8
+    length = struct.unpack(">I", png_bytes[pos:pos + 4])[0]
+    ctype = png_bytes[pos + 4:pos + 8]
+    if ctype != b"IHDR":
+        raise ValueError("PNG has no IHDR first")
+    after_ihdr = pos + 12 + length
+    text = b"PSLM\x00" + BOOTSTRAP_TEXT.encode("latin-1")
+    return (png_bytes[:after_ihdr] +
+            _png_chunk(b"tEXt", text) + png_bytes[after_ihdr:])
 
 
 def build_pack(data_path):
@@ -153,172 +284,103 @@ def build_model_remote(name, path):
             "remote": True, "url": REMOTE_URLS[name], "_stored": b""}
 
 
-def header_model_entry(m):
-    if m.get("remote"):
-        return {k: m[k] for k in ("name", "len", "sha256", "remote", "url")}
-    return {k: m[k] for k in ("name", "len", "sha256", "stored_len", "compressed")}
+def part_entry(name, stored, encoding, remote=None):
+    """One entry of the generic parts list. `stored` is the exact bytes
+    that go into the bitstream; the SHA-256 is of those stored bytes.
+    The extractor verifies each part against this entry and knows nothing
+    about what the part IS — the name is only a label the renderer looks
+    up afterwards. For a remote part, `remote` carries the length +
+    SHA-256 of the bytes to be fetched, and the part occupies no bytes
+    in the bitstream."""
+    if remote is not None:
+        return {"name": name, "len": remote["len"], "sha256": remote["sha256"],
+                "encoding": "raw", "remote": True, "url": remote["url"]}
+    return {"name": name, "len": len(stored),
+            "sha256": hashlib.sha256(stored).hexdigest(), "encoding": encoding}
 
 
-def build_header(pack, comp, audio, models, strip_h, w, h, depth, data):
+def build_header(pack, comp, audio, models, w, h, depth, data):
+    """The v4 header: version + lsb_depth + a generic parts list, plus
+    renderer metadata the extractor ignores. `models` are the build
+    records from build_model / build_model_remote. The parts list IS the
+    bitstream order after the header blob: text, audio, world (the scene
+    recipe, tools/scene.json, stored raw), then models."""
+    parts = [part_entry("text", comp, "zlib")]
+    if audio:
+        parts.append(part_entry("audio", audio, "raw"))
+    parts.append(part_entry("world", SCENE_BYTES, "raw"))
+    for m in models:
+        if m.get("remote"):
+            parts.append(part_entry(m["name"], b"", "raw",
+                                    remote={"len": m["len"], "sha256": m["sha256"],
+                                            "url": m["url"]}))
+        else:
+            parts.append(part_entry(m["name"], m["_stored"],
+                                    "zlib" if m["compressed"] else "raw"))
     return {
         "format": "PSLM",
         "version": VERSION,
+        "lsb_depth": depth,
+        "parts": parts,
+        "strip_h": 0,  # v4: no strip; the LSB bitstream starts at row 0.
+        "cover_w": w,
+        "cover_h": h,
         "chapter": data["chapter"],
         "languages": data["languages"],
         "fallback": data.get("fallback", "en"),
-        "pack_len": len(pack),
-        "pack_comp_len": len(comp),
-        "pack_sha256": hashlib.sha256(pack).hexdigest(),
-        "audio_len": len(audio),
-        "audio_sha256": hashlib.sha256(audio).hexdigest() if audio else None,
         "audio_format": "opus-webm" if audio else None,
-        "strip_h": strip_h,
-        "cover_w": w,
-        "cover_h": h,
-        "lsb_depth": depth,
-        "models": [header_model_entry(m) for m in models],
     }
 
 
-def visible_blob(header, comp):
+def prefix_blob(header, comp):
+    """The header blob: the first section of the LSB bitstream."""
     hj = json.dumps(header, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     return MAGIC + bytes([VERSION]) + struct.pack(">I", len(hj)) + hj + comp
 
 
-def lsb_capacity(w, h, strip_h, depth):
-    return (h - strip_h) * w * 3 * depth // 8
+def lsb_capacity(w, h, depth):
+    """Whole-image LSB capacity in bytes (v4: no strip is subtracted)."""
+    return w * h * 3 * depth // 8
 
 
 def min_square_side(payload, depth):
-    """Smallest square cover side whose LSB layer (minus a 16-row strip)
-    holds `payload` bytes at the given depth."""
-    s = 16
-    while lsb_capacity(s, s, MIN_STRIP_H, depth) < payload:
+    """Smallest square cover side whose LSB layer holds `payload` bytes
+    at the given depth."""
+    s = 1
+    while lsb_capacity(s, s, depth) < payload:
         s += 1
     return s
 
 
-def encode(cover_path, data_path, out_path, audio_path, palace_path, skybox_path,
-           depth_arg, remote_models=False, text_audio_only=False):
-    cover = Image.open(cover_path).convert("RGB")
-    w, h = cover.size
-    pack, comp = build_pack(data_path)
-    audio = open(audio_path, "rb").read() if audio_path else b""
-    with open(data_path, encoding="utf-8") as f:
-        data = json.load(f)
-    embedded = [build_model("palace", palace_path), build_model("skybox", skybox_path)]
+def _lsb_write_numpy(img_bytes, stream, depth):
+    """Write `stream` into the LSBs of the flat RGB byte string, starting
+    at channel 0 (pixel (0, 0), R). Returns the new RGB bytes. The bit
+    layout is identical to the pure-Python loop below: each channel takes
+    the next `depth` stream bits, first bit into the highest of them."""
+    arr = _np.frombuffer(img_bytes, dtype=_np.uint8).copy()
+    bits = _np.unpackbits(_np.frombuffer(stream, dtype=_np.uint8))
+    if depth == 1:
+        n = len(bits)
+        arr[:n] = (arr[:n] & 0xFE) | bits
+    else:
+        n = len(bits) // 2
+        chunk = bits[0::2] * 2 + bits[1::2]
+        arr[:n] = (arr[:n] & 0xFC) | chunk
+    return arr.tobytes()
 
-    def strip_and_depth(models):
-        """Fixed-point strip height + minimum LSB depth that fits for this
-        models list. Returns (strip_h, depth, payload); depth is None when
-        no depth fits."""
-        stream = audio + b"".join(m["_stored"] for m in models)
-        payload = len(stream)
-        # strip_h depends on the header, which contains strip_h: iterate to
-        # a fixed point (header length only changes if the digit count
-        # changes). lsb_depth is 1 or 2 either way — one digit — so the
-        # header length is identical for both depths and the depth choice
-        # can follow the strip.
-        strip_h = MIN_STRIP_H
-        for _ in range(5):
-            header = build_header(pack, comp, audio, models, strip_h, w, h, 1, data)
-            blob = visible_blob(header, comp)
-            need = (len(blob) + w * 3 - 1) // (w * 3)
-            new_h = max(MIN_STRIP_H, need)
-            if new_h == strip_h:
-                break
-            strip_h = new_h
-        else:
-            raise SystemExit("strip height did not converge")
-        if strip_h >= h:
-            raise SystemExit(
-                f"cover is too small: the text strip alone needs {strip_h} rows of {h} — "
-                f"use a larger cover image"
-            )
-        if depth_arg == "auto":
-            depths = [1, 2]
-        else:
-            depths = [int(depth_arg)]
-        for d in depths:
-            if payload <= lsb_capacity(w, h, strip_h, d):
-                return strip_h, d, payload
-        return strip_h, None, payload
 
-    # ORDER OF ATTEMPTS: fit everything in the image first (with lossless
-    # compression). Only when the models do not fit do the explicit opt-ins
-    # come into play — never automatically, never silently.
-    strip_h, depth, payload = strip_and_depth(embedded)
-    mode = "embedded"
-    models = embedded
-    if depth is None:
-        cap1 = lsb_capacity(w, h, strip_h, 1)
-        cap2 = lsb_capacity(w, h, strip_h, 2)
-        if remote_models:
-            models = [build_model_remote("palace", palace_path),
-                      build_model_remote("skybox", skybox_path)]
-            strip_h, depth, payload = strip_and_depth(models)
-            if depth is None:
-                raise SystemExit(
-                    f"PAYLOAD DOES NOT FIT even without the models: audio {len(audio):,} bytes "
-                    f"exceeds the LSB capacity of this cover ({w}x{h}, strip {strip_h} rows): "
-                    f"{cap1:,} bytes at 1 LSB, {cap2:,} bytes at 2 LSBs. "
-                    f"Use a larger cover image."
-                )
-            mode = "remote"
-        elif text_audio_only:
-            models = []
-            strip_h, depth, payload = strip_and_depth(models)
-            if depth is None:
-                raise SystemExit(
-                    f"PAYLOAD DOES NOT FIT even without the models: audio {len(audio):,} bytes "
-                    f"exceeds the LSB capacity of this cover ({w}x{h}, strip {strip_h} rows): "
-                    f"{cap1:,} bytes at 1 LSB, {cap2:,} bytes at 2 LSBs. "
-                    f"Use a larger cover image."
-                )
-            mode = "text-audio-only"
-        else:
-            raise SystemExit(
-                f"PAYLOAD DOES NOT FIT: {payload:,} bytes (audio {len(audio):,} + "
-                f"palace stored {embedded[0]['stored_len']:,} + skybox stored {embedded[1]['stored_len']:,}) "
-                f"exceeds the LSB capacity of this cover ({w}x{h}, strip {strip_h} rows): "
-                f"{cap1:,} bytes at 1 LSB, {cap2:,} bytes at 2 LSBs. "
-                f"Use a cover at least {min_square_side(payload, 2)}x{min_square_side(payload, 2)} "
-                f"px for 2 LSBs, or {min_square_side(payload, 1)}x{min_square_side(payload, 1)} px for 1 LSB. "
-                f"The models are never dropped silently. Two explicit choices: "
-                f"re-run with --remote-models (the cartridge is encoded with text + audio in the image, "
-                f"but its world will need the network), or --text-audio-only (the cartridge will be "
-                f"incomplete for the world). A bigger cover image is the fully-offline option."
-            )
-    header = build_header(pack, comp, audio, models, strip_h, w, h, depth, data)
-    blob = visible_blob(header, comp)
-    capacity = lsb_capacity(w, h, strip_h, depth)
-    stream = audio + b"".join(m["_stored"] for m in models)
-
-    px = cover.load()
-
-    # 1. Visible strip: blob bytes as RGB pixels, row-major.
-    seed = int.from_bytes(hashlib.sha256(pack).digest()[:4], "big")
-    rng = random.Random(seed)
-    total_strip_bytes = strip_h * w * 3
-    strip_bytes = bytearray(blob)
-    strip_bytes.extend(rng.randrange(256) for _ in range(total_strip_bytes - len(blob)))
-    pos = 0
-    for y in range(strip_h):
-        for x in range(w):
-            r, g, b = px[x, y]
-            px[x, y] = (strip_bytes[pos], strip_bytes[pos + 1], strip_bytes[pos + 2])
-            pos += 3
-
-    # 2. LSB stream: audio then models, `depth` bits per channel, rows below
-    # the strip, MSB first within each byte. Each channel takes the next
-    # `depth` stream bits, first bit into the highest of them.
+def _lsb_write_python(img, stream, depth):
+    """Pure-Python fallback for the same write (no numpy). Slow on large
+    covers; kept so the tool works anywhere."""
+    px = img.load()
+    w, h = img.size
     mask = (1 << depth) - 1
     bitpos = 0
     total_bits = len(stream) * 8
-    for y in range(strip_h, h):
+    for y in range(h):
         for x in range(w):
             if bitpos >= total_bits:
-                break
+                return
             r, g, b = px[x, y]
             channels = []
             for ch in (r, g, b):
@@ -336,19 +398,125 @@ def encode(cover_path, data_path, out_path, audio_path, palace_path, skybox_path
                 channels.append((ch & ~mask) | chunk)
             px[x, y] = tuple(channels)
         if bitpos >= total_bits:
-            break
+            return
+
+
+def encode(cover_path, data_path, out_path, audio_path, palace_path, skybox_path,
+           depth_arg, remote_models=False, text_audio_only=False):
+    cover = Image.open(cover_path).convert("RGB")
+    w, h = cover.size
+    pack, comp = build_pack(data_path)
+    audio = open(audio_path, "rb").read() if audio_path else b""
+    with open(data_path, encoding="utf-8") as f:
+        data = json.load(f)
+    embedded = [build_model("palace", palace_path), build_model("skybox", skybox_path)]
+
+    def depth_for(models):
+        """Minimum LSB depth whose whole-image capacity holds this models
+        list (header blob + audio + stored models). Returns
+        (depth, payload, blob); depth is None when no depth fits. The
+        header length does not depend on the depth (one digit either
+        way) or on strip_h (always 0 in v4), so no fixed-point
+        iteration is needed."""
+        header = build_header(pack, comp, audio, models, w, h, 1, data)
+        blob = prefix_blob(header, comp)
+        # The whole bitstream: the header blob (which already carries the
+        # text part, parts[0]) + every other part in the header's list,
+        # in listed order. The parts list is the single source of truth.
+        payload = len(blob) + sum(p["len"] for p in header["parts"]
+                                  if p["name"] != "text" and "remote" not in p)
+        if depth_arg == "auto":
+            depths = [1, 2]
+        else:
+            depths = [int(depth_arg)]
+        for d in depths:
+            if payload <= lsb_capacity(w, h, d):
+                return d, payload, blob
+        return None, payload, blob
+
+    # ORDER OF ATTEMPTS: fit everything in the image first (with lossless
+    # compression). Only when the models do not fit do the explicit opt-ins
+    # come into play — never automatically, never silently.
+    depth, payload, blob = depth_for(embedded)
+    mode = "embedded"
+    models = embedded
+    if depth is None:
+        cap1 = lsb_capacity(w, h, 1)
+        cap2 = lsb_capacity(w, h, 2)
+        if remote_models:
+            models = [build_model_remote("palace", palace_path),
+                      build_model_remote("skybox", skybox_path)]
+            depth, payload, blob = depth_for(models)
+            if depth is None:
+                raise SystemExit(
+                    f"PAYLOAD DOES NOT FIT even without the models: audio {len(audio):,} bytes "
+                    f"exceeds the LSB capacity of this cover ({w}x{h}): "
+                    f"{cap1:,} bytes at 1 LSB, {cap2:,} bytes at 2 LSBs. "
+                    f"Use a larger cover image."
+                )
+            mode = "remote"
+        elif text_audio_only:
+            models = []
+            depth, payload, blob = depth_for(models)
+            if depth is None:
+                raise SystemExit(
+                    f"PAYLOAD DOES NOT FIT even without the models: audio {len(audio):,} bytes "
+                    f"exceeds the LSB capacity of this cover ({w}x{h}): "
+                    f"{cap1:,} bytes at 1 LSB, {cap2:,} bytes at 2 LSBs. "
+                    f"Use a larger cover image."
+                )
+            mode = "text-audio-only"
+        else:
+            raise SystemExit(
+                f"PAYLOAD DOES NOT FIT: {payload:,} bytes (header blob "
+                f"{len(blob):,} + audio {len(audio):,} + world scene "
+                f"{len(SCENE_BYTES):,} + "
+                f"palace stored {embedded[0]['stored_len']:,} + skybox stored {embedded[1]['stored_len']:,}) "
+                f"exceeds the LSB capacity of this cover ({w}x{h}): "
+                f"{cap1:,} bytes at 1 LSB, {cap2:,} bytes at 2 LSBs. "
+                f"Use a cover at least {min_square_side(payload, 2)}x{min_square_side(payload, 2)} "
+                f"px for 2 LSBs, or {min_square_side(payload, 1)}x{min_square_side(payload, 1)} px for 1 LSB. "
+                f"The models are never dropped silently. Two explicit choices: "
+                f"re-run with --remote-models (the cartridge is encoded with text + audio in the image, "
+                f"but its world will need the network), or --text-audio-only (the cartridge will be "
+                f"incomplete for the world). A bigger cover image is the fully-offline option."
+            )
+    header = build_header(pack, comp, audio, models, w, h, depth, data)
+    blob = prefix_blob(header, comp)
+    capacity = lsb_capacity(w, h, depth)
+    # The bitstream follows the header's parts list, in listed order: the
+    # header blob (which carries the text part), then audio, the world
+    # part (the scene recipe), then the models. Remote parts occupy no
+    # bytes here.
+    stream = blob + audio + SCENE_BYTES + b"".join(m["_stored"] for m in models)
+    assert len(stream) == payload, "bitstream length does not match the parts list"
+
+    # ONE LSB bitstream from pixel (0, 0): header blob, audio, models.
+    # No strip — no pixel is replaced, only least-significant bits change.
+    if _np is not None:
+        out_bytes = _lsb_write_numpy(cover.tobytes(), stream, depth)
+        cover = Image.frombytes("RGB", (w, h), out_bytes)
+    else:
+        _lsb_write_python(cover, stream, depth)
 
     cover.save(out_path, format="PNG")
-    print(f"wrote {out_path} ({w}x{h}, strip {strip_h} rows, PSLM v{VERSION}, {depth} LSB)")
+    # The PNG teaches itself: add the plain-text bootstrap chunk (tEXt
+    # "PSLM"). It touches no pixels and nothing depends on it.
+    with open(out_path, "rb") as f:
+        png_bytes = f.read()
+    with open(out_path, "wb") as f:
+        f.write(insert_bootstrap_chunk(png_bytes))
+    print(f"wrote {out_path} ({w}x{h}, PSLM v{VERSION}, {depth} LSB, no strip)")
     print(f"  text pack: {len(pack)} bytes -> {len(comp)} compressed "
           f"(sha256 {hashlib.sha256(pack).hexdigest()[:12]}...)")
     print(f"  audio: {len(audio)} bytes Opus/WebM "
           f"(sha256 {(hashlib.sha256(audio).hexdigest()[:12] if audio else '-') }...)")
+    for p in header["parts"]:
+        if p["name"] in ("text", "audio") or p.get("remote"):
+            continue  # text/audio printed above; remote parts are reported by the mode branches below
+        print(f"  part {p['name']}: {p['len']:,} bytes stored ({p['encoding']}), "
+              f"sha256 {p['sha256'][:12]}...")
     if mode == "embedded":
-        for m in models:
-            print(f"  model {m['name']}: {m['len']:,} bytes -> {m['stored_len']:,} stored "
-                  f"({'zlib' if m['compressed'] else 'raw'}, "
-                  f"sha256 {m['sha256'][:12]}...)")
         if remote_models:
             print("  note: --remote-models was given, but the models fit in the image, "
                   "so they were packed in — remote was not needed.")
@@ -372,7 +540,7 @@ def encode(cover_path, data_path, out_path, audio_path, palace_path, skybox_path
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Encode a Bible cartridge PNG (PSLM v3).")
+    ap = argparse.ArgumentParser(description="Encode a Bible cartridge PNG (PSLM v4).")
     ap.add_argument("--cover", required=True, help="cover art PNG (RGB)")
     ap.add_argument("--data", required=True, help="chapter data JSON (verses + lexicon)")
     ap.add_argument("--audio", help="Opus-in-WebM audio file (optional)")

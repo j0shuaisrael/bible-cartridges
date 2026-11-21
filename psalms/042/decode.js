@@ -1,20 +1,33 @@
-// decode.js — PSLM cartridge decoder (v2 and v3), shared by the viewer
+// decode.js — PSLM cartridge decoder (v2, v3 and v4), shared by the viewer
 // (psalms/NNN/index.html) and the standalone decoder page (decode.html).
 // If this file changes, mirror the change into decode.html's inlined copy.
 //
-// Format (PSLM v3; v2 cartridges still read — models come back null):
-//   PNG pixels, row-major. Top strip rows hold the text pack (zlib) as a
-//   visible RGB strip: 3 bytes per pixel, header first.
-//   Strip blob: 4 bytes magic "PSLM", 1 byte version, 4 bytes BE header_len,
-//   header JSON (UTF-8), then the zlib-compressed text pack (pack_comp_len).
+// Format (PSLM v4; v2/v3 cartridges still read — models come back null
+// for v2, and v3 reads exactly as before):
+//   ONE LSB bitstream, starting at pixel (0, 0), row-major, at lsb_depth
+//   bits per colour channel (1 or 2), MSB-first within each byte.
+//   Sections in order, back to back, with no separators: the header blob
+//   (4 bytes magic "PSLM", 1 byte version = 4, 4 bytes BE header_len,
+//   header JSON (UTF-8), then the zlib-compressed text pack
+//   (pack_comp_len)), then the audio (audio_len bytes, raw Opus/WebM),
+//   then each model in header order (stored_len bytes; zlib-compressed
+//   iff compressed is true, else raw GLB bytes).
+//   There is NO visible strip in v4: the cartridge differs from its
+//   cover ONLY in the least-significant bits (at most 1/255 per channel
+//   at depth 1, 3/255 at depth 2), and no row of the cover is lost.
 //   Header fields: format, version, chapter, languages[], fallback,
 //   pack_len, pack_comp_len, pack_sha256, audio_len, audio_sha256,
-//   audio_format, strip_h, cover_w, cover_h, lsb_depth (1|2, v3 only),
-//   models[] (v3 only): [{name, len, sha256, stored_len, compressed}].
-//   Below the strip, ONE LSB bitstream at lsb_depth bits per channel,
-//   MSB-first within each byte, sections in order: audio (audio_len bytes,
-//   raw Opus/WebM), then each model in header order (stored_len bytes;
-//   zlib-compressed iff compressed is true, else raw GLB bytes).
+//   audio_format, strip_h (always 0 in v4 — the row the LSB bitstream
+//   starts at; kept so the header shape is stable across versions),
+//   cover_w, cover_h, lsb_depth (1|2), models[]:
+//   [{name, len, sha256, stored_len, compressed}].
+//   v3 (and v2) layout, still read: the header blob sits in a visible
+//   strip at the top of the image (3 bytes per pixel, header first), and
+//   the audio + models live in ONE LSB bitstream below the strip, at
+//   lsb_depth bits per channel. The decoder tries the strip first, then
+//   the LSB layer from row 0, and validates the header fully (version,
+//   header-length bounds, JSON, format/version match, every SHA-256)
+//   before trusting either layout.
 //   Every payload (text pack, audio, each model) is SHA-256-verified; any
 //   mismatch throws, and the caller reports DAMAGE. The decoder never
 //   fetches language data or models: everything comes out of the image.
@@ -27,7 +40,25 @@
 // zh-pinyin). Nothing is fetched at decode time.
 
 const MAGIC = [0x50, 0x53, 0x4c, 0x4d]; // "PSLM"
-const VERSIONS = [2, 3];
+// A header longer than this is not a PSLM header (real ones are ~500 B);
+// the bound stops a corrupt length field from causing a huge read.
+const MAX_HEADER_LEN = 1000000;
+
+// Thrown when a layout's magic did not match — the caller tries the
+// other layout. Any other throw means the magic matched and the file
+// is damaged.
+function notThisFormat() {
+  const e = new Error('no PSLM magic in this layout');
+  e.notThisFormat = true;
+  return e;
+}
+
+function checkHeaderLen(hlen) {
+  if (!hlen || hlen > MAX_HEADER_LEN) {
+    throw new Error('header length ' + hlen + ' out of bounds — cartridge damaged');
+  }
+  return hlen;
+}
 
 function hexSha256(bytes) {
   // SHA-256 via the browser's built-in crypto (async).
@@ -69,14 +100,15 @@ function stripBytes(data, w, n) {
   return out;
 }
 
-// Read `n` bytes from the LSB bitstream below the strip, at `depth` bits
-// per channel (1 or 2), MSB-first within each byte, row-major, RGB order.
-function lsbBytes(data, w, h, stripH, n, depth) {
+// Read `n` bytes from the LSB bitstream starting at row `startRow`, at
+// `depth` bits per channel (1 or 2), MSB-first within each byte,
+// row-major, RGB order.
+function lsbBytes(data, w, h, startRow, n, depth) {
   const out = new Uint8Array(n);
   let bit = 0;
   const total = n * 8;
   const mask = (1 << depth) - 1;
-  for (let y = stripH; y < h; y++) {
+  for (let y = startRow; y < h; y++) {
     for (let x = 0; x < w; x++) {
       if (bit >= total) return out;
       const i = (y * w + x) * 4;
@@ -95,6 +127,179 @@ function lsbBytes(data, w, h, stripH, n, depth) {
   return out;
 }
 
+async function finishDecodeV3(header, comp, stream) {
+  // Verify the text pack, audio and models from the already-read bytes.
+  // Legacy v3 field names (pack_len, pack_sha256, audio_len, audio_sha256,
+  // models[] with stored_len/compressed) — the v3 reader keeps them.
+  const packBytes = await inflateZlib(comp);
+  if (packBytes.length !== header.pack_len) {
+    throw new Error('pack length mismatch — cartridge damaged');
+  }
+  if ((await hexSha256(packBytes)) !== header.pack_sha256) {
+    throw new Error('pack SHA-256 mismatch — text damaged');
+  }
+  const pack = JSON.parse(new TextDecoder().decode(packBytes));
+  let off = 0;
+  let audio = null;
+  if (header.audio_len) {
+    audio = stream.slice(off, off + header.audio_len); off += header.audio_len;
+    if (audio.length !== header.audio_len) {
+      throw new Error('cartridge truncated: audio runs past the bitstream');
+    }
+    if ((await hexSha256(audio)) !== header.audio_sha256) {
+      throw new Error('audio SHA-256 mismatch — audio damaged');
+    }
+  }
+  const models = Array.isArray(header.models) ? header.models : [];
+  const decodedModels = {};
+  const remoteModels = {};
+  for (const m of models) {
+    if (m.remote) { remoteModels[m.name] = m; continue; } // remote models occupy NO bytes in the stream
+    const stored = stream.slice(off, off + m.stored_len); off += m.stored_len;
+    if (stored.length !== m.stored_len) {
+      throw new Error('cartridge truncated: model ' + m.name + ' runs past the bitstream');
+    }
+    const bytes = m.compressed ? await inflateZlib(stored) : stored;
+    if (bytes.length !== m.len) {
+      throw new Error(`model ${m.name} length mismatch: ${bytes.length} != ${m.len}`);
+    }
+    if ((await hexSha256(bytes)) !== m.sha256) {
+      throw new Error(`model ${m.name} SHA-256 mismatch — model damaged`);
+    }
+    decodedModels[m.name] = bytes;
+  }
+  if (off !== stream.length) {
+    throw new Error('bitstream length mismatch — cartridge damaged');
+  }
+  return { header, pack, audio, models: decodedModels, remoteModels, packTextLen: packBytes.length, world: null };
+}
+
+// v2/v3 layout: header blob in the visible strip, audio + models in the
+// LSB layer below the strip.
+async function decodeV3(data, w, h) {
+  const head = stripBytes(data, w, 9);
+  if (!MAGIC.every((b, i) => b === head[i])) throw notThisFormat();
+  const version = head[4];
+  if (version !== 2 && version !== 3) {
+    throw new Error(`unsupported PSLM version ${version} (this layout reads v2 and v3)`);
+  }
+  const hlen = checkHeaderLen(new DataView(head.buffer, head.byteOffset + 5, 4).getUint32(0, false));
+  const headerRaw = stripBytes(data, w, 9 + hlen).subarray(9);
+  const header = JSON.parse(new TextDecoder().decode(headerRaw));
+  if (header.format !== 'PSLM' || header.version !== version) {
+    throw new Error('header/version mismatch');
+  }
+  const stripH = header.strip_h;
+  const blobLen = 9 + hlen + header.pack_comp_len;
+  const blob = stripBytes(data, w, blobLen);
+  const comp = blob.subarray(9 + hlen);
+  // LSB stream: audio first, then the v3 model sections, in header order.
+  const depth = header.lsb_depth || 1;
+  const models = version === 3 && Array.isArray(header.models) ? header.models : [];
+  const totalLsb = header.audio_len + models.reduce((s, m) => s + (m.remote ? 0 : m.stored_len), 0);
+  const stream = totalLsb ? lsbBytes(data, w, h, stripH, totalLsb, depth) : new Uint8Array(0);
+  const out = await finishDecodeV3(header, comp, stream);
+  if (version === 2) out.models = null; // v2 has no models
+  return out;
+}
+
+function extractParts(header, data) {
+  // Role-blind extraction: split the bytes after the header JSON into
+  // the parts the header lists, in listed order, and verify each part's
+  // SHA-256 against its stored bytes. Knows nothing about what any part
+  // IS — only its name, length, hash and encoding. Remote parts occupy
+  // no bytes here; they are recorded for the caller.
+  const parts = {};
+  const remoteParts = {};
+  let off = 0;
+  for (const p of header.parts) {
+    if (p.remote) { remoteParts[p.name] = p; continue; }
+    const chunk = data.slice(off, off + p.len);
+    if (chunk.length !== p.len) {
+      throw new Error(`cartridge truncated: part '${p.name}' runs past the bitstream`);
+    }
+    parts[p.name] = chunk;
+    off += p.len;
+  }
+  if (off !== data.length) {
+    throw new Error('bitstream length mismatch — cartridge damaged');
+  }
+  return { parts, remoteParts };
+}
+
+async function resolveParts(header, parts) {
+  // Renderer-side role resolution, AFTER extraction: look the parts up
+  // by name and turn them into the chapter's text, audio and models.
+  // Each part's SHA-256 was already verified against its stored bytes;
+  // a zlib part's decompression is verified by the stream's own
+  // Adler-32. The names are the only thing this step knows.
+  if (!parts.text) {
+    throw new Error(`v4 cartridge has no part named 'text' — cartridge damaged`);
+  }
+  const packBytes = await inflateZlib(parts.text);
+  const pack = JSON.parse(new TextDecoder().decode(packBytes));
+  const audio = parts.audio || null;
+  let world = null;
+  if (parts.world) {
+    try {
+      world = JSON.parse(new TextDecoder().decode(parts.world));
+    } catch (e) {
+      throw new Error('world part is not valid JSON — cartridge damaged');
+    }
+  }
+  const models = {};
+  for (const p of header.parts) {
+    const name = p.name;
+    if (name === 'text' || name === 'audio' || name === 'world' || !(name in parts)) continue;
+    models[name] = p.encoding === 'zlib' ? await inflateZlib(parts[name]) : parts[name];
+  }
+  return { pack, audio, models, packTextLen: packBytes.length, world };
+}
+
+async function verifyParts(parts, header) {
+  // Verify every extracted part's SHA-256 (stored bytes). Kept separate
+  // from extraction so the order is explicit: read, then verify, then
+  // resolve.
+  for (const p of header.parts) {
+    if (p.remote || !(p.name in parts)) continue;
+    if ((await hexSha256(parts[p.name])) !== p.sha256) {
+      throw new Error(`part '${p.name}' SHA-256 mismatch — part damaged`);
+    }
+  }
+}
+
+// v4 layout: the whole bitstream (header blob, then the parts the header
+// lists, in listed order) in the LSB layer from pixel (0, 0). The depth
+// is found by trying 1, then 2.
+async function decodeV4(data, w, h) {
+  for (const depth of [1, 2]) {
+    const head = lsbBytes(data, w, h, 0, 9, depth);
+    if (!MAGIC.every((b, i) => b === head[i])) continue;
+    // The magic matched at this depth: this IS the layout — any failure
+    // from here on is damage, not the wrong layout.
+    const version = head[4];
+    if (version !== 4) {
+      throw new Error(`unsupported PSLM version ${version} (this layout reads v4)`);
+    }
+    const hlen = checkHeaderLen(new DataView(head.buffer, head.byteOffset + 5, 4).getUint32(0, false));
+    const header = JSON.parse(new TextDecoder().decode(lsbBytes(data, w, h, 0, 9 + hlen, depth).subarray(9)));
+    if (header.format !== 'PSLM' || header.version !== 4) {
+      throw new Error('header/version mismatch');
+    }
+    if (!Array.isArray(header.parts) || !header.parts.length) {
+      throw new Error('v4 header has no parts list — cartridge damaged');
+    }
+    // The whole bitstream: header blob + the parts, in listed order.
+    const total = 9 + hlen + header.parts.reduce((s, p) => s + (p.remote ? 0 : p.len), 0);
+    const buf = lsbBytes(data, w, h, 0, total, depth);
+    const { parts, remoteParts } = extractParts(header, buf.subarray(9 + hlen));
+    await verifyParts(parts, header);
+    const { pack, audio, models, packTextLen, world } = await resolveParts(header, parts);
+    return { header, pack, audio, models, remoteModels: remoteParts, packTextLen, world };
+  }
+  throw notThisFormat();
+}
+
 export async function decodeCartridge(url) {
   const img = new Image();
   img.src = url;
@@ -107,60 +312,23 @@ export async function decodeCartridge(url) {
   const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const w = canvas.width, h = canvas.height;
 
-  const head = stripBytes(data, w, 9);
-  if (!MAGIC.every((b, i) => b === head[i])) {
-    throw new Error('not a PSLM cartridge (bad magic)');
+  // v3 first (the live cartridges are v3 until rebuilt), then v4. A layout
+  // whose magic matched but whose validation failed is reported as damage;
+  // a layout whose magic never matched is simply not this cartridge's.
+  let v3Err = null;
+  try {
+    return await decodeV3(data, w, h);
+  } catch (e) {
+    if (e.notThisFormat) { /* fall through to v4 */ }
+    else v3Err = e;
   }
-  const version = head[4];
-  if (!VERSIONS.includes(version)) {
-    throw new Error(`unsupported PSLM version ${version} (this decoder reads v2 and v3)`);
+  try {
+    return await decodeV4(data, w, h);
+  } catch (e) {
+    if (!e.notThisFormat) throw e; // v4 magic matched: damaged v4
   }
-  const hlen = new DataView(head.buffer, head.byteOffset + 5, 4).getUint32(0, false);
-  const headerRaw = stripBytes(data, w, 9 + hlen).subarray(9);
-  const header = JSON.parse(new TextDecoder().decode(headerRaw));
-  if (header.format !== 'PSLM' || header.version !== version) {
-    throw new Error('header/version mismatch');
-  }
-
-  const stripH = header.strip_h;
-  const blobLen = 9 + hlen + header.pack_comp_len;
-  const blob = stripBytes(data, w, blobLen);
-  const comp = blob.subarray(9 + hlen);
-  const packBytes = await inflateZlib(comp);
-  if (packBytes.length !== header.pack_len) {
-    throw new Error('pack length mismatch — cartridge damaged');
-  }
-  if ((await hexSha256(packBytes)) !== header.pack_sha256) {
-    throw new Error('pack SHA-256 mismatch — text damaged');
-  }
-  const pack = JSON.parse(new TextDecoder().decode(packBytes));
-
-  // LSB stream: audio first, then the v3 model sections, in header order.
-  const depth = header.lsb_depth || 1;
-  const models = version === 3 && Array.isArray(header.models) ? header.models : [];
-  const totalLsb = header.audio_len + models.reduce((s, m) => s + m.stored_len, 0);
-  const stream = totalLsb ? lsbBytes(data, w, h, stripH, totalLsb, depth) : new Uint8Array(0);
-  let off = 0;
-  let audio = null;
-  if (header.audio_len) {
-    audio = stream.slice(off, off + header.audio_len); off += header.audio_len;
-    if ((await hexSha256(audio)) !== header.audio_sha256) {
-      throw new Error('audio SHA-256 mismatch — audio damaged');
-    }
-  }
-  const decodedModels = {};
-  for (const m of models) {
-    const stored = stream.slice(off, off + m.stored_len); off += m.stored_len;
-    const bytes = m.compressed ? await inflateZlib(stored) : stored;
-    if (bytes.length !== m.len) {
-      throw new Error(`model ${m.name} length mismatch: ${bytes.length} != ${m.len}`);
-    }
-    if ((await hexSha256(bytes)) !== m.sha256) {
-      throw new Error(`model ${m.name} SHA-256 mismatch — model damaged`);
-    }
-    decodedModels[m.name] = bytes;
-  }
-  return { header, pack, audio, models: version === 3 ? decodedModels : null };
+  if (v3Err) throw v3Err;
+  throw new Error('not a PSLM cartridge (bad magic)');
 }
 
 // Best packed language for a device language tag ("es-MX" -> "es",

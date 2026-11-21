@@ -12,7 +12,7 @@ Steps (each is a separate tool; this driver only wires them together):
   cover   tools/make_cover.py (deterministic procedural STAND-IN cover)
   viewer  copy psalms/001/index.html + decode.js; generate chapter.js
           (number / title / Hebrew title) for this psalm
-  encode  tools/encode.py (PSLM v3 cartridge with the full palace + skybox)
+  encode  tools/encode.py (PSLM v4 cartridge with the full palace + skybox + scene)
   verify  tools/decode.py round-trip: every SHA-256 checked, extracted
           audio/text/models compared byte-for-byte with the sources
 
@@ -45,7 +45,6 @@ import encode as encode_mod  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 TOOLS = ROOT / "tools"
-MIN_STRIP_H = encode_mod.MIN_STRIP_H
 
 
 def run(cmd, **kw):
@@ -61,28 +60,23 @@ def sha256(path):
 
 
 def choose_cover_size(n, data_path, audio_path):
-    """Minimum square cover whose depth-1 LSB layer holds the payload."""
+    """Minimum square cover (3072 or 4096) whose depth-1 LSB layer holds
+    the whole v4 payload: header blob + audio + scene + models. No strip
+    is subtracted in v4 — the capacity is the whole image."""
     pack, comp = encode_mod.build_pack(str(data_path))
     audio = Path(audio_path).read_bytes()
     models = [encode_mod.build_model("palace", str(ROOT / "assets" / "cloud-palace.glb")),
               encode_mod.build_model("skybox", str(ROOT / "assets" / "skybox.glb"))]
-    payload = len(audio) + sum(m["stored_len"] for m in models)
+    data = json.loads(Path(data_path).read_text(encoding="utf-8"))
+    header = encode_mod.build_header(pack, comp, audio, models, 3072, 3072, 1, data)
+    blob = encode_mod.prefix_blob(header, comp)
+    payload = (len(blob) + len(audio) + len(encode_mod.SCENE_BYTES)
+               + sum(m["stored_len"] for m in models))
     for side in (3072, 4096):
-        strip_h = MIN_STRIP_H
-        for _ in range(5):
-            header = encode_mod.build_header(
-                pack, comp, audio, models, strip_h, side, side, 1,
-                json.loads(Path(data_path).read_text(encoding="utf-8")))
-            blob = encode_mod.visible_blob(header, comp)
-            need = (len(blob) + side * 3 - 1) // (side * 3)
-            new_h = max(MIN_STRIP_H, need)
-            if new_h == strip_h:
-                break
-            strip_h = new_h
-        cap1 = encode_mod.lsb_capacity(side, side, strip_h, 1)
-        print(f"  cover sizing: payload={payload} B (audio {len(audio)} + "
-              f"models {sum(m['stored_len'] for m in models)}), "
-              f"{side}x{side} d1 capacity={cap1} B (strip {strip_h} rows)")
+        cap1 = encode_mod.lsb_capacity(side, side, 1)
+        print(f"  cover sizing: payload={payload} B (blob {len(blob)} + audio {len(audio)} + "
+              f"scene {len(encode_mod.SCENE_BYTES)} + models {sum(m['stored_len'] for m in models)}), "
+              f"{side}x{side} d1 capacity={cap1} B")
         if payload <= cap1:
             return side
     return 4096
