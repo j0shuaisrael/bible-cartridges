@@ -67,6 +67,8 @@
   .small { font-size: .85rem; color: #777; }
   button { font-size: 1rem; padding: 10px 18px; border-radius: 8px; border: 1px solid #888;
     background: #2e9e5b; color: #fff; cursor: pointer; }
+  a.btn { display: inline-block; font-size: 1rem; padding: 10px 18px; border-radius: 8px;
+    border: 1px solid #888; background: #555; color: #fff; cursor: pointer; text-decoration: none; }
   button.secondary { background: #555; }
   button:disabled { background: #999; border-color: #999; cursor: not-allowed; }
   textarea#spec { width: 100%; min-height: 340px; font-family: ui-monospace, Menlo, monospace;
@@ -160,6 +162,12 @@ right here, built from the models inside the image itself.</p>
   and the world — to your device. It works fully offline: open the saved file
   in any browser, drop a cartridge on it, and the chapter and its world open
   with no network at all. A cartridge plus this file is everything you need.</p>
+  <p><a class="btn" id="downloadBareDecoder" href="bare-decoder.html" download>Download the bare-bones decoder</a></p>
+  <p class="small">The same decoder in its smallest form — one file, no specs,
+  no extra pages. Pick a cartridge PNG and it reads the chapter, plays the
+  audio and opens the 3D world, fully offline. Made for testing the cartridge
+  on its own: save it to your phone, open it with no network, and it works
+  from the PNG alone.</p>
 </section>
 
 <section class="block" id="offline">
