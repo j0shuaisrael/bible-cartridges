@@ -172,6 +172,7 @@ intact — carrying the chapter inside it. Nothing is uploaded anywhere.</p>
   <h2>Numbers — check before you encode</h2>
   <div id="numbers"></div>
   <div id="fitWarning"></div>
+  <div id="upscaleBox"></div>
   <p class="small" style="margin:10px 0 0"><strong>Full quality by default:</strong>
   the cartridge holds the complete, unmodified models, audio and text.
   The only compression is lossless zlib (decoded bytes identical) — nothing
@@ -2006,6 +2007,7 @@ const reportEl = document.getElementById('report');
 const numbersPanel = document.getElementById('numbersPanel');
 const numbersEl = document.getElementById('numbers');
 const fitWarningEl = document.getElementById('fitWarning');
+const upscaleBoxEl = document.getElementById('upscaleBox');
 const encodeBtn = document.getElementById('encodeBtn');
 const encodeNote = document.getElementById('encodeNote');
 const remoteBox = document.getElementById('remoteBox');
@@ -2262,6 +2264,7 @@ async function handleFile(file) {
   taoBtn.hidden = true;
   remoteBox.hidden = true;
   fitWarningEl.innerHTML = '';
+  upscaleBoxEl.innerHTML = '';
   current = null;
 
   const bytes = new Uint8Array(await file.arrayBuffer());
@@ -2437,10 +2440,41 @@ async function handleFile(file) {
   const planRemote = await planEncode(w, h, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, remoteModels);
   const planTao = await planEncode(w, h, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, []);
 
+  // Upscale option: only when the payload that could be packed here does
+  // not fit at any LSB depth. Never automatic, off by default (the box
+  // in refreshFitUI). The target is the full payload when the models are
+  // available, else text + audio — the only thing packable from file://,
+  // where the models cannot be fetched at all. Pre-select the smallest
+  // factor that fits at 1 LSB, else the smallest that fits at 2 LSBs.
+  // Only factors that actually fit are offered; if even 4× at 2 LSBs
+  // cannot fit, there is no upscale offer at all.
+  let upscale = null;
+  {
+    const basePlan = embeddedModels ? planEmbedded : planTao;
+    if (basePlan && basePlan.depth === null) {
+      const targetModels = embeddedModels || [];
+      const options = [];
+      for (const f of [2, 3, 4]) {
+        const p = await planEncode(w * f, h * f, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, targetModels);
+        if (p.depth !== null) options.push({ factor: f, plan: p });
+      }
+      if (options.length) {
+        const at1 = options.find((o) => o.plan.depth === 1);
+        upscale = {
+          options,
+          selected: (at1 || options[0]).factor,
+          method: 'smooth',
+          enabled: false,
+          target: embeddedModels ? 'embedded' : 'text-audio-only',
+        };
+      }
+    }
+  }
+
   current = {
     file, kind, bytes, pixels, w, h,
     pngInfo, meta, gifComments, outColorType, preserved, packBytes, compBytes,
-    embeddedModels, remoteModels, planEmbedded, planRemote, planTao,
+    embeddedModels, remoteModels, planEmbedded, planRemote, planTao, upscale,
   };
 
   const modelsRow = embeddedModels
@@ -2451,7 +2485,7 @@ async function handleFile(file) {
   let html = `<h2>Image — ${file.name}</h2>` +
     `<table class="nums">` +
     `<tr><td>Format</td><td>${current.kind}${kind === 'PNG' ? `, colour type ${pngInfo.colorType}, ${pngInfo.bitDepth}-bit${pngInfo.interlace ? ', interlaced' : ''}` : ''}${kind === 'HEIC' && bitDepth ? `, ${bitDepth}-bit source (stored 8-bit)` : ''}</td></tr>` +
-    `<tr><td>Dimensions</td><td>${w} × ${h} (output will be exactly this)</td></tr>` +
+    `<tr><td>Dimensions</td><td>${w} × ${h}${upscale ? ' (output will be this size — or the scaled size, if you turn on “Scale the image up” below)' : ' (output will be exactly this)'}</td></tr>` +
     `<tr><td>Text pack</td><td>${fmtBytes(packBytes.length)} → ${fmtBytes(compBytes.length)} compressed (SHA-256 <code>${packSha.slice(0, 12)}…</code>)</td></tr>` +
     `<tr><td>Audio</td><td>${fmtBytes(CHAPTER_AUDIO.length)} Opus/WebM (${audioSource})</td></tr>` +
     modelsRow +
@@ -2477,6 +2511,12 @@ function refreshFitUI() {
   const remoteOn = remoteToggle.checked;
   const audioFits = planTao.depth !== null;
 
+  // Upscale state (computed in handleFile): null when the image already
+  // fits, or when even 4× at 2 LSBs cannot fit.
+  const up = current.upscale || null;
+  const upscaleOn = !!(up && up.enabled);
+  const upOpt = upscaleOn ? up.options.find((o) => o.factor === up.selected) : null;
+
   // Numbers line.
   let nums = `Cover <strong>${w} × ${h}</strong> · output colour type <strong>${outColorType === 6 ? 'RGBA' : 'RGB'}</strong><br>`;
   if (modelsFit) {
@@ -2490,6 +2530,18 @@ function refreshFitUI() {
       `<strong>${fmtBytes(planEmbedded.cap1)}</strong> at 1 LSB, <strong>${fmtBytes(planEmbedded.cap2)}</strong> at 2 LSBs, strip ${planEmbedded.stripH} rows.`;
   } else {
     nums += `Audio <strong>${fmtBytes(audioLen)}</strong> of <strong>${fmtBytes(planTao.depth === 1 ? planTao.cap1 : planTao.cap2)}</strong> LSB capacity (text + audio only — the models are unavailable here).`;
+  }
+  // Upscaled numbers, when the user turned scaling on: the scaled size's
+  // own plan (computed in handleFile) — the same numbers the encoder
+  // will use.
+  if (upscaleOn && upOpt) {
+    const nw = w * up.selected, nh = h * up.selected;
+    const cap = upOpt.plan.depth === 1 ? upOpt.plan.cap1 : upOpt.plan.cap2;
+    nums = `Cover <strong>${w} × ${h}</strong> scaled up <strong>${up.selected}×</strong> to ` +
+      `<strong>${nw} × ${nh}</strong> · output colour type <strong>${outColorType === 6 ? 'RGBA' : 'RGB'}</strong><br>` +
+      `${up.target === 'embedded' ? 'Full payload' : 'Text + audio payload'} <strong>${fmtBytes(upOpt.plan.payload)}</strong> of ` +
+      `<strong>${fmtBytes(cap)}</strong> LSB capacity — <strong>${upOpt.plan.depth} LSB, ${(100 * upOpt.plan.payload / cap).toFixed(1)}%</strong>, ` +
+      `strip ${upOpt.plan.stripH} rows. The output PNG is bigger than your original image — the picture is the same, just larger.`;
   }
   numbersEl.innerHTML = nums;
 
@@ -2510,26 +2562,62 @@ function refreshFitUI() {
       `<p>${reason} The cartridge can still be encoded with text + audio in the image, ` +
       `but the world will need the network unless a bigger image is supplied — ` +
       `a ${Math.ceil(w * 1.5)}×${Math.ceil(h * 1.5)} cover or larger holds the full payload at 1 LSB.</p>` +
-      `<p>Two explicit choices, neither automatic: turn on <strong>Allow remote models</strong> above ` +
+      `<p>${up ? 'Three' : 'Two'} explicit choices, none automatic: turn on <strong>Allow remote models</strong> above ` +
       `(the world is fetched from the site when opened, and the decoder always warns it needs the network), ` +
-      `or press <strong>Encode text + audio only</strong> below (the cartridge will be incomplete for the world).</p></div>`;
+      `or press <strong>Encode text + audio only</strong> below (the cartridge will be incomplete for the world)` +
+      (up ? `, or turn on <strong>Scale the image up to fit</strong> below (a bigger cover that holds everything, still fully offline)` : '') +
+      `.</p></div>`;
   } else {
     fitWarningEl.innerHTML = '';
   }
 
+  // The upscale offer: only in the too-small situations (current.upscale
+  // exists), never automatic, off by default. Rendered from
+  // current.upscale state on every refresh, so the checkbox, factor and
+  // method survive re-renders (remote toggle changes etc.). Only factors
+  // that actually fit are offered; the smallest fitting one is pre-selected.
+  if (up) {
+    const opts = up.options.map((o) => {
+      const nw = w * o.factor, nh = h * o.factor;
+      const cap = o.plan.depth === 1 ? o.plan.cap1 : o.plan.cap2;
+      return `<label style="display:block;margin:4px 0"><input type="radio" name="upFactor" value="${o.factor}"${o.factor === up.selected ? ' checked' : ''}> ` +
+        `<strong>${o.factor}×</strong> → ${nw} × ${nh} — capacity ${fmtBytes(cap)} at ${o.plan.depth} LSB, payload ${fmtBytes(o.plan.payload)} (${(100 * o.plan.payload / cap).toFixed(1)}%)</label>`;
+    }).join('');
+    upscaleBoxEl.innerHTML = `<div class="panel"><h2 style="margin-top:0">Scale the image up to fit</h2>` +
+      `<p><label><input type="checkbox" id="upscaleToggle"${up.enabled ? ' checked' : ''}> <strong>Scale the image up</strong></label> — ` +
+      `your ${w}×${h} image is too small to hold ${up.target === 'embedded' ? 'the full payload (text + audio + models)' : 'the text + audio'} as it is. ` +
+      `Scaling makes a bigger image that holds it, at full quality — the text, audio and models packed are exactly the same bytes; only the cover gets bigger, so the output PNG is bigger than your original image.</p>` +
+      `<p>Scale factor (the smallest that fits is pre-selected):</p>${opts}` +
+      `<p>Method: <label><input type="radio" name="upMethod" value="smooth"${up.method === 'smooth' ? ' checked' : ''}> Smooth (best for photos)</label> ` +
+      `<label><input type="radio" name="upMethod" value="exact"${up.method === 'exact' ? ' checked' : ''}> Exact (nearest-neighbour — keeps every original pixel value, best for pixel art)</label></p>` +
+      `<p class="small">When this is on, the Encode button below scales the image first, then encodes exactly as usual — same PSLM v3 format, same depth rules, same self-check. Turn it off any time to go back to the original size.</p></div>`;
+    upscaleBoxEl.querySelector('#upscaleToggle').addEventListener('change', (e) => { up.enabled = e.target.checked; refreshFitUI(); });
+    upscaleBoxEl.querySelectorAll('input[name="upFactor"]').forEach((r) => r.addEventListener('change', () => { up.selected = parseInt(r.value, 10); refreshFitUI(); }));
+    upscaleBoxEl.querySelectorAll('input[name="upMethod"]').forEach((r) => r.addEventListener('change', () => { up.method = r.value; refreshFitUI(); }));
+  } else {
+    upscaleBoxEl.innerHTML = '';
+  }
+
   // Encode button: full-quality embedded when it fits; remote only when
-  // the user turned the toggle on. Never enabled for a silent downgrade.
-  const mode = modelsFit ? 'embedded' : (remoteOn ? 'remote' : null);
+  // the user turned the toggle on; the upscale target when the user turned
+  // scaling on. Never enabled for a silent downgrade.
+  const mode = upscaleOn && upOpt ? up.target : (modelsFit ? 'embedded' : (remoteOn ? 'remote' : null));
   current.mode = mode;
-  encodeBtn.disabled = !mode || !audioFits;
+  encodeBtn.disabled = upscaleOn ? false : (!mode || !audioFits);
   encodeBtn.textContent = mode === 'remote' ? 'Encode cartridge (remote models)' : 'Encode cartridge';
-  encodeNote.textContent = !audioFits
-    ? 'Encoding is disabled: even the audio does not fit this image — use a bigger image.'
-    : mode === 'embedded'
-      ? 'Ready — full quality, everything in the image. The download is the cartridge — same size, metadata intact.'
-      : mode === 'remote'
-        ? 'Ready — the models will be recorded as remote links. The decoder will warn this cartridge needs the network.'
-        : 'Encoding is disabled: the models do not fit this image and the remote-models toggle is off. Turn it on, use text + audio only, or pick a bigger image.';
+  if (upscaleOn) {
+    encodeNote.textContent = `Ready — the image will be scaled up ${up.selected}× to ${w * up.selected} × ${h * up.selected} first, then encoded at full quality. The output PNG is bigger than your original image.`;
+  } else if (!audioFits) {
+    encodeNote.textContent = up
+      ? 'Encoding is disabled: even the audio does not fit this image at this size — turn on “Scale the image up” below, or pick a bigger image.'
+      : 'Encoding is disabled: even the audio does not fit this image — use a bigger image.';
+  } else if (mode === 'embedded') {
+    encodeNote.textContent = 'Ready — full quality, everything in the image. The download is the cartridge — same size, metadata intact.';
+  } else if (mode === 'remote') {
+    encodeNote.textContent = 'Ready — the models will be recorded as remote links. The decoder will warn this cartridge needs the network.';
+  } else {
+    encodeNote.textContent = 'Encoding is disabled: the models do not fit this image and the remote-models toggle is off. Turn it on, use text + audio only, or pick a bigger image.';
+  }
 }
 
 async function encodeCurrent(mode) {
@@ -2537,7 +2625,16 @@ async function encodeCurrent(mode) {
   const { pixels, w, h, packBytes, compBytes, embeddedModels, remoteModels, planEmbedded, planRemote, planTao } = current;
   const models = mode === 'embedded' ? embeddedModels : mode === 'remote' ? remoteModels : [];
   const plan = mode === 'embedded' ? planEmbedded : mode === 'remote' ? planRemote : planTao;
-  if (!plan || plan.depth === null) {
+  // Upscale path: only from the main Encode button, only when the user
+  // turned it on, and only for the mode it was offered for. The scaled
+  // pixels replace the originals for the rest of this function; the
+  // payload bytes (text, audio, models) are unchanged.
+  const up = current.upscale || null;
+  const useUpscale = !!(up && up.enabled && mode === up.target);
+  const effPlan = useUpscale
+    ? up.options.find((o) => o.factor === up.selected).plan
+    : plan;
+  if (!effPlan || effPlan.depth === null) {
     showReport('<h2>Does not fit</h2><p>This payload does not fit the image at any LSB depth. ' +
       'Use a bigger image.</p>', 'bad');
     return;
@@ -2545,8 +2642,23 @@ async function encodeCurrent(mode) {
   encodeBtn.disabled = true;
   taoBtn.disabled = true;
   encodeNote.textContent = 'Encoding…';
-  const work = new Uint8Array(pixels); // never mutate the preview buffer in place twice
-  const { header, stripH, depth, lsbCapacity } = await buildCartridge(work, w, h, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, models);
+  let ew = w, eh = h, ePixels = pixels;
+  if (useUpscale) {
+    const f = up.selected;
+    ew = w * f; eh = h * f;
+    const src = document.createElement('canvas');
+    src.width = w; src.height = h;
+    src.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(pixels), w, h), 0, 0);
+    const cv = document.createElement('canvas');
+    cv.width = ew; cv.height = eh;
+    const sctx = cv.getContext('2d', { willReadFrequently: true });
+    if (up.method === 'smooth') { sctx.imageSmoothingEnabled = true; sctx.imageSmoothingQuality = 'high'; }
+    else { sctx.imageSmoothingEnabled = false; }
+    sctx.drawImage(src, 0, 0, ew, eh);
+    ePixels = sctx.getImageData(0, 0, ew, eh).data;
+  }
+  const work = new Uint8Array(ePixels); // never mutate the preview buffer in place twice
+  const { header, stripH, depth, lsbCapacity } = await buildCartridge(work, ew, eh, packBytes, compBytes, CHAPTER_AUDIO, CHAPTER_DATA, models);
 
   // Assemble the output PNG, carrying the input's metadata. PNG inputs
   // carry their chunks verbatim (in `preserved`); every other input
@@ -2566,12 +2678,12 @@ async function encodeCurrent(mode) {
   for (const c of (current.gifComments || [])) {
     extraChunks.push({ type: 'tEXt', data: textChunk('Comment', c) });
   }
-  const pngBytes = await assemblePng(work, w, h, current.outColorType, extraChunks);
+  const pngBytes = await assemblePng(work, ew, eh, current.outColorType, extraChunks);
 
   // Self-check on the built pixels before offering the download.
   let checkMsg = '';
   try {
-    await selfCheck(work, w, h, header);
+    await selfCheck(work, ew, eh, header);
     checkMsg = 'Self-check passed: the strip header parses, the text pack SHA-256 matches, ' +
       (header.audio_len ? 'the audio SHA-256 matches' : 'no audio was packed') +
       (header.models.some((m) => !m.remote) ? ', and every packed model SHA-256 matches.' : '.');
@@ -2595,15 +2707,18 @@ async function encodeCurrent(mode) {
     : mode === 'text-audio-only'
       ? `<p><strong>Incomplete for the world:</strong> this cartridge carries text + audio only. The decoder will report it incomplete and will never fetch models to fill the gap.</p>`
       : `<p>Full quality — everything (text, audio, both models) is in the image, and the decoder works fully offline.</p>`;
+  const upNote = useUpscale
+    ? `<p>Scaled up ${up.selected}× (${w} × ${h} → ${ew} × ${eh}, ${up.method === 'smooth' ? 'smooth' : 'exact'} method) before encoding — the output PNG is bigger than your original image; the text, audio and models packed are the same bytes.</p>`
+    : '';
   doneInfo.innerHTML =
     `<table class="nums">` +
-    `<tr><td>Output</td><td><code>psalm${nnn}-cartridge.png</code> — ${w} × ${h}, ` +
+    `<tr><td>Output</td><td><code>psalm${nnn}-cartridge.png</code> — ${ew} × ${eh}, ` +
     `${pngBytes.length.toLocaleString()} bytes, colour type ${current.outColorType === 6 ? 'RGBA' : 'RGB'}</td></tr>` +
     `<tr><td>Strip</td><td>${stripH} rows · LSB payload ${header.audio_len.toLocaleString()} audio + models of ${lsbCapacity.toLocaleString()} bytes at ${depth} LSB</td></tr>` +
     `<tr><td>Text pack</td><td>SHA-256 <code>${header.pack_sha256}</code></td></tr>` +
     `<tr><td>Audio</td><td>SHA-256 <code>${header.audio_sha256 || '—'}</code></td></tr>` +
     modelsRow +
-    `</table><p>${checkMsg}</p>` + modeNote;
+    `</table><p>${checkMsg}</p>` + modeNote + upNote;
   donePanel.hidden = false;
   encodeNote.textContent = 'Done — your download should start automatically; the link below works too.';
   donePanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
