@@ -71,6 +71,9 @@
   textarea#spec { width: 100%; min-height: 340px; font-family: ui-monospace, Menlo, monospace;
     font-size: .8rem; line-height: 1.45; padding: 10px; border: 1px solid #aaa; border-radius: 8px;
     background: #f8f8f8; color: #222; }
+  textarea#minspec { width: 100%; min-height: 230px; font-family: ui-monospace, Menlo, monospace;
+    font-size: .8rem; line-height: 1.45; padding: 10px; border: 1px solid #aaa; border-radius: 8px;
+    background: #f8f8f8; color: #222; }
   section.block { margin-top: 40px; border-top: 1px solid #ddd; padding-top: 8px; }
   section.block h2 { font-size: 1.15rem; }
   /* ---- the 3D world (same overlay the psalm viewer uses) ---- */
@@ -186,6 +189,12 @@ right here, built from the models inside the image itself.</p>
   <textarea id="spec" readonly></textarea>
   <p><button id="copySpec" class="secondary">Copy the spec</button>
   <span class="small" id="copyNote"></span></p>
+  <h2>The bare minimum</h2>
+  <p>The short version — just where the invisible code lives, and what you
+  need to show it. Same format, nothing left out that a reader needs.</p>
+  <textarea id="minspec" readonly></textarea>
+  <p><button id="copyMinSpec" class="secondary">Copy the short spec</button>
+  <span class="small" id="copyMinNote"></span></p>
 </section>
 
 <script type="module">
@@ -1609,11 +1618,62 @@ const SPEC_TEXT = [
 'rendering per script. If a word has no gloss in the reader\'s',
 'language, fall back to the fallback language, then to an empty gloss.',
 'Audio: play the decoded WebM bytes (e.g. via a Blob URL).',
-'World (version 3 with models): build the chapter\'s 3D world from the',
-'extracted GLBs — a floating scroll in a palace-and-sky scene, the',
-'decoded chapter text printed on the scroll, the audio playing when',
-'the scroll is tapped. The world comes out of the image; it is never',
-'fetched from the site.',
+'WORLD — HOW TO BUILD IT (version 3 with models)',
+'The world is not in the bytes: the cartridge gives you two GLB files',
+'and the chapter text. You must build the scene. Do it exactly like',
+'this, in a browser with three.js (r160 or later):',
+'',
+'1. Load the models from the VERIFIED bytes only, never from a URL:',
+'   new GLTFLoader().parse(arrayBufferOf(palaceBytes), "", onLoad).',
+'   Same for skybox. If either fails to parse, report it; do not',
+'   substitute any other file.',
+'2. Sky: do NOT add the skybox as a mesh. Take the embedded JPEG out',
+'   of the skybox GLB (parse the GLB container: 12-byte header, JSON',
+'   chunk, BIN chunk; the texture is the embedded image), flip it',
+'   horizontally and shift it down 80 rows (the equirect mapping',
+'   mirrors u versus the sphere UVs), then set scene.background to',
+'   that texture with EquirectangularReflectionMapping. If the bottom',
+'   rows are a flat uniform band (a truncated file), extend the last',
+'   good row downward instead of showing black.',
+'3. Palace: add the parsed palace group to the scene, recentered so',
+'   its floor sits at y=0 (subtract the bounding-box center x/z and',
+'   the box minimum y). Give every non-floor mesh a polished metal',
+'   material (color #f2f3f5, metalness 1.0, roughness 0.05,',
+'   DoubleSide) with an environment map; leave the floor mesh with',
+'   its own material.',
+'4. Scroll: a tan sheet 7 wide by 3.5 high by 0.06 thick, with a',
+'   roll (radius 0.5, length 3.5) on each side at x = +/-3.8, a thin',
+'   wooden rod (radius 0.07, length 4.3) through each roll, and',
+'   wooden caps (radius 0.56) at y = +/-1.81. The sheet sits 0.30',
+'   behind the rolls. Put the whole scroll group at y = 3.6, facing',
+'   the camera.',
+'5. Scroll text: draw the chapter on a canvas 1400 px wide (tan',
+'   #efe3c0 background, dark #2a2118 text, 46 px serif, 78 px line',
+'   height): the chapter title, the Hebrew title, then each verse',
+'   (a separator line, then the words in order as',
+'   Hebrew (transliteration, gloss)). Use that canvas as the texture',
+'   on the front face of the sheet. When the text is longer than the',
+'   sheet, show the top part and scroll the texture as the reader',
+'   scrolls.',
+'6. Camera and light: perspective camera, 60 degree field of view,',
+'   near 0.1, far 500, at (0, 2, 11), looking slightly down',
+'   (pitch -0.06). Hemisphere light (sky #bfd9ff, ground #8a6f4d,',
+'   0.9) plus a directional sun (#fff2dd, 1.6) at (20, 30, 10).',
+'   Renderer: antialias on, sRGB output, ACES filmic tone mapping,',
+'   exposure 1.0.',
+'7. Controls: drag to look around; joystick (bottom-left) or WASD',
+'   to move; wheel over the scroll scrolls the text. Tapping or',
+'   clicking the scroll toggles the audio (play/pause). Show a',
+'   status line: palace OK, skybox OK, cartridge OK, language,',
+'   audio OK.',
+'8. Display rule: a valid v3 cartridge with embedded models takes',
+'   over the display with the world immediately, with the plain',
+'   chapter text underneath and a way back to the text. A cartridge',
+'   with no models, or with models that fail to parse, shows text',
+'   and audio only, reports itself incomplete, and NEVER fetches',
+'   models to fill the gap.',
+'',
+'The world comes out of the image; it is never fetched from the site.',
 '',
 'ENCODING (for completeness — what the encoder does)',
 'The encoder takes a cover image, the chapter data (text pack JSON),',
@@ -1639,10 +1699,77 @@ const SPEC_TEXT = [
 'header explicitly says remote. Bundle any 3D library into the page',
 'itself. The page must work from file:// with the network unavailable.',
 ].join('\n');
+const MIN_SPEC_TEXT = [
+'PSLM cartridge — the bare minimum.',
+'',
+'A cartridge is a PNG. Everything is inside the image. No key, no',
+'password, no account, no network. The decoder reads ONLY the PNG.',
+'',
+'WHERE THE CODE IS',
+'Read the pixels row by row, top-left first: red, green, blue per',
+'pixel (ignore alpha).',
+'',
+'1. The top rows are a visible strip. Its bytes, 3 per pixel (R,',
+'   then G, then B), read:',
+'   bytes 0-3: the letters P S L M.',
+'   byte 4: version (2 or 3).',
+'   bytes 5-8: header length, big-endian uint32.',
+'   then the header, UTF-8 JSON. It tells you everything: the psalm',
+'   number, the languages packed, the strip height (strip_h), the',
+'   text pack length and SHA-256, the audio length and SHA-256, how',
+'   many LSB bits per channel (lsb_depth: 1 or 2), and each 3D model',
+'   (length, SHA-256, stored length, whether it is compressed).',
+'   right after the header, in the same strip: the text pack,',
+'   zlib-compressed. Decompress it: JSON with verses (indexes into a',
+'   lexicon) and the lexicon (Hebrew word, Latin transliteration,',
+'   glosses per language).',
+'2. Below the strip, the rest of the image is one LSB bitstream:',
+'   read the least-significant lsb_depth bits of every R, G and B',
+'   channel, pixel by pixel, row by row, most-significant bit first',
+'   inside each byte. First the audio (audio_len bytes), then each',
+'   model in header order (stored_len bytes each; zlib-decompress',
+'   it if the header says compressed).',
+'3. Check every SHA-256 against the header. Any mismatch means the',
+'   file is damaged: say so, and show nothing unverified.',
+'',
+'WHAT YOU NEED TO READ IT',
+'Anything that can read PNG pixels: Python + Pillow, JavaScript +',
+'canvas, Java, anything. No special library, no key.',
+'',
+'WHAT YOU NEED TO SHOW IT',
+'- Text: nothing special. Print each verse word by word, in order:',
+'  Hebrew, then (transliteration, gloss in the reader language).',
+'- Audio: the bytes are Opus in a WebM container. Any WebM/Opus',
+'  player plays them; in a browser, a plain <audio> tag does.',
+'- The 3D world: the models are standard glTF 2.0 binary (.glb)',
+'  files. Any glTF viewer opens them; in a browser, three.js with',
+'  GLTFLoader is the simplest route. If you cannot do 3D, the chapter',
+'  is still complete as text + audio — the world is presentation,',
+'  not the content. The exact scene recipe — camera, sky, scroll,',
+'  controls — is in the WORLD section of the full spec.',
+].join('\n');
 document.getElementById('spec').value = SPEC_TEXT;
+document.getElementById('minspec').value = MIN_SPEC_TEXT;
 document.getElementById('copySpec').addEventListener('click', async () => {
   const ta = document.getElementById('spec');
   const note = document.getElementById('copyNote');
+  try {
+    await navigator.clipboard.writeText(ta.value);
+    note.textContent = 'Copied.';
+  } catch (e) {
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand('copy');
+      note.textContent = 'Copied.';
+    } catch (e2) {
+      note.textContent = 'Copy failed — select the text manually.';
+    }
+  }
+});
+document.getElementById('copyMinSpec').addEventListener('click', async () => {
+  const ta = document.getElementById('minspec');
+  const note = document.getElementById('copyMinNote');
   try {
     await navigator.clipboard.writeText(ta.value);
     note.textContent = 'Copied.';
