@@ -1,0 +1,47 @@
+{
+ "chapter": 110,
+ "title": "Psalm 110",
+ "source_text": "https://www.mechon-mamre.org/p/pt/pt26b0.htm",
+ "source_audio": "https://www.mechon-mamre.org/mp3/t26b0.mp3",
+ "verses_hebrew_raw": [
+  "לְדָוִד, מִזְמוֹר: נְאֻם יְהוָה, לַאדֹנִי--שֵׁב לִימִינִי; עַד-אָשִׁית אֹיְבֶיךָ, הֲדֹם לְרַגְלֶיךָ.",
+  "מַטֵּה-עֻזְּךָ--יִשְׁלַח יְהוָה, מִצִּיּוֹן; רְדֵה, בְּקֶרֶב אֹיְבֶיךָ.",
+  "עַמְּךָ נְדָבֹת, בְּיוֹם חֵילֶךָ: בְּהַדְרֵי-קֹדֶשׁ, מֵרֶחֶם מִשְׁחָר; לְךָ, טַל יַלְדֻתֶיךָ.",
+  "נִשְׁבַּע יְהוָה, וְלֹא יִנָּחֵם-- אַתָּה-כֹהֵן לְעוֹלָם; עַל-דִּבְרָתִי, מַלְכִּי-צֶדֶק.",
+  "אֲדֹנָי עַל-יְמִינְךָ; מָחַץ בְּיוֹם-אַפּוֹ מְלָכִים.",
+  "יָדִין בַּגּוֹיִם, מָלֵא גְוִיּוֹת; מָחַץ רֹאשׁ, עַל-אֶרֶץ רַבָּה.",
+  "מִנַּחַל, בַּדֶּרֶךְ יִשְׁתֶּה; עַל-כֵּן, יָרִים רֹאשׁ."
+ ],
+ "verses_hebrew": [
+  "לְדָוִד מִזְמוֹר נְאֻם יְהוָה לַאדֹנִי שֵׁב לִימִינִי עַד־אָשִׁית אֹיְבֶיךָ הֲדֹם לְרַגְלֶיךָ",
+  "מַטֵּה־עֻזְּךָ יִשְׁלַח יְהוָה מִצִּיּוֹן רְדֵה בְּקֶרֶב אֹיְבֶיךָ",
+  "עַמְּךָ נְדָבֹת בְּיוֹם חֵילֶךָ בְּהַדְרֵי־קֹדֶשׁ מֵרֶחֶם מִשְׁחָר לְךָ טַל יַלְדֻתֶיךָ",
+  "נִשְׁבַּע יְהוָה וְלֹא יִנָּחֵם אַתָּה־כֹהֵן לְעוֹלָם עַל־דִּבְרָתִי מַלְכִּי־צֶדֶק",
+  "אֲדֹנָי עַל־יְמִינְךָ מָחַץ בְּיוֹם־אַפּוֹ מְלָכִים",
+  "יָדִין בַּגּוֹיִם מָלֵא גְוִיּוֹת מָחַץ רֹאשׁ עַל־אֶרֶץ רַבָּה",
+  "מִנַּחַל בַּדֶּרֶךְ יִשְׁתֶּה עַל־כֵּן יָרִים רֹאשׁ"
+ ],
+ "verses_english": [
+  "A Psalm of David. {N} The LORD saith unto my lord: 'Sit thou at My right hand, until I make thine enemies thy footstool.'",
+  "The rod of Thy strength the LORD will send out of Zion: 'Rule thou in the midst of thine enemies.'",
+  "Thy people offer themselves willingly in the day of thy warfare; {N} in adornments of holiness, from the womb of the dawn, thine is the dew of thy youth.",
+  "The LORD hath sworn, and will not repent: 'Thou art a priest for ever {N} after the manner of Melchizedek.'",
+  "The Lord at thy right hand doth crush kings in the day of His wrath.",
+  "He will judge among the nations; He filleth it with dead bodies, He crusheth the head over a wide land.",
+  "He will drink of the brook in the way; therefore will he lift up the head. {P}"
+ ],
+ "verse_count": 7,
+ "anchors": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8
+ ],
+ "anchor_check": true,
+ "fetched_at": "2026-11-20T04:06:12.763708+00:00",
+ "source_bytes": 5459
+}

@@ -1,0 +1,43 @@
+{
+ "chapter": 13,
+ "title": "Psalm 13",
+ "source_text": "https://www.mechon-mamre.org/p/pt/pt2613.htm",
+ "source_audio": "https://www.mechon-mamre.org/mp3/t2613.mp3",
+ "verses_hebrew_raw": [
+  "לַמְנַצֵּחַ, מִזְמוֹר לְדָוִד.",
+  "עַד-אָנָה יְהוָה, תִּשְׁכָּחֵנִי נֶצַח; עַד-אָנָה, תַּסְתִּיר אֶת-פָּנֶיךָ מִמֶּנִּי.",
+  "עַד-אָנָה אָשִׁית עֵצוֹת, בְּנַפְשִׁי-- יָגוֹן בִּלְבָבִי יוֹמָם; עַד-אָנָה, יָרוּם אֹיְבִי עָלָי.",
+  "הַבִּיטָה עֲנֵנִי, יְהוָה אֱלֹהָי; הָאִירָה עֵינַי, פֶּן-אִישַׁן הַמָּוֶת.",
+  "פֶּן-יֹאמַר אֹיְבִי יְכָלְתִּיו; צָרַי יָגִילוּ, כִּי אֶמּוֹט.",
+  "וַאֲנִי, בְּחַסְדְּךָ בָטַחְתִּי-- יָגֵל לִבִּי, בִּישׁוּעָתֶךָ: אָשִׁירָה לַיהוָה, כִּי גָמַל עָלָי."
+ ],
+ "verses_hebrew": [
+  "לַמְנַצֵּחַ מִזְמוֹר לְדָוִד",
+  "עַד־אָנָה יְהוָה תִּשְׁכָּחֵנִי נֶצַח עַד־אָנָה תַּסְתִּיר אֶת־פָּנֶיךָ מִמֶּנִּי",
+  "עַד־אָנָה אָשִׁית עֵצוֹת בְּנַפְשִׁי יָגוֹן בִּלְבָבִי יוֹמָם עַד־אָנָה יָרוּם אֹיְבִי עָלָי",
+  "הַבִּיטָה עֲנֵנִי יְהוָה אֱלֹהָי הָאִירָה עֵינַי פֶּן־אִישַׁן הַמָּוֶת",
+  "פֶּן־יֹאמַר אֹיְבִי יְכָלְתִּיו צָרַי יָגִילוּ כִּי אֶמּוֹט",
+  "וַאֲנִי בְּחַסְדְּךָ בָטַחְתִּי יָגֵל לִבִּי בִּישׁוּעָתֶךָ אָשִׁירָה לַיהוָה כִּי גָמַל עָלָי"
+ ],
+ "verses_english": [
+  "For the Leader. A Psalm of David.",
+  "How long, O LORD, wilt Thou forget me for ever? How long wilt Thou hide Thy face from me?",
+  "How long shall I take counsel in my soul, having sorrow in my heart by day? {N} How long shall mine enemy be exalted over me?",
+  "Behold Thou, and answer me, O LORD my God; lighten mine eyes, lest I sleep the sleep of death;",
+  "Lest mine enemy say: 'I have prevailed against him'; lest mine adversaries rejoice when I am moved.",
+  "But as for me, in Thy mercy do I trust; my heart shall rejoice in Thy salvation. {N} I will sing unto the LORD, because He hath dealt bountifully with me. {P}"
+ ],
+ "verse_count": 6,
+ "anchors": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+ ],
+ "anchor_check": true,
+ "fetched_at": "2026-11-20T04:05:02.805007+00:00",
+ "source_bytes": 5049
+}

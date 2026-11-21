@@ -1,0 +1,6 @@
+tools/mp3/
+__pycache__/
+tools/gloss-fetch/master/__pycache__/
+tools/psalm002_audio.mp3
+tools/build_psalm002_draft.py
+tools/psalm002_data_draft.json

@@ -1,0 +1,43 @@
+{
+ "chapter": 150,
+ "title": "Psalm 150",
+ "source_text": "https://www.mechon-mamre.org/p/pt/pt26f0.htm",
+ "source_audio": "https://www.mechon-mamre.org/mp3/t26f0.mp3",
+ "verses_hebrew_raw": [
+  "הַלְלוּ-יָהּ: הַלְלוּ-אֵל בְּקָדְשׁוֹ; הַלְלוּהוּ, בִּרְקִיעַ עֻזּוֹ.",
+  "הַלְלוּהוּ בִגְבוּרֹתָיו; הַלְלוּהוּ, כְּרֹב גֻּדְלוֹ.",
+  "הַלְלוּהוּ, בְּתֵקַע שׁוֹפָר; הַלְלוּהוּ, בְּנֵבֶל וְכִנּוֹר.",
+  "הַלְלוּהוּ, בְּתֹף וּמָחוֹל; הַלְלוּהוּ, בְּמִנִּים וְעֻגָב.",
+  "הַלְלוּהוּ בְצִלְצְלֵי-שָׁמַע; הַלְלוּהוּ, בְּצִלְצְלֵי תְרוּעָה.",
+  "כֹּל הַנְּשָׁמָה, תְּהַלֵּל יָהּ: הַלְלוּ-יָהּ."
+ ],
+ "verses_hebrew": [
+  "הַלְלוּ־יָהּ הַלְלוּ־אֵל בְּקָדְשׁוֹ הַלְלוּהוּ בִּרְקִיעַ עֻזּוֹ",
+  "הַלְלוּהוּ בִגְבוּרֹתָיו הַלְלוּהוּ כְּרֹב גֻּדְלוֹ",
+  "הַלְלוּהוּ בְּתֵקַע שׁוֹפָר הַלְלוּהוּ בְּנֵבֶל וְכִנּוֹר",
+  "הַלְלוּהוּ בְּתֹף וּמָחוֹל הַלְלוּהוּ בְּמִנִּים וְעֻגָב",
+  "הַלְלוּהוּ בְצִלְצְלֵי־שָׁמַע הַלְלוּהוּ בְּצִלְצְלֵי תְרוּעָה",
+  "כֹּל הַנְּשָׁמָה תְּהַלֵּל יָהּ הַלְלוּ־יָהּ"
+ ],
+ "verses_english": [
+  "Hallelujah. {N} Praise God in His sanctuary; praise Him in the firmament of His power.",
+  "Praise Him for His mighty acts; praise Him according to His abundant greatness.",
+  "Praise Him with the blast of the horn; praise Him with the psaltery and harp.",
+  "Praise Him with the timbrel and dance; praise Him with stringed instruments and the pipe.",
+  "Praise Him with the loud-sounding cymbals; praise Him with the clanging cymbals.",
+  "Let every thing that hath breath praise the LORD. {S} Hallelujah. {P}"
+ ],
+ "verse_count": 6,
+ "anchors": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+ ],
+ "anchor_check": true,
+ "fetched_at": "2026-11-20T04:06:42.065407+00:00",
+ "source_bytes": 4774
+}

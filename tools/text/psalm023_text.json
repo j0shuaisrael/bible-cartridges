@@ -1,0 +1,43 @@
+{
+ "chapter": 23,
+ "title": "Psalm 23",
+ "source_text": "https://www.mechon-mamre.org/p/pt/pt2623.htm",
+ "source_audio": "https://www.mechon-mamre.org/mp3/t2623.mp3",
+ "verses_hebrew_raw": [
+  "מִזְמוֹר לְדָוִד: יְהוָה רֹעִי, לֹא אֶחְסָר.",
+  "בִּנְאוֹת דֶּשֶׁא, יַרְבִּיצֵנִי; עַל-מֵי מְנֻחוֹת יְנַהֲלֵנִי.",
+  "נַפְשִׁי יְשׁוֹבֵב; יַנְחֵנִי בְמַעְגְּלֵי-צֶדֶק, לְמַעַן שְׁמוֹ.",
+  "גַּם כִּי-אֵלֵךְ בְּגֵיא צַלְמָוֶת, לֹא-אִירָא רָע-- כִּי-אַתָּה עִמָּדִי; שִׁבְטְךָ וּמִשְׁעַנְתֶּךָ, הֵמָּה יְנַחֲמֻנִי.",
+  "תַּעֲרֹךְ לְפָנַי, שֻׁלְחָן-- נֶגֶד צֹרְרָי; דִּשַּׁנְתָּ בַשֶּׁמֶן רֹאשִׁי, כּוֹסִי רְוָיָה.",
+  "אַךְ, טוֹב וָחֶסֶד יִרְדְּפוּנִי-- כָּל-יְמֵי חַיָּי; וְשַׁבְתִּי בְּבֵית-יְהוָה, לְאֹרֶךְ יָמִים."
+ ],
+ "verses_hebrew": [
+  "מִזְמוֹר לְדָוִד יְהוָה רֹעִי לֹא אֶחְסָר",
+  "בִּנְאוֹת דֶּשֶׁא יַרְבִּיצֵנִי עַל־מֵי מְנֻחוֹת יְנַהֲלֵנִי",
+  "נַפְשִׁי יְשׁוֹבֵב יַנְחֵנִי בְמַעְגְּלֵי־צֶדֶק לְמַעַן שְׁמוֹ",
+  "גַּם כִּי־אֵלֵךְ בְּגֵיא צַלְמָוֶת לֹא־אִירָא רָע כִּי־אַתָּה עִמָּדִי שִׁבְטְךָ וּמִשְׁעַנְתֶּךָ הֵמָּה יְנַחֲמֻנִי",
+  "תַּעֲרֹךְ לְפָנַי שֻׁלְחָן נֶגֶד צֹרְרָי דִּשַּׁנְתָּ בַשֶּׁמֶן רֹאשִׁי כּוֹסִי רְוָיָה",
+  "אַךְ טוֹב וָחֶסֶד יִרְדְּפוּנִי כָּל־יְמֵי חַיָּי וְשַׁבְתִּי בְּבֵית־יְהוָה לְאֹרֶךְ יָמִים"
+ ],
+ "verses_english": [
+  "A Psalm of David. The LORD is my shepherd; I shall not want.",
+  "He maketh me to lie down in green pastures; He leadeth me beside the still waters.",
+  "He restoreth my soul; He guideth me in straight paths for His name's sake.",
+  "Yea, though I walk through the valley of the shadow of death, I will fear no evil, for Thou art with me; {N} Thy rod and Thy staff, they comfort me.",
+  "Thou preparest a table before me in the presence of mine enemies; {N} Thou hast anointed my head with oil; my cup runneth over.",
+  "Surely goodness and mercy shall follow me all the days of my life; {N} and I shall dwell in the house of the LORD for ever. {P}"
+ ],
+ "verse_count": 6,
+ "anchors": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+ ],
+ "anchor_check": true,
+ "fetched_at": "2026-11-20T04:05:10.117680+00:00",
+ "source_bytes": 5190
+}

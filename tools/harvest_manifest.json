@@ -1,0 +1,3152 @@
+{
+ "1": {
+  "text": {
+   "status": 200,
+   "bytes": 5311,
+   "sha256": "eb71d9ae8a9d8ad1dd33dc369dedf5d0b1cfa3affd2cb76e9b935cde443dfd86",
+   "verses": 6,
+   "anchor_check": true,
+   "file": "tools/text/psalm001_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 232544,
+   "sha256": "8fe5ffd36cac9679692ead4e329821b70fa2bdc0e1ebd71668e90d42d79d0137",
+   "duration": 58.136,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2601.mp3"
+  }
+ },
+ "2": {
+  "text": {
+   "status": 200,
+   "bytes": 6718,
+   "sha256": "cd44165dab7f57b4314f41ad6cb5b5da36c7e3e39283b2f0374da81d79d1929c",
+   "verses": 12,
+   "anchor_check": true,
+   "file": "tools/text/psalm002_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 356928,
+   "sha256": "1fa1a45c9087d0e97d0c4b5c5571e3af8adef585ffb1702b7b5e7b86b8ca4388",
+   "duration": 89.232,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2602.mp3"
+  }
+ },
+ "3": {
+  "text": {
+   "status": 200,
+   "bytes": 5656,
+   "sha256": "a43e9db5efa5d5878a5b137a66ebb27601617c76a7f22819b2c07a499d1844db",
+   "verses": 9,
+   "anchor_check": true,
+   "file": "tools/text/psalm003_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 259896,
+   "sha256": "bf5372afaddd564dc367b3d3cf6c5260acf1c62d77a3d8b68e71258f23683b41",
+   "duration": 64.974,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2603.mp3"
+  }
+ },
+ "4": {
+  "text": {
+   "status": 200,
+   "bytes": 5865,
+   "sha256": "8e168220ac2e25535492e40194e2dc8fc1121b051c9a9da1f1a76cf1ad2ed456",
+   "verses": 9,
+   "anchor_check": true,
+   "file": "tools/text/psalm004_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 289432,
+   "sha256": "3e500d93775f2c24e5baad73590cd5f5a41d39627bc9dffb9351f1a425b4c347",
+   "duration": 72.358,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2604.mp3"
+  }
+ },
+ "5": {
+  "text": {
+   "status": 200,
+   "bytes": 7473,
+   "sha256": "191f92259707800464e07601b206f60d7f5cd3d763983886d08a86ce28b54316",
+   "verses": 13,
+   "anchor_check": true,
+   "file": "tools/text/psalm005_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 459992,
+   "sha256": "51bcd607867f6b914284ea2e837ca79305c2dda03f3471f1f6c512839449c97b",
+   "duration": 114.998,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2605.mp3"
+  }
+ },
+ "6": {
+  "text": {
+   "status": 200,
+   "bytes": 6252,
+   "sha256": "25d13cf8ce2ab545fac6582fc1435b0158b5d740b656dfb9ab774750557d14ee",
+   "verses": 11,
+   "anchor_check": true,
+   "file": "tools/text/psalm006_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 333424,
+   "sha256": "1bf0032b79741e9772d2d6faff01339a0cc96abd6dc92c4be81ef8e5a1485e74",
+   "duration": 83.356,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2606.mp3"
+  }
+ },
+ "7": {
+  "text": {
+   "status": 200,
+   "bytes": 8673,
+   "sha256": "63f6c7c257a42dd4fb03437e15d2730cd36a9b15f15065b58fda81a5f75850ce",
+   "verses": 18,
+   "anchor_check": true,
+   "file": "tools/text/psalm007_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 585000,
+   "sha256": "7492f0274f2300da4e9f7eeeba8d34c90c110395f0587b57d4e6331847f77472",
+   "duration": 146.25,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2607.mp3"
+  }
+ },
+ "8": {
+  "text": {
+   "status": 200,
+   "bytes": 6239,
+   "sha256": "002000b5047324e30c2d8ace9431f3aaf827ad80eeffb186f8bd3232e2752026",
+   "verses": 10,
+   "anchor_check": true,
+   "file": "tools/text/psalm008_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 314600,
+   "sha256": "c424c56db11821ee3e60d31eb1032639a6e5fda5ad0a636e1ae9468d86399677",
+   "duration": 78.65,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2608.mp3"
+  }
+ },
+ "9": {
+  "text": {
+   "status": 200,
+   "bytes": 9616,
+   "sha256": "b52a3aaa07708402b504513e85d958064d0e4d1ffca22c73be79477c17a88b6d",
+   "verses": 21,
+   "anchor_check": true,
+   "file": "tools/text/psalm009_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 673816,
+   "sha256": "fbd6a0a5224b7b8f2676971526f222e77fd9f7cc1effe573760e17e9d8d84e50",
+   "duration": 168.454,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2609.mp3"
+  }
+ },
+ "10": {
+  "text": {
+   "status": 200,
+   "bytes": 9197,
+   "sha256": "eb2736967df9d0698f5150b8c02a65829425cd39d5177c89364087dac5936aec",
+   "verses": 18,
+   "anchor_check": true,
+   "file": "tools/text/psalm010_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 641576,
+   "sha256": "ed2a181334c89e2f54bbe547a4b7aa271b3840f8f1874c0ae0a318d2d5244198",
+   "duration": 160.394,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2610.mp3"
+  }
+ },
+ "11": {
+  "text": {
+   "status": 200,
+   "bytes": 5626,
+   "sha256": "be31b981597ee3e8a0bfeb22d20f5c6cbc3c5ac3c7d3c6a2fdb4e5045511bb02",
+   "verses": 7,
+   "anchor_check": true,
+   "file": "tools/text/psalm011_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 270400,
+   "sha256": "acea28a39e6d0b82ebafaccca8f8c44bd0ea109028c753c177b9a43212d3089e",
+   "duration": 67.6,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2611.mp3"
+  }
+ },
+ "12": {
+  "text": {
+   "status": 200,
+   "bytes": 5986,
+   "sha256": "1f4fc19ec62078b3a1fc82a1bf12e94679ba3c130f9f0808e8b492f0306be395",
+   "verses": 9,
+   "anchor_check": true,
+   "file": "tools/text/psalm012_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 305448,
+   "sha256": "b04b86c19cda48cddcc694f446f8094bd5cf125f4bdd5afefaf602808c20d9b0",
+   "duration": 76.362,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2612.mp3"
+  }
+ },
+ "13": {
+  "text": {
+   "status": 200,
+   "bytes": 5049,
+   "sha256": "9f58e4bb553a50f1c48b3dc5b55e963352231990fdfe776ef5cea5c54e1a9820",
+   "verses": 6,
+   "anchor_check": true,
+   "file": "tools/text/psalm013_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 211224,
+   "sha256": "078b3311870a6b7bdb14282fe4781c061205ad5379df7f7b14345e79d3344bd7",
+   "duration": 52.806,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2613.mp3"
+  }
+ },
+ "14": {
+  "text": {
+   "status": 200,
+   "bytes": 5690,
+   "sha256": "4c65fce5841984eb373cc74a31448d1d09ef0e9d47078cd375eecc131cbdc47a",
+   "verses": 7,
+   "anchor_check": true,
+   "file": "tools/text/psalm014_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 273000,
+   "sha256": "6e0a3fdcc794f8fdb04a6fbbed45af1fd68f2bed5dd0a1831c47b4da30e0c748",
+   "duration": 68.25,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2614.mp3"
+  }
+ },
+ "15": {
+  "text": {
+   "status": 200,
+   "bytes": 4893,
+   "sha256": "92701a2e5372f25d9197e1ac00b563d8ae58e77b5e7227b64acd9e1e442d8ebb",
+   "verses": 5,
+   "anchor_check": true,
+   "file": "tools/text/psalm015_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 202176,
+   "sha256": "1bb82981cc4d0f00f67c05faa17be81ac6221de23ea290a1150b3c53da41ffd5",
+   "duration": 50.544,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2615.mp3"
+  }
+ },
+ "16": {
+  "text": {
+   "status": 200,
+   "bytes": 6581,
+   "sha256": "c225198704332496d054d6d7afe7757a2bc24c2ff6c318feb10a95c834a332af",
+   "verses": 11,
+   "anchor_check": true,
+   "file": "tools/text/psalm016_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 367640,
+   "sha256": "6c57928fae114c791014d09429886168063f396ef3ab6d773511381e86fcd6d6",
+   "duration": 91.91,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2616.mp3"
+  }
+ },
+ "17": {
+  "text": {
+   "status": 200,
+   "bytes": 8480,
+   "sha256": "f3ad5259c536b3cb6c829ee1e4ea86b5bd490668ad9bf298d708dda94778b52f",
+   "verses": 15,
+   "anchor_check": true,
+   "file": "tools/text/psalm017_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 539448,
+   "sha256": "a1d4783bef9693e426887e4e808fe9b96ba5c86e10fbd81a8f30db2f927fcd62",
+   "duration": 134.862,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2617.mp3"
+  }
+ },
+ "18": {
+  "text": {
+   "status": 200,
+   "bytes": 19574,
+   "sha256": "50b66465c0edf9e43f7bcc7b617c9fce7362cca030b62a050bbed36e250a30ab",
+   "verses": 51,
+   "anchor_check": true,
+   "file": "tools/text/psalm018_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1621464,
+   "sha256": "6ccbfc7ba5cc5efbda72d765d71289f334d93e3efcf91a14330f5f6123f013a7",
+   "duration": 405.366,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2618.mp3"
+  }
+ },
+ "19": {
+  "text": {
+   "status": 200,
+   "bytes": 7989,
+   "sha256": "3ee3b0e6ce44bae391df78f1dcf858b65de4f998ccc9c0329c1c2bda03fad3ef",
+   "verses": 15,
+   "anchor_check": true,
+   "file": "tools/text/psalm019_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 507728,
+   "sha256": "7e4a174502010ea27b65bab9891d34ac30565e3f004c2c5ec5cea4899f304f55",
+   "duration": 126.932,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2619.mp3"
+  }
+ },
+ "20": {
+  "text": {
+   "status": 200,
+   "bytes": 6144,
+   "sha256": "39900d8c1d964ec549fd0c54b9261eaf57841c80e3ead84a55d9eef5e4322596",
+   "verses": 10,
+   "anchor_check": true,
+   "file": "tools/text/psalm020_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 317408,
+   "sha256": "2e7660e51cdf62caf7cb1cf0d944ad89d1dadef2968d4300dd10ad51cb28ed0c",
+   "duration": 79.352,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2620.mp3"
+  }
+ },
+ "21": {
+  "text": {
+   "status": 200,
+   "bytes": 7316,
+   "sha256": "fc1243b7bc7595b14a5036b9df3b570e0e33b8b205aa591bb1390e086bbd8708",
+   "verses": 14,
+   "anchor_check": true,
+   "file": "tools/text/psalm021_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 409344,
+   "sha256": "81882a6d2bff2a61592e28a78f6a942111c49d9987fdb4fc77e85602996db64f",
+   "duration": 102.336,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2621.mp3"
+  }
+ },
+ "22": {
+  "text": {
+   "status": 200,
+   "bytes": 13255,
+   "sha256": "a7ef29593dd92241b22dcfe26149934ae351ae8a1556c50c4fd00f6c93ae5728",
+   "verses": 32,
+   "anchor_check": true,
+   "file": "tools/text/psalm022_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1002352,
+   "sha256": "9cd446574a24c43b359114dcb2dfc55544a2e34ccdc6ed178f1534e36334cec1",
+   "duration": 250.588,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2622.mp3"
+  }
+ },
+ "23": {
+  "text": {
+   "status": 200,
+   "bytes": 5190,
+   "sha256": "133e8cb3e50cc0e1085fed340f97a51568121ff8671d03ca4c5d865c9f478b1d",
+   "verses": 6,
+   "anchor_check": true,
+   "file": "tools/text/psalm023_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 228800,
+   "sha256": "87f7f838b62f1ac5c72f014332ad8d2dcf1c310fcb5819f56b1f506472a9441e",
+   "duration": 57.2,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2623.mp3"
+  }
+ },
+ "24": {
+  "text": {
+   "status": 200,
+   "bytes": 6488,
+   "sha256": "213f38cce475484cf1bf87ae078b4f394d6a4b6d26c058398972c32dfbd3a89f",
+   "verses": 10,
+   "anchor_check": true,
+   "file": "tools/text/psalm024_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 312320,
+   "sha256": "1c3aba12b8b2fa5f9b8977b79d2b8cd0f53de9e108513e989be19caee5b4569a",
+   "duration": 78.08,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2624.mp3"
+  }
+ },
+ "25": {
+  "text": {
+   "status": 200,
+   "bytes": 9334,
+   "sha256": "12a87fbb5ce95178fb0f7a6c5ce6e2bc5776eea8d6cb14822cd2e6f82728c2cb",
+   "verses": 22,
+   "anchor_check": true,
+   "file": "tools/text/psalm025_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 613176,
+   "sha256": "359a507e44e4069d000363d8fcd3c82138836739ccb759a8d125efb3c9d22034",
+   "duration": 153.27,
+   "bit_rate": 32005,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2625.mp3"
+  }
+ },
+ "26": {
+  "text": {
+   "status": 200,
+   "bytes": 6494,
+   "sha256": "890001bdea29ce22785a857b9fae67bee66cddaba10f2ec350165fabf9d62189",
+   "verses": 12,
+   "anchor_check": true,
+   "file": "tools/text/psalm026_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 354536,
+   "sha256": "bee6bc99d1b9c1b8a859f69d9497ccd3e72d023e3b31802d7f58295d560f9403",
+   "duration": 88.634,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2626.mp3"
+  }
+ },
+ "27": {
+  "text": {
+   "status": 200,
+   "bytes": 8660,
+   "sha256": "1315ab4d3923addf992cc1e2ae29c5c405082b6e4025db1a8e50227c0d584358",
+   "verses": 14,
+   "anchor_check": true,
+   "file": "tools/text/psalm027_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 597584,
+   "sha256": "114e21c8557d71ff18e08dc1bbafc6798c873ff5a6b03c042f84d5579cbf09c5",
+   "duration": 149.396,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2627.mp3"
+  }
+ },
+ "28": {
+  "text": {
+   "status": 200,
+   "bytes": 6749,
+   "sha256": "d60ec92489d9980bb3f5aa3614e6684c36106befde6ac28c673f0c19237d5a0c",
+   "verses": 9,
+   "anchor_check": true,
+   "file": "tools/text/psalm028_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 367224,
+   "sha256": "fcc501faaf32218047151e8854bf4f418f98dcbb896c49ff42cf70c7863123fd",
+   "duration": 91.806,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2628.mp3"
+  }
+ },
+ "29": {
+  "text": {
+   "status": 200,
+   "bytes": 6394,
+   "sha256": "a2126e8afb2e9edc9b54d2a6335e2af2a4616a69335055d5d91075cf2513eb13",
+   "verses": 11,
+   "anchor_check": true,
+   "file": "tools/text/psalm029_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 345384,
+   "sha256": "e47fcd9787b50669454af10cd94252698121d5111b147d2a6485778cce8ffe0f",
+   "duration": 86.346,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2629.mp3"
+  }
+ },
+ "30": {
+  "text": {
+   "status": 200,
+   "bytes": 7207,
+   "sha256": "c2c1a969d8b8f509bd19d67d86ba53177b19916661e54324f698f7e09716251f",
+   "verses": 13,
+   "anchor_check": true,
+   "file": "tools/text/psalm030_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 407368,
+   "sha256": "711eb999af728b349171743a19ea67bb6903f1f0a5320167682871da3f8f86ea",
+   "duration": 101.842,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2630.mp3"
+  }
+ },
+ "31": {
+  "text": {
+   "status": 200,
+   "bytes": 12076,
+   "sha256": "bf0cc56f25fb067de8d02430940f99d5d02742e56669a7083d7185662796eed5",
+   "verses": 25,
+   "anchor_check": true,
+   "file": "tools/text/psalm031_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 924768,
+   "sha256": "4b8b8b373d3581cbc2ba9ac085e9a7d2a450b06eecf36051c0fb339685148107",
+   "duration": 231.192,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2631.mp3"
+  }
+ },
+ "32": {
+  "text": {
+   "status": 200,
+   "bytes": 7324,
+   "sha256": "6705e5f05f88a64fd3851842381637290f90f4012e3cb3c779672bdcf6df17bb",
+   "verses": 11,
+   "anchor_check": true,
+   "file": "tools/text/psalm032_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 429832,
+   "sha256": "30e7b06c7c9232971095303e3a7818144df0400379baab625acf7fac45c393ff",
+   "duration": 107.458,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2632.mp3"
+  }
+ },
+ "33": {
+  "text": {
+   "status": 200,
+   "bytes": 9240,
+   "sha256": "9fd51c0ea216f8d734655420f68dbfe6a12c23d3f8673cc3879db8f059292fe8",
+   "verses": 22,
+   "anchor_check": true,
+   "file": "tools/text/psalm033_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 628160,
+   "sha256": "f5e7725a188533efa4029791229d455b80662a00dcda611ca6f9c52b36a215b7",
+   "duration": 157.04,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2633.mp3"
+  }
+ },
+ "34": {
+  "text": {
+   "status": 200,
+   "bytes": 9526,
+   "sha256": "5cb088058d79bb392371bf484885651d0b2c73108c148baa8ab6ffaec2a79776",
+   "verses": 23,
+   "anchor_check": true,
+   "file": "tools/text/psalm034_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 847761,
+   "sha256": "a6cbc07f2c2d9f47d74e9809858bf17419215e6a3ef060bcc3d67237ded26597",
+   "duration": 211.94025,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2634.mp3"
+  }
+ },
+ "35": {
+  "text": {
+   "status": 200,
+   "bytes": 12653,
+   "sha256": "6bf2f4acf29b4e6a502ee7202ca581095aa02a06083c68fb66226d8b18668c31",
+   "verses": 28,
+   "anchor_check": true,
+   "file": "tools/text/psalm035_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1890012,
+   "sha256": "b685631ac83fb60f7ff26ab17aa1c0431b4c3a8f78e053f96f337c7df3903c74",
+   "duration": 236.2515,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2635.mp3"
+  }
+ },
+ "36": {
+  "text": {
+   "status": 200,
+   "bytes": 6914,
+   "sha256": "1472f373b5b9274921578d2fa48786357f3506ee69260a6a46979e80ea7ef18b",
+   "verses": 13,
+   "anchor_check": true,
+   "file": "tools/text/psalm036_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 834664,
+   "sha256": "c98353887a3c9d99499441d7c30e8eb338d415206af141bcf186a58535ff1d8c",
+   "duration": 104.333,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2636.mp3"
+  }
+ },
+ "37": {
+  "text": {
+   "status": 200,
+   "bytes": 15472,
+   "sha256": "bcbe5923035dd332fe586dd291a1301005a91f554e2648a6f0dcfc7f65976ac1",
+   "verses": 40,
+   "anchor_check": true,
+   "file": "tools/text/psalm037_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1243802,
+   "sha256": "300529397af388b27378ed702d8152bd6d2b1ccb21fbc70003edd0a117adae5a",
+   "duration": 310.9505,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2637.mp3"
+  }
+ },
+ "38": {
+  "text": {
+   "status": 200,
+   "bytes": 9610,
+   "sha256": "e7ace4329f037bb834ad777b5768ff3a00201d4e7de42ff8dcd5c990d39b4fe0",
+   "verses": 23,
+   "anchor_check": true,
+   "file": "tools/text/psalm038_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 683176,
+   "sha256": "9858656ea9d69e1eed3cd72232a3062cef41553f516d8ca405f831efd0e715ae",
+   "duration": 170.794,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2638.mp3"
+  }
+ },
+ "39": {
+  "text": {
+   "status": 200,
+   "bytes": 8012,
+   "sha256": "f3b5f55f5374ed6f1cbe2a9878f28643b727e29d1bdcbf4deed2ee47c37a083f",
+   "verses": 14,
+   "anchor_check": true,
+   "file": "tools/text/psalm039_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 524472,
+   "sha256": "65be102030ad51afe6621ee7cd833614b6718f1d923fc099507ca3db1c0e2eaf",
+   "duration": 131.118,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2639.mp3"
+  }
+ },
+ "40": {
+  "text": {
+   "status": 200,
+   "bytes": 10544,
+   "sha256": "e0507ab3207666a8f7ff2262d0b005cc08e2e0e232aeb95217512e2e7a6db524",
+   "verses": 18,
+   "anchor_check": true,
+   "file": "tools/text/psalm040_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 741936,
+   "sha256": "5e5d5f4323ef921aab21c8281a70780e271776cf4b27f4b289573601d38200da",
+   "duration": 185.484,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2640.mp3"
+  }
+ },
+ "41": {
+  "text": {
+   "status": 200,
+   "bytes": 7440,
+   "sha256": "d998bdc3d913f17ec96199afae9f7285897abc5045a747657e75d2fcc8a5d2c3",
+   "verses": 14,
+   "anchor_check": true,
+   "file": "tools/text/psalm041_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 444912,
+   "sha256": "8840657270ae0fd10f6791516213516d845e86cc298dbb3c759ecc7f7769fa07",
+   "duration": 111.228,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2641.mp3"
+  }
+ },
+ "42": {
+  "text": {
+   "status": 200,
+   "bytes": 8140,
+   "sha256": "d2eec3b5ed0bfcdb29750996954afbfefc2b34001517958761670b1a5cebf35d",
+   "verses": 12,
+   "anchor_check": true,
+   "file": "tools/text/psalm042_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 512616,
+   "sha256": "e189e35b186ae28a70d35e183495a7183ae977e2df0b1ddc1b04e328ed4cd560",
+   "duration": 128.154,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2642.mp3"
+  }
+ },
+ "43": {
+  "text": {
+   "status": 200,
+   "bytes": 5293,
+   "sha256": "9b167699e52f4275dc3bb32ec1e23de9b073d518013e777fb0413c4327cb7e7b",
+   "verses": 5,
+   "anchor_check": true,
+   "file": "tools/text/psalm043_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 232128,
+   "sha256": "5347d41a89fdf98a60ad8ee04af87e388fecaeef8e81a149e58b691dded281d4",
+   "duration": 58.032,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2643.mp3"
+  }
+ },
+ "44": {
+  "text": {
+   "status": 200,
+   "bytes": 11327,
+   "sha256": "2e8ae9261473b5dc5ee70c892de7504555bcb00d7962b571c44230af0c17af79",
+   "verses": 27,
+   "anchor_check": true,
+   "file": "tools/text/psalm044_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 808392,
+   "sha256": "838f01f36e47599be85baa849f16eaaac6fd501f8d73dda3ef3db2e9a6b62b88",
+   "duration": 202.098,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2644.mp3"
+  }
+ },
+ "45": {
+  "text": {
+   "status": 200,
+   "bytes": 9303,
+   "sha256": "53f9dc2fc7dca042ce3535e3e9bfdf521704565d6e28a6ef675e48ec54e9c623",
+   "verses": 18,
+   "anchor_check": true,
+   "file": "tools/text/psalm045_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 604344,
+   "sha256": "e21f553303c3ca678460d7bef0eac5033a9bb04459e725534ffdd69a3c4532e4",
+   "duration": 151.086,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2645.mp3"
+  }
+ },
+ "46": {
+  "text": {
+   "status": 200,
+   "bytes": 6750,
+   "sha256": "53586be4b5bfef39435300a2cfda3eaa1931c4b9f1add0a7dc3de643fae96229",
+   "verses": 12,
+   "anchor_check": true,
+   "file": "tools/text/psalm046_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 354848,
+   "sha256": "660b48fcf1d4db979c4aafe5c0b50d5a87191e1c572df6a460db30b9a3c67ffe",
+   "duration": 88.712,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2646.mp3"
+  }
+ },
+ "47": {
+  "text": {
+   "status": 200,
+   "bytes": 5855,
+   "sha256": "aa5cb66c28ef6388897e48cf583465bd5fe2937e59ebd9560122f280987125e2",
+   "verses": 10,
+   "anchor_check": true,
+   "file": "tools/text/psalm047_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 244088,
+   "sha256": "5728c142ab61abc8df20726d3be18504cd5b70a3a2618526dd4a36dbfcb65639",
+   "duration": 61.022,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2647.mp3"
+  }
+ },
+ "48": {
+  "text": {
+   "status": 200,
+   "bytes": 7559,
+   "sha256": "fe35e736b23823b30f9646afe5c6a500693422a660e4e8bebd4bf9e5c4283d18",
+   "verses": 15,
+   "anchor_check": true,
+   "file": "tools/text/psalm048_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 413920,
+   "sha256": "a0d6ed46961165c7f2e631daee70688b92dcf3dcbcec62a7044eb5b585ed0170",
+   "duration": 103.48,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2648.mp3"
+  }
+ },
+ "49": {
+  "text": {
+   "status": 200,
+   "bytes": 9483,
+   "sha256": "8a97a5a0ab0aa2868ac23a80354d816769f20da0e9b75584a18f7e4fad92db4e",
+   "verses": 21,
+   "anchor_check": true,
+   "file": "tools/text/psalm049_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 572000,
+   "sha256": "4fefee64ed95d04a27eae0bf43dbe7f84b012e6794dd6f909d1823ede27ddb8b",
+   "duration": 143.0,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2649.mp3"
+  }
+ },
+ "50": {
+  "text": {
+   "status": 200,
+   "bytes": 10288,
+   "sha256": "0e1ef39e1fa32f98dff3e42d9e31f6ab2d32b06e8b6ec808be14f7e566673ccf",
+   "verses": 23,
+   "anchor_check": true,
+   "file": "tools/text/psalm050_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 645840,
+   "sha256": "ca1f89e43780dbed42e62f2790ebed15045022a8372a533a148b6bdcf1b9f27d",
+   "duration": 161.46,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2650.mp3"
+  }
+ },
+ "51": {
+  "text": {
+   "status": 200,
+   "bytes": 9568,
+   "sha256": "0bd63fd4b46c3716646e8d29f1905f730518372a2aa413e5964d548eafc7b3a7",
+   "verses": 21,
+   "anchor_check": true,
+   "file": "tools/text/psalm051_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 570232,
+   "sha256": "3e3b8cfa5cfbe67762dfd786674ce06a8450efc7c1103f835ab5a225a3d23f4d",
+   "duration": 142.558,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2651.mp3"
+  }
+ },
+ "52": {
+  "text": {
+   "status": 200,
+   "bytes": 6643,
+   "sha256": "3cbdcf0177a9cfd017d1f1fa5d3a1c6108a0c4c0b7f5f211ba38d0778db2078b",
+   "verses": 11,
+   "anchor_check": true,
+   "file": "tools/text/psalm052_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 316888,
+   "sha256": "3f8187a76e0da81080cfb8093b993023a9a6aa5137843e6d73e00b087dfe67f5",
+   "duration": 79.222,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2652.mp3"
+  }
+ },
+ "53": {
+  "text": {
+   "status": 200,
+   "bytes": 5805,
+   "sha256": "3eee01bbaff69b364e938b3ac444e77c71633498c550f9abcd68c131084660b6",
+   "verses": 7,
+   "anchor_check": true,
+   "file": "tools/text/psalm053_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 255632,
+   "sha256": "ce40701386d4a7a5259a7675b598f9bb266aa8c2bf89619d9489fcd2e9b243ab",
+   "duration": 63.908,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2653.mp3"
+  }
+ },
+ "54": {
+  "text": {
+   "status": 200,
+   "bytes": 5654,
+   "sha256": "38fbde7b2c83713e5e07c0773b143cf981e77a9cc51007bbc4702bfab82ce748",
+   "verses": 9,
+   "anchor_check": true,
+   "file": "tools/text/psalm054_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 235936,
+   "sha256": "402315689dd1b5f1727022b805c68d64515f5e08efd5d8077bba165739d6aed4",
+   "duration": 58.984,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2654.mp3"
+  }
+ },
+ "55": {
+  "text": {
+   "status": 200,
+   "bytes": 10931,
+   "sha256": "fcb8f4a25bb5dc11cf6359af27bbba85eb279c4dfb6af14a69a187eb78751490",
+   "verses": 24,
+   "anchor_check": true,
+   "file": "tools/text/psalm055_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 716496,
+   "sha256": "151ccecdbabfb1ef01504f7847737401fcda949d88fae28dab7a42d10699a0c5",
+   "duration": 179.114,
+   "bit_rate": 32001,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2655.mp3"
+  }
+ },
+ "56": {
+  "text": {
+   "status": 200,
+   "bytes": 7578,
+   "sha256": "26e0f3f1f22b582f9eb305e9175f9213de10e154e6de1623828aadf26e7ef3ef",
+   "verses": 14,
+   "anchor_check": true,
+   "file": "tools/text/psalm056_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 413920,
+   "sha256": "b1e3575d8341448b59f16220a38a64cabf2eec3876b2847f970fee51059c2754",
+   "duration": 103.48,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2656.mp3"
+  }
+ },
+ "57": {
+  "text": {
+   "status": 200,
+   "bytes": 7227,
+   "sha256": "f68ba1523b09e056d28092e52b9a908feef9d065258a67d471f3ebaefcb81735",
+   "verses": 12,
+   "anchor_check": true,
+   "file": "tools/text/psalm057_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 387816,
+   "sha256": "d93147c9070b810bbb756d0e55d6b3f20c334ad10aefd2edc447ee62601798ff",
+   "duration": 96.954,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2657.mp3"
+  }
+ },
+ "58": {
+  "text": {
+   "status": 200,
+   "bytes": 6830,
+   "sha256": "56a8e054b0327de6db019d8f4a5fe247017d8e2cf51d87d52a7bbee9c3a04866",
+   "verses": 12,
+   "anchor_check": true,
+   "file": "tools/text/psalm058_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 357864,
+   "sha256": "f40e0628467a3e5814a787a93a2ee7b8348de8c2c3087391392a9bff2726b2b4",
+   "duration": 89.466,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2658.mp3"
+  }
+ },
+ "59": {
+  "text": {
+   "status": 200,
+   "bytes": 9509,
+   "sha256": "11911c5d59b95ab7fb73488c133c7f4abacf7cfba5fd9323c20ef55e8916eef6",
+   "verses": 18,
+   "anchor_check": true,
+   "file": "tools/text/psalm059_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 585728,
+   "sha256": "f6e66882d5bec9bf23eb550ff58499fd554331ce9be4c5f97bd5b35d86aba3d0",
+   "duration": 146.432,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2659.mp3"
+  }
+ },
+ "60": {
+  "text": {
+   "status": 200,
+   "bytes": 7410,
+   "sha256": "f3af5a5622dda80b8501aa42f3de6c4cbae3372b766343df84ca3f976f1d67c9",
+   "verses": 14,
+   "anchor_check": true,
+   "file": "tools/text/psalm060_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 429936,
+   "sha256": "1202213293fb911b62a2e9aebba0f1bb3fc560f7bb463f3d11d95c0299c9e79e",
+   "duration": 107.484,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2660.mp3"
+  }
+ },
+ "61": {
+  "text": {
+   "status": 200,
+   "bytes": 5616,
+   "sha256": "99b5a7dfd65689acffa97dda9bf9fa726afe70b12cb061f39a9be18a2a156eec",
+   "verses": 9,
+   "anchor_check": true,
+   "file": "tools/text/psalm061_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 247312,
+   "sha256": "f148b5721a5577ef3bf881d58168d07745e884bc53b960ade8257f1f2e3ddc50",
+   "duration": 61.828,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2661.mp3"
+  }
+ },
+ "62": {
+  "text": {
+   "status": 200,
+   "bytes": 7398,
+   "sha256": "552302f89a720d09fc494d416c808c5192a59ba0dda21e86dcf3eadf1797f224",
+   "verses": 13,
+   "anchor_check": true,
+   "file": "tools/text/psalm062_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 403208,
+   "sha256": "7b5e4b981de74ab3ffc0a7272bb385372f7974802300d982991afe7e3fa033fb",
+   "duration": 100.802,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2662.mp3"
+  }
+ },
+ "63": {
+  "text": {
+   "status": 200,
+   "bytes": 6812,
+   "sha256": "7a4589e6345a2390700c80b622c19ea8e990786af1b8eff3cb8c775aff4924ce",
+   "verses": 12,
+   "anchor_check": true,
+   "file": "tools/text/psalm063_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 354640,
+   "sha256": "715d4081fafc4a852cf246494caae4e46e41c6a59f3b93a8bfb7643f7374f6de",
+   "duration": 88.66,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2663.mp3"
+  }
+ },
+ "64": {
+  "text": {
+   "status": 200,
+   "bytes": 6401,
+   "sha256": "2f5849b1b766786e7de951ee0a96ce77dfe2af43c6689b89e505a93aa47c1e9f",
+   "verses": 11,
+   "anchor_check": true,
+   "file": "tools/text/psalm064_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 321976,
+   "sha256": "1336423433767ffb378d27a4eaf23c2def693731c701ff1691dcc9e5337b40af",
+   "duration": 80.494,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2664.mp3"
+  }
+ },
+ "65": {
+  "text": {
+   "status": 200,
+   "bytes": 7838,
+   "sha256": "4d804d45bbc356eb789856decc9183b55100283431b9d1bc5fde4dab4f5e83b0",
+   "verses": 14,
+   "anchor_check": true,
+   "file": "tools/text/psalm065_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 336274,
+   "sha256": "0e2cafb7ae9c83a9e4a4760b21b0ff1dc7b970e55d2a04f888b01c552a9062a0",
+   "duration": 112.091333,
+   "bit_rate": 24000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2665.mp3"
+  }
+ },
+ "66": {
+  "text": {
+   "status": 200,
+   "bytes": 9159,
+   "sha256": "01367f780db8239ca3f2e24be52009258987f9a2737a5b7c6446b538e3d710ab",
+   "verses": 20,
+   "anchor_check": true,
+   "file": "tools/text/psalm066_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 559416,
+   "sha256": "c5e869cf39ed25ecf4ceca82220a118ce2b1e81d53f905712257b563345fd8fd",
+   "duration": 139.854,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2666.mp3"
+  }
+ },
+ "67": {
+  "text": {
+   "status": 200,
+   "bytes": 5329,
+   "sha256": "549a37a14ee2f3d11b20674ce2cfb44ebe8d032cc4603818a36527c3c1f5dafd",
+   "verses": 8,
+   "anchor_check": true,
+   "file": "tools/text/psalm067_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 196768,
+   "sha256": "1c1be0faaaffee2c15e66bc0c23f96a896261e111b8253f7194e6e333edea6ca",
+   "duration": 49.192,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2667.mp3"
+  }
+ },
+ "68": {
+  "text": {
+   "status": 200,
+   "bytes": 15663,
+   "sha256": "1d47a46a1b484f1dc39ffaf05e48a4c5deb1329f0b1c27f3b4ad535601fbf1c5",
+   "verses": 36,
+   "anchor_check": true,
+   "file": "tools/text/psalm068_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1210828,
+   "sha256": "bb453215abcd16e142ce525d007f9087d9f117407057e0d8b46f1e57cfb0c28a",
+   "duration": 302.707,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2668.mp3"
+  }
+ },
+ "69": {
+  "text": {
+   "status": 200,
+   "bytes": 14895,
+   "sha256": "8634a68e8ec1df86fe162afadadfa541044c94e677c8982a34d2e52a252d4011",
+   "verses": 37,
+   "anchor_check": true,
+   "file": "tools/text/psalm069_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1084304,
+   "sha256": "92d48231a6448f92c66cf573f1049a368e0dc45fe06c57fdc8bbb8ba6fb47437",
+   "duration": 271.076,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2669.mp3"
+  }
+ },
+ "70": {
+  "text": {
+   "status": 200,
+   "bytes": 4956,
+   "sha256": "5b5c57338521570befe486dd9ee32e179889cb4edd72cf7aaba05c7d23bb5612",
+   "verses": 6,
+   "anchor_check": true,
+   "file": "tools/text/psalm070_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 196664,
+   "sha256": "1083b19340b0bd0d4f53a302f763b5638e8879442da829765b6a9a55527972ea",
+   "duration": 49.166,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2670.mp3"
+  }
+ },
+ "71": {
+  "text": {
+   "status": 200,
+   "bytes": 11349,
+   "sha256": "28aa95276ba985fbd3ea98122bc2e2015cfe893b8fda503ecee6ee34bcc110ef",
+   "verses": 24,
+   "anchor_check": true,
+   "file": "tools/text/psalm071_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 733200,
+   "sha256": "4fb10a66c69808eb9f8187b8ba14bc58cf29ea24649a8beeec50525ae3b2b336",
+   "duration": 183.3,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2671.mp3"
+  }
+ },
+ "72": {
+  "text": {
+   "status": 200,
+   "bytes": 9629,
+   "sha256": "e6bff3bd2a46d2d072d5ce77bd767a9440e353b915d56465b2422c9af41d0de0",
+   "verses": 20,
+   "anchor_check": true,
+   "file": "tools/text/psalm072_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 589888,
+   "sha256": "53f763ba1951b77c732c3f595f7c2d673a716ad4ad78d04ac83249c5e8cd1a77",
+   "duration": 147.472,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2672.mp3"
+  }
+ },
+ "73": {
+  "text": {
+   "status": 200,
+   "bytes": 11083,
+   "sha256": "36bcf6e2592cb2bcd65ac3be304759284d42d422d2316cddd867e84db7a03f76",
+   "verses": 28,
+   "anchor_check": true,
+   "file": "tools/text/psalm073_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 734240,
+   "sha256": "ad2dae9c13af59f138a5b249a12759a1eaf31b877ef0dfd9df884361cce3b88b",
+   "duration": 183.56,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2673.mp3"
+  }
+ },
+ "74": {
+  "text": {
+   "status": 200,
+   "bytes": 10537,
+   "sha256": "d1cab58834caa7fedb27a02344fa75dcea85bda46a96f74a51e8b0473238862b",
+   "verses": 23,
+   "anchor_check": true,
+   "file": "tools/text/psalm074_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 720200,
+   "sha256": "a8864bcf937217e069db410c06240fcc6ede4bc79aaeb0531e3520aabcf84417",
+   "duration": 180.05,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2674.mp3"
+  }
+ },
+ "75": {
+  "text": {
+   "status": 200,
+   "bytes": 6438,
+   "sha256": "245a57aa0a629a86abc05406967d39e1087b1a01dcf4cd0d9af7d7a6b03c5c85",
+   "verses": 11,
+   "anchor_check": true,
+   "file": "tools/text/psalm075_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 292240,
+   "sha256": "5b9fa33879a75da5c855073f60714fd4fb34d7b4b70c332f461af77c849f5580",
+   "duration": 73.06,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2675.mp3"
+  }
+ },
+ "76": {
+  "text": {
+   "status": 200,
+   "bytes": 6738,
+   "sha256": "65695b39301b455a7ff29d3ab280ee2228b0db8b67578131a344c87a413ca457",
+   "verses": 13,
+   "anchor_check": true,
+   "file": "tools/text/psalm076_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 338728,
+   "sha256": "875b747b2584a05f289e1d51a70d867b7bc0a19abd6d90a8f76c2a3f2a11127b",
+   "duration": 84.682,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2676.mp3"
+  }
+ },
+ "77": {
+  "text": {
+   "status": 200,
+   "bytes": 9362,
+   "sha256": "93411f4186a2e1ef5d379f7a61e1b7cf167ead71051ada5236adee61dd104a33",
+   "verses": 21,
+   "anchor_check": true,
+   "file": "tools/text/psalm077_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 558792,
+   "sha256": "fc0361b700352f81c839bc4b80fa33bb81b934a736221dcc3078bc8793d543d5",
+   "duration": 139.698,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2677.mp3"
+  }
+ },
+ "78": {
+  "text": {
+   "status": 200,
+   "bytes": 25570,
+   "sha256": "068754816fba20511c6a5a2c7d3a5120c3e952483957f98dfe47a8e1d78a5ed1",
+   "verses": 72,
+   "anchor_check": true,
+   "file": "tools/text/psalm078_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1971538,
+   "sha256": "a63ba7c574d60c2a8eff6188054c83d8f9093e5b62c875dc8839008a39548302",
+   "duration": 492.8845,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2678.mp3"
+  }
+ },
+ "79": {
+  "text": {
+   "status": 200,
+   "bytes": 8311,
+   "sha256": "0cf1dc2f8216deff1fb3b4a844b937972703b1d0d7b541e0553e19fa85716bc3",
+   "verses": 13,
+   "anchor_check": true,
+   "file": "tools/text/psalm079_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 493272,
+   "sha256": "b53775a0d04719d8b9882606d3c443ab3c8e96427ba4090e5e4d4499f6b7b81a",
+   "duration": 123.318,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2679.mp3"
+  }
+ },
+ "80": {
+  "text": {
+   "status": 200,
+   "bytes": 9167,
+   "sha256": "c6b25f467fb48567407f5239204e61dd6ab78c795070d64374330a587a8a56a5",
+   "verses": 20,
+   "anchor_check": true,
+   "file": "tools/text/psalm080_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 558376,
+   "sha256": "6e964d5864d2a260d8e38cb888cf4739f5fab3705b9fc0ce4c38a8b9e807bf7d",
+   "duration": 139.594,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2680.mp3"
+  }
+ },
+ "81": {
+  "text": {
+   "status": 200,
+   "bytes": 8174,
+   "sha256": "92774022fdb9fd3c003fa18462f697f816dd1f9a6dc60c8d83b558dc34e8e9bb",
+   "verses": 17,
+   "anchor_check": true,
+   "file": "tools/text/psalm081_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 473496,
+   "sha256": "768ed710a38bdb562f76988ddcd27368d749f0bcb30fd4ecbf4c0cca18b771e2",
+   "duration": 118.374,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2681.mp3"
+  }
+ },
+ "82": {
+  "text": {
+   "status": 200,
+   "bytes": 5421,
+   "sha256": "0683eff47b10b8ae2b8ab5352649d44ddde53061a42f57e1aceef06e9d61d28a",
+   "verses": 8,
+   "anchor_check": true,
+   "file": "tools/text/psalm082_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 246912,
+   "sha256": "45f881b3519fd95b613240ba2a5048549ab058db382befccc8ef1931a9a4734b",
+   "duration": 61.724,
+   "bit_rate": 32002,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2682.mp3"
+  }
+ },
+ "83": {
+  "text": {
+   "status": 200,
+   "bytes": 8306,
+   "sha256": "e4b382bf04c51f52c204642837e6b52bbdbb002f086ba18a6b9f71ef30dfe812",
+   "verses": 19,
+   "anchor_check": true,
+   "file": "tools/text/psalm083_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 510640,
+   "sha256": "2ba94078f81ed46a697b23170294a0a23139ae86b57d17a8d5b35f31de546707",
+   "duration": 127.66,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2683.mp3"
+  }
+ },
+ "84": {
+  "text": {
+   "status": 200,
+   "bytes": 7576,
+   "sha256": "878095f83459f21a5b3e1d0cc86469d77aaa3624fc0701c2615547b9d4dc05bd",
+   "verses": 13,
+   "anchor_check": true,
+   "file": "tools/text/psalm084_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 427696,
+   "sha256": "e2a1eaa6e7cae3a8333fc3b6210f9ea9dd07cfacbfce8fa8b1bbbdb60e3e5bdf",
+   "duration": 106.924,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2684.mp3"
+  }
+ },
+ "85": {
+  "text": {
+   "status": 200,
+   "bytes": 7018,
+   "sha256": "166c918193c8a339c31e342c7d2258a0bd10f5b3088c819570ef71b65d768d76",
+   "verses": 14,
+   "anchor_check": true,
+   "file": "tools/text/psalm085_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 381632,
+   "sha256": "6937597f1f6c328d3296a50796cc61e9f42e29ae8d9bb0aa5575d7ea4cb4870a",
+   "duration": 95.394,
+   "bit_rate": 32004,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2685.mp3"
+  }
+ },
+ "86": {
+  "text": {
+   "status": 200,
+   "bytes": 8799,
+   "sha256": "424406cb2af817fd5acab14eee3b4ee6d4474340397687e6ef81e9524d505d43",
+   "verses": 17,
+   "anchor_check": true,
+   "file": "tools/text/psalm086_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 574912,
+   "sha256": "784432a5471474e42fe31172148f79d9f427104c362d0daaa4e956dda3b81798",
+   "duration": 143.728,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2686.mp3"
+  }
+ },
+ "87": {
+  "text": {
+   "status": 200,
+   "bytes": 5147,
+   "sha256": "7adab7851cae70e09707cfb0970cc6adf28ab24ec8bd985b741e763e46bc0d66",
+   "verses": 7,
+   "anchor_check": true,
+   "file": "tools/text/psalm087_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 219856,
+   "sha256": "1dab089c04e7699972ee2887aec49cd3d6d7db386851bdf23ae90bd8b2b04b95",
+   "duration": 54.964,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2687.mp3"
+  }
+ },
+ "88": {
+  "text": {
+   "status": 200,
+   "bytes": 9057,
+   "sha256": "5544ee004d8a910a7f13e83343ba394a71e6b7abcfd6794674e43ea5828c1297",
+   "verses": 19,
+   "anchor_check": true,
+   "file": "tools/text/psalm088_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 591656,
+   "sha256": "6ea5f69756b991b3a83a840e8c16f42ce4a39bbfa1a88a056ee9d7ed2623d401",
+   "duration": 147.914,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2688.mp3"
+  }
+ },
+ "89": {
+  "text": {
+   "status": 200,
+   "bytes": 18745,
+   "sha256": "6f012f10e5a6dda103a23247219a6108c6f558ec50478a5257f17fc184951e70",
+   "verses": 53,
+   "anchor_check": true,
+   "file": "tools/text/psalm089_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1459539,
+   "sha256": "5e460a909fcaec372e7bb26185fbc96cdacf4e63c52fb47dd56d742811e19517",
+   "duration": 364.88475,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2689.mp3"
+  }
+ },
+ "90": {
+  "text": {
+   "status": 200,
+   "bytes": 8882,
+   "sha256": "88cd338c048d12bed9f62f65120c917388b23c3b484e270b9b421b5d0707eba9",
+   "verses": 17,
+   "anchor_check": true,
+   "file": "tools/text/psalm090_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 530584,
+   "sha256": "515495b20c0eb11fd75dabc9f2ade527c58f791ed6cdb322af40ca8509caf48a",
+   "duration": 132.646,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2690.mp3"
+  }
+ },
+ "91": {
+  "text": {
+   "status": 200,
+   "bytes": 7722,
+   "sha256": "9f628b9d40be9ecd455d5b6f1339707b7b7705906c6903edd8df7e743bd19af9",
+   "verses": 16,
+   "anchor_check": true,
+   "file": "tools/text/psalm091_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 451280,
+   "sha256": "1b6dda27e6ae9bf445c5d005b4240edf4d527f0fb8f6b276bff613e6eb3063d5",
+   "duration": 112.814,
+   "bit_rate": 32001,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2691.mp3"
+  }
+ },
+ "92": {
+  "text": {
+   "status": 200,
+   "bytes": 7787,
+   "sha256": "218d54ec57025db87e95e4c2b6e1ed34822be8aaf8eae097df091ef36b3ef754",
+   "verses": 16,
+   "anchor_check": true,
+   "file": "tools/text/psalm092_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 414024,
+   "sha256": "68283e5f6b97d1cde56276c30a8846ada11c86fdcc679a503b857a3450a79437",
+   "duration": 103.506,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2692.mp3"
+  }
+ },
+ "93": {
+  "text": {
+   "status": 200,
+   "bytes": 4690,
+   "sha256": "1f7d8c4c2777653ba2eb9199e99c3ed0f791524d39576170a737d9e55c24a27b",
+   "verses": 5,
+   "anchor_check": true,
+   "file": "tools/text/psalm093_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 182416,
+   "sha256": "2a7aa410a7653f31782bc92a130ec0b860713608e6a1c6c3aa0a8b4bfdf33876",
+   "duration": 45.604,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2693.mp3"
+  }
+ },
+ "94": {
+  "text": {
+   "status": 200,
+   "bytes": 9541,
+   "sha256": "8c3f1af273afa845b6183247e3430646c4c931233d8bc3684e85b3e89f05eef5",
+   "verses": 23,
+   "anchor_check": true,
+   "file": "tools/text/psalm094_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 609216,
+   "sha256": "366efa2b9eb790508e5755604936fd1818ef55adf7a2554a79ff1f5281d0ca34",
+   "duration": 152.304,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2694.mp3"
+  }
+ },
+ "95": {
+  "text": {
+   "status": 200,
+   "bytes": 6412,
+   "sha256": "d682b7778f09d2ebab98cf51009d6718d9e3a11ded11288de5045ca4945d8248",
+   "verses": 11,
+   "anchor_check": true,
+   "file": "tools/text/psalm095_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 295792,
+   "sha256": "ad76ab7621dfd930a0ff319dbe22a2e81426bd99ff9a032f6f5c8afe3d68da89",
+   "duration": 73.944,
+   "bit_rate": 32001,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2695.mp3"
+  }
+ },
+ "96": {
+  "text": {
+   "status": 200,
+   "bytes": 7197,
+   "sha256": "d199dc4007e3c80786ab60acd4f173f7e81cfa7eea3355e18e816dc6ff678ad2",
+   "verses": 13,
+   "anchor_check": true,
+   "file": "tools/text/psalm096_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 378624,
+   "sha256": "c10c0677752641a5738c9fdd910a174bc05e62fd5854af1c4646c6481737091e",
+   "duration": 94.656,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2696.mp3"
+  }
+ },
+ "97": {
+  "text": {
+   "status": 200,
+   "bytes": 6864,
+   "sha256": "3c9b7cad215e61375a2429e788302003e5b208e895edefcf9952dbd3c8b31475",
+   "verses": 12,
+   "anchor_check": true,
+   "file": "tools/text/psalm097_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 338352,
+   "sha256": "8575e48f84b8378eaac827dac0b2c5e7195a4601b7471dbb896de504988eb1a3",
+   "duration": 84.578,
+   "bit_rate": 32003,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2697.mp3"
+  }
+ },
+ "98": {
+  "text": {
+   "status": 200,
+   "bytes": 6078,
+   "sha256": "ae23a60cb6113a36ed3ffc06b5810e5b86a617e7b1f75cba63b7b143f91fbd70",
+   "verses": 9,
+   "anchor_check": true,
+   "file": "tools/text/psalm098_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 268800,
+   "sha256": "9c72462224d1450e418a003398a4a8206dc4cd567ffcb6fdaf22a7e5aafc8363",
+   "duration": 67.2,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2698.mp3"
+  }
+ },
+ "99": {
+  "text": {
+   "status": 200,
+   "bytes": 6208,
+   "sha256": "f6b4aa477bb390ae0dc4b2c83696771ab1639cffc818e0b1720cd58ecd7a1ab9",
+   "verses": 9,
+   "anchor_check": true,
+   "file": "tools/text/psalm099_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 293424,
+   "sha256": "46717c35dd2dba85040272f87c2d2eb2a4bc68811556b66c2a054676ef2f9db7",
+   "duration": 73.346,
+   "bit_rate": 32004,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t2699.mp3"
+  }
+ },
+ "100": {
+  "text": {
+   "status": 200,
+   "bytes": 4637,
+   "sha256": "675e1c8b23beaf3d2e033548d5f742daf468167d0760a4fb6e59e4364d8582eb",
+   "verses": 5,
+   "anchor_check": true,
+   "file": "tools/text/psalm100_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 143624,
+   "sha256": "f90d44c4e2f25318fa43e8fdee482fa0498361d1fecfdc336f9d3254cdbce9b8",
+   "duration": 35.906,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26a0.mp3"
+  }
+ },
+ "101": {
+  "text": {
+   "status": 200,
+   "bytes": 6248,
+   "sha256": "c7e686d5b97d5debee2ecfe4a36bbf7a6b39f2eb9d9a558556f92ea2e1e05a26",
+   "verses": 8,
+   "anchor_check": true,
+   "file": "tools/text/psalm101_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 295568,
+   "sha256": "fe0d92a6c38f8d8b0566fb8db5643dfb691f0f3e375fac1ba224fddecc62b25d",
+   "duration": 73.892,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26a1.mp3"
+  }
+ },
+ "102": {
+  "text": {
+   "status": 200,
+   "bytes": 11615,
+   "sha256": "a4140ee4bd837bd40d1e10fe30c6f5029bf2e2d5dfd1d31a008d721dad7a38c4",
+   "verses": 29,
+   "anchor_check": true,
+   "file": "tools/text/psalm102_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 776776,
+   "sha256": "2fdcc9abdb89d95c135fc127c9927b298fdb24f25fc3f29932d6eb822e510bdc",
+   "duration": 194.194,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26a2.mp3"
+  }
+ },
+ "103": {
+  "text": {
+   "status": 200,
+   "bytes": 9714,
+   "sha256": "23a2b6f302485a09eec6281d14e0ec60266776ce6bb1a0605c70b6b31124db84",
+   "verses": 22,
+   "anchor_check": true,
+   "file": "tools/text/psalm103_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 595032,
+   "sha256": "382ad4a7e01206718b93bcdb7eb8fa9fabfff45afbcdaa7358640c8208ca51fb",
+   "duration": 148.758,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26a3.mp3"
+  }
+ },
+ "104": {
+  "text": {
+   "status": 200,
+   "bytes": 14135,
+   "sha256": "074e7ecab53aecf4ea7403bb0940f9f5cd81426b4e389a17913fa9ab867185e2",
+   "verses": 35,
+   "anchor_check": true,
+   "file": "tools/text/psalm104_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1010528,
+   "sha256": "2aa1186fc4cc5c16e5cc44fd817378cc2c2a5cbbb2ab11767125f7b241cf5a7e",
+   "duration": 252.618,
+   "bit_rate": 32001,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26a4.mp3"
+  }
+ },
+ "105": {
+  "text": {
+   "status": 200,
+   "bytes": 15185,
+   "sha256": "6d4e0d598452c13510a31322505d8439802d39d81aed4bd819c676e971fbdbdf",
+   "verses": 45,
+   "anchor_check": true,
+   "file": "tools/text/psalm105_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1108008,
+   "sha256": "c3eef391f0752b8e35cc5348a0157b34ddb816d0048c8b44964fd7a9cd344967",
+   "duration": 276.978,
+   "bit_rate": 32002,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26a5.mp3"
+  }
+ },
+ "106": {
+  "text": {
+   "status": 200,
+   "bytes": 17848,
+   "sha256": "7105c63121c3f5f6beff9e376a26b40a6a97a7d288a1dc13566ffc98aed1c01d",
+   "verses": 48,
+   "anchor_check": true,
+   "file": "tools/text/psalm106_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1288352,
+   "sha256": "7e3bb4825a03361aad19e9292433a30745f1ca7d0ac788568f403e7b0b3a1bdf",
+   "duration": 322.088,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26a6.mp3"
+  }
+ },
+ "107": {
+  "text": {
+   "status": 200,
+   "bytes": 15409,
+   "sha256": "e7d65f39ecde028ad496729402706430ff02d1e67d44cc5c17056ede6d657163",
+   "verses": 43,
+   "anchor_check": true,
+   "file": "tools/text/psalm107_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1011088,
+   "sha256": "5439d25484500b753375596f161fd6c2419aee3e2f175d32e242ba53e5d769fe",
+   "duration": 252.772,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26a7.mp3"
+  }
+ },
+ "108": {
+  "text": {
+   "status": 200,
+   "bytes": 6851,
+   "sha256": "f8860528412ebcdf5dca32ce0f4bba934497efaafb086ab9ac88fece98bdf622",
+   "verses": 14,
+   "anchor_check": true,
+   "file": "tools/text/psalm108_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 353912,
+   "sha256": "91948d63a1daf7f7eedbbc53b98d5f128ff28d7e0404c6ac9297bbacc0dcd496",
+   "duration": 88.478,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26a8.mp3"
+  }
+ },
+ "109": {
+  "text": {
+   "status": 200,
+   "bytes": 12487,
+   "sha256": "a7e2f5a3591741eec6737930e83b28ffd8422f26862d7e009699ba943c151d05",
+   "verses": 31,
+   "anchor_check": true,
+   "file": "tools/text/psalm109_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 871104,
+   "sha256": "71adcdf0925988058d44a54488a27534fb70b5220f52edeb81e0b8544071f601",
+   "duration": 217.776,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26a9.mp3"
+  }
+ },
+ "110": {
+  "text": {
+   "status": 200,
+   "bytes": 5459,
+   "sha256": "6a997aa1c672d9b9cb4dcad9652b9887be149dbb8a7ef0fa9223f922ee6d93bc",
+   "verses": 7,
+   "anchor_check": true,
+   "file": "tools/text/psalm110_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 232856,
+   "sha256": "747b747b964ab73bee718361d63aa8790f1a8611ca4f4a5584c782d506861f14",
+   "duration": 58.214,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26b0.mp3"
+  }
+ },
+ "111": {
+  "text": {
+   "status": 200,
+   "bytes": 6167,
+   "sha256": "d0ffaffd9771c0d23fe82f51d1e42de1abbffe11f273a1f366a5634cd59d6178",
+   "verses": 10,
+   "anchor_check": true,
+   "file": "tools/text/psalm111_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 260728,
+   "sha256": "56bf0802e71c9c68503dadb0a39199f7e4af2258db97f7700078a5ad3bfbc993",
+   "duration": 65.182,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26b1.mp3"
+  }
+ },
+ "112": {
+  "text": {
+   "status": 200,
+   "bytes": 6210,
+   "sha256": "558986272108d56676d83252fe62be78aabf65d78dc800843680e94b9357567b",
+   "verses": 10,
+   "anchor_check": true,
+   "file": "tools/text/psalm112_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 253240,
+   "sha256": "d9eefe2dc9720f2a485b9468eef641302d2c6b48db4e763a5cc2076930b2ece1",
+   "duration": 63.31,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26b2.mp3"
+  }
+ },
+ "113": {
+  "text": {
+   "status": 200,
+   "bytes": 5431,
+   "sha256": "c52409297b3aec3d7ed7f236b849f068e2716b8762b657132755933732443861",
+   "verses": 9,
+   "anchor_check": true,
+   "file": "tools/text/psalm113_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 210944,
+   "sha256": "d2d869b2d84dc5ac3d26a0fe455480d76dd8fe206187dce12ccef5d504fb41f6",
+   "duration": 52.736,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26b3.mp3"
+  }
+ },
+ "114": {
+  "text": {
+   "status": 200,
+   "bytes": 5101,
+   "sha256": "d566366c45bd3e30f42c30c070701230e0f4cd4dc718e0d765ead4ac9ef5417c",
+   "verses": 8,
+   "anchor_check": true,
+   "file": "tools/text/psalm114_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 156096,
+   "sha256": "5b98e351cef4d861f0e1b502b275149b42ad4da80356d0da53cf319842a9108d",
+   "duration": 52.032,
+   "bit_rate": 24000,
+   "codec": "mp3",
+   "sample_rate": "24000",
+   "channels": 1,
+   "file": "tools/mp3/t26b4.mp3"
+  }
+ },
+ "115": {
+  "text": {
+   "status": 200,
+   "bytes": 8072,
+   "sha256": "565b3b0ae2b3c84f1a0f65d1e2346c7bc6cee88c7b7ad4d2e2cb2a30e9c18d1e",
+   "verses": 18,
+   "anchor_check": true,
+   "file": "tools/text/psalm115_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 353388,
+   "sha256": "2dab236c11f7ee0f55fd9d15c9fd582b97dee121d7c8e30569ef9c83e65ab3d7",
+   "duration": 116.430667,
+   "bit_rate": 24281,
+   "codec": "mp3",
+   "sample_rate": "16000",
+   "channels": 1,
+   "file": "tools/mp3/t26b5.mp3"
+  }
+ },
+ "116": {
+  "text": {
+   "status": 200,
+   "bytes": 8258,
+   "sha256": "b6fc25244d7e8ee17c1247d49556eeccfed58d8af4914a9dff71492581d3b51b",
+   "verses": 19,
+   "anchor_check": true,
+   "file": "tools/text/psalm116_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 463320,
+   "sha256": "a4b9a8c072a75f69d3c33679abc7cdb3a412d01b4774f230cddf4ddd6bf28446",
+   "duration": 115.83,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26b6.mp3"
+  }
+ },
+ "117": {
+  "text": {
+   "status": 200,
+   "bytes": 3589,
+   "sha256": "93c47b49a18a2e342f1ffc652adf9314136a954e20a2d0f700ee396292aaec6a",
+   "verses": 2,
+   "anchor_check": true,
+   "file": "tools/text/psalm117_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 65728,
+   "sha256": "213845150a0a6b1da5a40c558882651e160e7af21d3591970fd879971461b25a",
+   "duration": 16.432,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26b7.mp3"
+  }
+ },
+ "118": {
+  "text": {
+   "status": 200,
+   "bytes": 10882,
+   "sha256": "bd7fb01455e78678877b632dd3ecebc5e18ecee35b2e5df0607d01e886f4dd2d",
+   "verses": 29,
+   "anchor_check": true,
+   "file": "tools/text/psalm118_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 2596779,
+   "sha256": "289e86546c91385d66909063b4d504b8b957bb87102a4d64968a0a0bf62e838a",
+   "duration": 162.272625,
+   "bit_rate": 128020,
+   "codec": "mp3",
+   "sample_rate": "44100",
+   "channels": 2,
+   "file": "tools/mp3/t26b8.mp3"
+  }
+ },
+ "119": {
+  "text": {
+   "status": 200,
+   "bytes": 51817,
+   "sha256": "b2f23979b6bd47a04ae4d670beac45454f6bfc91d045d7acc0701bf62ddf313f",
+   "verses": 176,
+   "anchor_check": true,
+   "file": "tools/text/psalm119_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 18178297,
+   "sha256": "ca0dc5aeec1c5dc90207de8c95fb99a6e3d0d37daa86c7c4d529aeb872371910",
+   "duration": 1136.1175,
+   "bit_rate": 128002,
+   "codec": "mp3",
+   "sample_rate": "44100",
+   "channels": 2,
+   "file": "tools/mp3/t26b9.mp3"
+  }
+ },
+ "120": {
+  "text": {
+   "status": 200,
+   "bytes": 4921,
+   "sha256": "afc4622e130d791d76d211f5c5b36c2f288d52744ac3d3015e4155d7b5518f32",
+   "verses": 7,
+   "anchor_check": true,
+   "file": "tools/text/psalm120_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 179816,
+   "sha256": "ceed7bba89b82a8052355684e8977ec054df3198e8107bbe56bd0c73b5be72f7",
+   "duration": 44.954,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26c0.mp3"
+  }
+ },
+ "121": {
+  "text": {
+   "status": 200,
+   "bytes": 5155,
+   "sha256": "6d29530a9aa3c4f3dd014b7ce7d6b9ac4848cf01552b8cdeba15f35d27156301",
+   "verses": 8,
+   "anchor_check": true,
+   "file": "tools/text/psalm121_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 197120,
+   "sha256": "adfde6a29569a044ddd855c25ceeb7d486e3b4729ebc3e2f1149a871b35b412b",
+   "duration": 49.28,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26c1.mp3"
+  }
+ },
+ "122": {
+  "text": {
+   "status": 200,
+   "bytes": 5608,
+   "sha256": "e62a577ee088624e05b9ecf20fda9d6a23f71c46a93033040b9b8ebc5035aeed",
+   "verses": 9,
+   "anchor_check": true,
+   "file": "tools/text/psalm122_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 231880,
+   "sha256": "56514ce5209fb8ddfe544f66db50f10afc92edf8e1e2858d97501ae9055c3559",
+   "duration": 57.954,
+   "bit_rate": 32008,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26c2.mp3"
+  }
+ },
+ "123": {
+  "text": {
+   "status": 200,
+   "bytes": 4763,
+   "sha256": "437e0482ead0896fc71513262761d67a456d56f787d8ecec2931fa7ce3240aa4",
+   "verses": 4,
+   "anchor_check": true,
+   "file": "tools/text/psalm123_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 151320,
+   "sha256": "537a65d956adaa7229f07ab7b04a150c3b4f0536c2c40bead0fb1a15c197d446",
+   "duration": 37.83,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26c3.mp3"
+  }
+ },
+ "124": {
+  "text": {
+   "status": 200,
+   "bytes": 5345,
+   "sha256": "b412a1a5f6372952ddf1a46a05072fe800942dfe359e18e53df13ff391d3e1c2",
+   "verses": 8,
+   "anchor_check": true,
+   "file": "tools/text/psalm124_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 208056,
+   "sha256": "d4444a7112cd91f49082592b30ccbf06ce8f44e775f63dfe79099d6cc73ea33d",
+   "duration": 52.014,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26c4.mp3"
+  }
+ },
+ "125": {
+  "text": {
+   "status": 200,
+   "bytes": 5054,
+   "sha256": "3ded215b20c4d244d9c7f1ca6f488f162b7aee0abdaaac5c71714932d19f5d14",
+   "verses": 5,
+   "anchor_check": true,
+   "file": "tools/text/psalm125_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 198480,
+   "sha256": "5b3aab53d5cea6804d45e0bc213fabbaa8764782b4435e86432fbbf933892ece",
+   "duration": 49.608,
+   "bit_rate": 32007,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26c5.mp3"
+  }
+ },
+ "126": {
+  "text": {
+   "status": 200,
+   "bytes": 5095,
+   "sha256": "2e66c8b592ab2d49bc31e6d9e6f7a48170f39e9e9d48e882f48be76fc2ed377b",
+   "verses": 6,
+   "anchor_check": true,
+   "file": "tools/text/psalm126_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 186368,
+   "sha256": "92604053bfb31dd8fd527fb732c2711ba8e81499642af1209355aa1b7b80de5c",
+   "duration": 46.592,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26c6.mp3"
+  }
+ },
+ "127": {
+  "text": {
+   "status": 200,
+   "bytes": 5149,
+   "sha256": "bb350101d02003dffcda35d55d2752893d5d68976b359ff5cabb85521f678280",
+   "verses": 5,
+   "anchor_check": true,
+   "file": "tools/text/psalm127_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 193112,
+   "sha256": "6a45588a90d64eefcb9b03a48e448f73f5404cfc871f1c9d2b877387a718f037",
+   "duration": 48.278,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26c7.mp3"
+  }
+ },
+ "128": {
+  "text": {
+   "status": 200,
+   "bytes": 4929,
+   "sha256": "05a6e17dc570b53d3d67f1ee6494fdfdd3123b0bdd6df54ee64962d4fe157fb2",
+   "verses": 6,
+   "anchor_check": true,
+   "file": "tools/text/psalm128_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 130608,
+   "sha256": "9405f7504b4f43fc81b6cd69b7bca689c30ae3ce5495145d3698f05203af3b12",
+   "duration": 43.536,
+   "bit_rate": 24000,
+   "codec": "mp3",
+   "sample_rate": "24000",
+   "channels": 1,
+   "file": "tools/mp3/t26c8.mp3"
+  }
+ },
+ "129": {
+  "text": {
+   "status": 200,
+   "bytes": 5372,
+   "sha256": "9712fbf760070c9338811096115c622d9849020ec70d42d42eaf82a4c5cecdeb",
+   "verses": 8,
+   "anchor_check": true,
+   "file": "tools/text/psalm129_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 210168,
+   "sha256": "f7d92b8dd66329e08e5bba68eaac1c115158410c5c63490c0b0c72ad41c407f0",
+   "duration": 52.542,
+   "bit_rate": 32000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26c9.mp3"
+  }
+ },
+ "130": {
+  "text": {
+   "status": 200,
+   "bytes": 5323,
+   "sha256": "152e06a8ec019ee745d7ab25a4ba192a77e9a65b895ad45e76047558659c8781",
+   "verses": 8,
+   "anchor_check": true,
+   "file": "tools/text/psalm130_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 188048,
+   "sha256": "5355e3cf5b560b9b36623e88ce4e8f29e023eed4303c4a89804472cd2f349edf",
+   "duration": 47.008,
+   "bit_rate": 32002,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26d0.mp3"
+  }
+ },
+ "131": {
+  "text": {
+   "status": 200,
+   "bytes": 4290,
+   "sha256": "088586337bbd1c28388479e70c6175f79687f4353d073bdb0c5fe6649dd3c51e",
+   "verses": 3,
+   "anchor_check": true,
+   "file": "tools/text/psalm131_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 245760,
+   "sha256": "67e7aef2b179239a84378fac9d2888d7396c6089d768950c215a5609d07051ab",
+   "duration": 30.72,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26d1.mp3"
+  }
+ },
+ "132": {
+  "text": {
+   "status": 200,
+   "bytes": 8356,
+   "sha256": "06eb9b0d57c6c96ff85e952f4fb9716bdb60ca6975947e9090bd1f64e0b4ce21",
+   "verses": 18,
+   "anchor_check": true,
+   "file": "tools/text/psalm132_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 959843,
+   "sha256": "598f3bd5bcf6468c1146b90bf814890b86c287f46b71cb90181d4e7b6128c773",
+   "duration": 119.980375,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26d2.mp3"
+  }
+ },
+ "133": {
+  "text": {
+   "status": 200,
+   "bytes": 4462,
+   "sha256": "5192d597c019e9a7d8cb4c0d52a1213320241d01ae4b22f6eb87fd4f3ae48de3",
+   "verses": 3,
+   "anchor_check": true,
+   "file": "tools/text/psalm133_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 251821,
+   "sha256": "743346914ea43baa1841bf646af00ad57f76d82db7afda05a55f29627b12e434",
+   "duration": 31.477625,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26d3.mp3"
+  }
+ },
+ "134": {
+  "text": {
+   "status": 200,
+   "bytes": 4023,
+   "sha256": "6ab9af6a9eee777f7cf057464aea9b004ce837c39946cfa1d9062b9d3946142a",
+   "verses": 3,
+   "anchor_check": true,
+   "file": "tools/text/psalm134_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 198112,
+   "sha256": "8ecd286854bcfc61b6e2ac3cefc460660e29784c6ba592e12fb066ee155811c2",
+   "duration": 24.764,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26d4.mp3"
+  }
+ },
+ "135": {
+  "text": {
+   "status": 200,
+   "bytes": 9282,
+   "sha256": "25255ab191d6f725bc33d298aa4b470d3a735921b62a4fff1797f29489d79c4c",
+   "verses": 21,
+   "anchor_check": true,
+   "file": "tools/text/psalm135_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1109682,
+   "sha256": "4a149f7b4068cf721245debb3bdab2df31d008a0f39a3a7a61a4f6b3975fe8d8",
+   "duration": 138.71025,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26d5.mp3"
+  }
+ },
+ "136": {
+  "text": {
+   "status": 200,
+   "bytes": 9885,
+   "sha256": "36de467ea5b9a1eda93d363133d2865fd3f7b2b7f0596f7bdd02a9d7f5fd5280",
+   "verses": 26,
+   "anchor_check": true,
+   "file": "tools/text/psalm136_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 994534,
+   "sha256": "5761f0870a44d3674257e65ac14aa3fee9b975b177e8f0f76de33121b531d8ae",
+   "duration": 124.31675,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26d6.mp3"
+  }
+ },
+ "137": {
+  "text": {
+   "status": 200,
+   "bytes": 6143,
+   "sha256": "bacc646a695737e79f17d053a7b64f4badae3096e0e378219f93515320a2d6d8",
+   "verses": 9,
+   "anchor_check": true,
+   "file": "tools/text/psalm137_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 558184,
+   "sha256": "9082f0d2133e32cd40980d036b9583f4e96002ce31504ae5c61aeb481812adaa",
+   "duration": 69.773,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26d7.mp3"
+  }
+ },
+ "138": {
+  "text": {
+   "status": 200,
+   "bytes": 5978,
+   "sha256": "eb3bb36c94a503dff9c1b6fe8b9a00aa0898b4a2a29b8bbfa0b13599941f2f51",
+   "verses": 8,
+   "anchor_check": true,
+   "file": "tools/text/psalm138_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 532898,
+   "sha256": "b1504eb769c33204c5c87256921af9cdb457b8c8c60613c4521500a18903d272",
+   "duration": 66.61225,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26d8.mp3"
+  }
+ },
+ "139": {
+  "text": {
+   "status": 200,
+   "bytes": 10543,
+   "sha256": "ae800048d690f8f9a2c09b134c13b5fe2ffb47eb1533dbdb22307d5ae68995b7",
+   "verses": 24,
+   "anchor_check": true,
+   "file": "tools/text/psalm139_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1295883,
+   "sha256": "6fbc785de9f66d0d4336bc805bc2714f72629bc7c541ed9aed1961e09de446e7",
+   "duration": 161.985375,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26d9.mp3"
+  }
+ },
+ "140": {
+  "text": {
+   "status": 200,
+   "bytes": 7589,
+   "sha256": "13e893c1308cabf23244ccf644c71a244005fd6c4f7f6489c8f2c38a9087af9f",
+   "verses": 14,
+   "anchor_check": true,
+   "file": "tools/text/psalm140_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 802899,
+   "sha256": "893af648363aee10de874abefa8dfda092c0cdcffe0f4d6448cef3701d3b2e1d",
+   "duration": 100.362375,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26e0.mp3"
+  }
+ },
+ "141": {
+  "text": {
+   "status": 200,
+   "bytes": 6706,
+   "sha256": "e6e2e7f2a98d7f9fd981581ea1588731df1856f83b4c7a405e616e332418151b",
+   "verses": 10,
+   "anchor_check": true,
+   "file": "tools/text/psalm141_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 647419,
+   "sha256": "34af778f7a1fe6f8a16dcce557dfe55e7a5b901f61a36b5465795248375c5487",
+   "duration": 80.927375,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26e1.mp3"
+  }
+ },
+ "142": {
+  "text": {
+   "status": 200,
+   "bytes": 6030,
+   "sha256": "59468cfab145149b6eb10dad4c398144c077f23a95533731a96fd4158f83e7b3",
+   "verses": 8,
+   "anchor_check": true,
+   "file": "tools/text/psalm142_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 552124,
+   "sha256": "1616ca4ac139cdac33aa200ff39628567e5a1b6aeb25a2119e5275708b4162f3",
+   "duration": 69.0155,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26e2.mp3"
+  }
+ },
+ "143": {
+  "text": {
+   "status": 200,
+   "bytes": 7713,
+   "sha256": "01ff6806f5aac30225c6d8bcc337ff10323e579052db0800f7810a27b67f2496",
+   "verses": 12,
+   "anchor_check": true,
+   "file": "tools/text/psalm143_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 841143,
+   "sha256": "7284949b698691387cf50fbe1c8df1120f282c48205654de56eed13da6049a22",
+   "duration": 105.142875,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26e3.mp3"
+  }
+ },
+ "144": {
+  "text": {
+   "status": 200,
+   "bytes": 8357,
+   "sha256": "470b578abac614d72e98cd5291efdc7143afa5d11dffa30cd7190f01469d3909",
+   "verses": 15,
+   "anchor_check": true,
+   "file": "tools/text/psalm144_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 973008,
+   "sha256": "0181ef6a643745a0c5958fba27338438d27f06edcd6c01a0225001ac0ec5d553",
+   "duration": 121.626,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26e4.mp3"
+  }
+ },
+ "145": {
+  "text": {
+   "status": 200,
+   "bytes": 9228,
+   "sha256": "e82648b93007ec5c6897b55ffb0651a44bf4d17b8a0e36deaba7d22c2e5c6661",
+   "verses": 21,
+   "anchor_check": true,
+   "file": "tools/text/psalm145_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1092755,
+   "sha256": "4d073167735cf8c8e6c66923f8a207e6d2017c884e5a35d3b7df45b91fa065ee",
+   "duration": 136.594375,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26e5.mp3"
+  }
+ },
+ "146": {
+  "text": {
+   "status": 200,
+   "bytes": 6197,
+   "sha256": "87d0557c5b74332bd5c6ea9f0bfe6e3ec740c16d267484f6bb26a9264c64fc89",
+   "verses": 10,
+   "anchor_check": true,
+   "file": "tools/text/psalm146_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 596427,
+   "sha256": "7f48ff97453c624161aa4bb219aca4f5c720dc543ea1833389f838b06bfb299e",
+   "duration": 74.553375,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26e6.mp3"
+  }
+ },
+ "147": {
+  "text": {
+   "status": 200,
+   "bytes": 8792,
+   "sha256": "00546d77ebf8a1236654701d48b41f4929cf53599c669e8cc66bbc68f4255eac",
+   "verses": 20,
+   "anchor_check": true,
+   "file": "tools/text/psalm147_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 1009998,
+   "sha256": "19dbbf20e42561337cf8f7397b51927e5d24a4e18f1baaf872f37371ab7dd222",
+   "duration": 126.24975,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26e7.mp3"
+  }
+ },
+ "148": {
+  "text": {
+   "status": 200,
+   "bytes": 7146,
+   "sha256": "deed9611f75dff57638d18aa935cc0a6e1f477277eb90e59b0f085b0d3065e5d",
+   "verses": 14,
+   "anchor_check": true,
+   "file": "tools/text/psalm148_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 661839,
+   "sha256": "d0b8384fd1550737618c4a9fb2ce37501bd32021798677246bdbe0324c3aa479",
+   "duration": 82.729875,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26e8.mp3"
+  }
+ },
+ "149": {
+  "text": {
+   "status": 200,
+   "bytes": 5683,
+   "sha256": "5d32365f45225ee3333d8b1cad96806f632d447e63c54289ead2f3cfefcdc46d",
+   "verses": 9,
+   "anchor_check": true,
+   "file": "tools/text/psalm149_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 450560,
+   "sha256": "e10c5f820b2816578b2861c5e4ed8876d80da172a44f2fa9408110b1fc7a63d3",
+   "duration": 56.32,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26e9.mp3"
+  }
+ },
+ "150": {
+  "text": {
+   "status": 200,
+   "bytes": 4774,
+   "sha256": "8bc9457675c14c35ff6a50b2b3dca9d0e142a2cded78e0de85262c5245461617",
+   "verses": 6,
+   "anchor_check": true,
+   "file": "tools/text/psalm150_text.json"
+  },
+  "audio": {
+   "status": 200,
+   "bytes": 286720,
+   "sha256": "7a0b8d9caf2d111adb615f26d57cf593e2bf488bd7d2239670d8ac54288870ec",
+   "duration": 35.84,
+   "bit_rate": 64000,
+   "codec": "mp3",
+   "sample_rate": "22050",
+   "channels": 1,
+   "file": "tools/mp3/t26f0.mp3"
+  }
+ }
+}

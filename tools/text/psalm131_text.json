@@ -1,0 +1,31 @@
+{
+ "chapter": 131,
+ "title": "Psalm 131",
+ "source_text": "https://www.mechon-mamre.org/p/pt/pt26d1.htm",
+ "source_audio": "https://www.mechon-mamre.org/mp3/t26d1.mp3",
+ "verses_hebrew_raw": [
+  "שִׁיר הַמַּעֲלוֹת, לְדָוִד: יְהוָה, לֹא-גָבַהּ לִבִּי-- וְלֹא-רָמוּ עֵינַי; וְלֹא-הִלַּכְתִּי, בִּגְדֹלוֹת וּבְנִפְלָאוֹת מִמֶּנִּי.",
+  "אִם-לֹא שִׁוִּיתִי, וְדוֹמַמְתִּי-- נַפְשִׁי: כְּגָמֻל, עֲלֵי אִמּוֹ; כַּגָּמֻל עָלַי נַפְשִׁי.",
+  "יַחֵל יִשְׂרָאֵל, אֶל-יְהוָה-- מֵעַתָּה, וְעַד-עוֹלָם."
+ ],
+ "verses_hebrew": [
+  "שִׁיר הַמַּעֲלוֹת לְדָוִד יְהוָה לֹא־גָבַהּ לִבִּי וְלֹא־רָמוּ עֵינַי וְלֹא־הִלַּכְתִּי בִּגְדֹלוֹת וּבְנִפְלָאוֹת מִמֶּנִּי",
+  "אִם־לֹא שִׁוִּיתִי וְדוֹמַמְתִּי נַפְשִׁי כְּגָמֻל עֲלֵי אִמּוֹ כַּגָּמֻל עָלַי נַפְשִׁי",
+  "יַחֵל יִשְׂרָאֵל אֶל־יְהוָה מֵעַתָּה וְעַד־עוֹלָם"
+ ],
+ "verses_english": [
+  "A Song of Ascents; of David. {N} LORD, my heart is not haughty, nor mine eyes lofty; {N} neither do I exercise myself in things too great, or in things too wonderful for me.",
+  "Surely I have stilled and quieted my soul; {N} like a weaned child with his mother; my soul is with me like a weaned child.",
+  "O Israel, hope in the LORD from this time forth and for ever. {P}"
+ ],
+ "verse_count": 3,
+ "anchors": [
+  1,
+  2,
+  3,
+  4
+ ],
+ "anchor_check": true,
+ "fetched_at": "2026-11-20T04:06:27.358031+00:00",
+ "source_bytes": 4290
+}

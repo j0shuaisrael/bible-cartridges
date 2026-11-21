@@ -1,0 +1,39 @@
+{
+ "chapter": 100,
+ "title": "Psalm 100",
+ "source_text": "https://www.mechon-mamre.org/p/pt/pt26a0.htm",
+ "source_audio": "https://www.mechon-mamre.org/mp3/t26a0.mp3",
+ "verses_hebrew_raw": [
+  "מִזְמוֹר לְתוֹדָה: הָרִיעוּ לַיהוָה, כָּל-הָאָרֶץ.",
+  "עִבְדוּ אֶת-יְהוָה בְּשִׂמְחָה; בֹּאוּ לְפָנָיו, בִּרְנָנָה.",
+  "דְּעוּ-- כִּי יְהוָה, הוּא אֱלֹהִים: הוּא-עָשָׂנוּ, ולא וְלוֹ אֲנַחְנוּ-- עַמּוֹ, וְצֹאן מַרְעִיתוֹ.",
+  "בֹּאוּ שְׁעָרָיו, בְּתוֹדָה--חֲצֵרֹתָיו בִּתְהִלָּה; הוֹדוּ-לוֹ, בָּרְכוּ שְׁמוֹ.",
+  "כִּי-טוֹב יְהוָה, לְעוֹלָם חַסְדּוֹ; וְעַד-דֹּר וָדֹר, אֱמוּנָתוֹ."
+ ],
+ "verses_hebrew": [
+  "מִזְמוֹר לְתוֹדָה הָרִיעוּ לַיהוָה כָּל־הָאָרֶץ",
+  "עִבְדוּ אֶת־יְהוָה בְּשִׂמְחָה בֹּאוּ לְפָנָיו בִּרְנָנָה",
+  "דְּעוּ כִּי יְהוָה הוּא אֱלֹהִים הוּא־עָשָׂנוּ ולא וְלוֹ אֲנַחְנוּ עַמּוֹ וְצֹאן מַרְעִיתוֹ",
+  "בֹּאוּ שְׁעָרָיו בְּתוֹדָה חֲצֵרֹתָיו בִּתְהִלָּה הוֹדוּ־לוֹ בָּרְכוּ שְׁמוֹ",
+  "כִּי־טוֹב יְהוָה לְעוֹלָם חַסְדּוֹ וְעַד־דֹּר וָדֹר אֱמוּנָתוֹ"
+ ],
+ "verses_english": [
+  "A Psalm of thanksgiving. Shout unto the LORD, all the earth.",
+  "Serve the LORD with gladness; come before His presence with singing.",
+  "Know ye that the LORD He is God; {N} it is He that hath made us, and we are His, His people, and the flock of His pasture.",
+  "Enter into His gates with thanksgiving, and into His courts with praise; give thanks unto Him, and bless His name.",
+  "For the LORD is good; His mercy endureth for ever; and His faithfulness unto all generations. {P}"
+ ],
+ "verse_count": 5,
+ "anchors": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6
+ ],
+ "anchor_check": true,
+ "fetched_at": "2026-11-20T04:06:05.587260+00:00",
+ "source_bytes": 4637
+}

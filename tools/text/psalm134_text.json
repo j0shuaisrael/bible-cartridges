@@ -1,0 +1,31 @@
+{
+ "chapter": 134,
+ "title": "Psalm 134",
+ "source_text": "https://www.mechon-mamre.org/p/pt/pt26d4.htm",
+ "source_audio": "https://www.mechon-mamre.org/mp3/t26d4.mp3",
+ "verses_hebrew_raw": [
+  "שִׁיר, הַמַּעֲלוֹת: הִנֵּה בָּרְכוּ אֶת-יְהוָה, כָּל-עַבְדֵי יְהוָה-- הָעֹמְדִים בְּבֵית-יְהוָה, בַּלֵּילוֹת.",
+  "שְׂאוּ-יְדֵכֶם קֹדֶשׁ; וּבָרְכוּ, אֶת-יְהוָה.",
+  "יְבָרֶכְךָ יְהוָה, מִצִּיּוֹן: עֹשֵׂה, שָׁמַיִם וָאָרֶץ."
+ ],
+ "verses_hebrew": [
+  "שִׁיר הַמַּעֲלוֹת הִנֵּה בָּרְכוּ אֶת־יְהוָה כָּל־עַבְדֵי יְהוָה הָעֹמְדִים בְּבֵית־יְהוָה בַּלֵּילוֹת",
+  "שְׂאוּ־יְדֵכֶם קֹדֶשׁ וּבָרְכוּ אֶת־יְהוָה",
+  "יְבָרֶכְךָ יְהוָה מִצִּיּוֹן עֹשֵׂה שָׁמַיִם וָאָרֶץ"
+ ],
+ "verses_english": [
+  "A Song of Ascents. {N} Behold, bless ye the LORD, all ye servants of the LORD, {N} that stand in the house of the LORD in the night seasons.",
+  "Lift up your hands to the sanctuary, and bless ye the LORD.",
+  "The LORD bless thee out of Zion; even He that made heaven and earth. {P}"
+ ],
+ "verse_count": 3,
+ "anchors": [
+  1,
+  2,
+  3,
+  4
+ ],
+ "anchor_check": true,
+ "fetched_at": "2026-11-20T04:06:29.500610+00:00",
+ "source_bytes": 4023
+}
